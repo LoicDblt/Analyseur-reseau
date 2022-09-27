@@ -24,9 +24,9 @@ void titreViolet(char* message){
 }
 void titreCian(char* message, int compteur){
 	if (compteur == -1)
-		printf("\n\t%s#### %s ####%s\n", CYAN, message, FIN);
+		printf("\t%s#### %s ####%s\n", CYAN, message, FIN);
 	else
-		printf("\n\t%s#### %d%s ####%s\n", CYAN, compteur, message, FIN);
+		printf("\t%s#### %d%s ####%s\n", CYAN, compteur, message, FIN);
 }
 
 // Fonction d'affichage des adresses MAC
@@ -85,13 +85,13 @@ void callback(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char* paqu
 	printf(ORANGE);
 	printf("IP src : %s\n", inet_ntoa(ip->ip_src)); // src
 	printf("IP dest : %s\n", inet_ntoa(ip->ip_dst)); // dest
-	printf(FIN);
+	printf("%s\n", FIN);
 	compteurPaquets++;
 }
 
 int main(int argc, char *argv[]){
 	pcap_t* handle;					/* Session handle */
-	char* device;					/* The device to sniff on */
+	char* device = "";					/* The device to sniff on */
 	char errbuf[PCAP_ERRBUF_SIZE];	/* Error string */
 	struct bpf_program fp;			/* The compiled filter */
 	char filter_exp[] = "port 80";	/* The filter expression */
@@ -104,12 +104,13 @@ int main(int argc, char *argv[]){
 	int iFlag = 0, oFlag = 0, fFlag = 0, vFlag = 0;
 	int opt, niveau;
 	char* nomFichier;
+
 	while ((opt = getopt (argc, argv, "i:o:f:v:")) != -1){
 		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0)
 			titreCian("Options activées", -1);
 		printf(VERT);
 
-		switch (opt){
+		switch(opt){
 			case 'i':
 				iFlag = 1;
 				if (optarg[0] == '-'){
@@ -139,15 +140,22 @@ int main(int argc, char *argv[]){
 				vFlag = 1;
 				niveau = atoi(optarg);
 				char* verbosite;
-				if (niveau == 1)
-					verbosite = "très concis";
-				else if (niveau == 2)
-					verbosite = "synthétique";
-				else if (niveau == 3)
-					verbosite = "complet";
-				else{
-					fprintf(stderr, "%s|Erreur| Niveau de verbosité inconnu (1 [synthétique] à 3 [complet])%s\n", ROUGE, FIN);
-					return EXIT_FAILURE;
+				switch(niveau){
+					case 1:
+						verbosite = "très concis";
+						break;
+
+					case 2:
+						verbosite = "très concis";
+						break;
+
+					case 3:
+						verbosite = "complet";
+						break;
+
+					default:
+						fprintf(stderr, "%s|Erreur| Niveau de verbosité inconnu (1 [très concis] à 3 [complet])%s\n", ROUGE, FIN);
+						return EXIT_FAILURE;
 				}
 				printf("[-v] Niveau de verbosité %s [%s]\n", optarg, verbosite);
 				break;
@@ -161,18 +169,19 @@ int main(int argc, char *argv[]){
 		}
 		printf("\033[00m");
 	}
-	fprintf(stderr, "\033[31m");
+	fprintf(stderr, "\033[31m\n");
 
-	/* Define the device */
-	// device = pcap_lookupdev(errbuf);
-	// if (device == NULL){
-	// 	fprintf(stderr, "|Erreur| Impossible de trouver le périph : %s\n", errbuf);
-	// 	return EXIT_FAILURE;
-	// }
+	/* Défini l'interface si elle ne l'a pas été avec un commutateur */
+	if (device == NULL || device[0] == '\0')
+		device = pcap_lookupdev(errbuf);
+	if (device == NULL){
+		fprintf(stderr, "|Erreur| Impossible de trouver le périphérique : %s\n", errbuf);
+		return EXIT_FAILURE;
+	}
 
-	/* Cherche les propriétés du périphérique */
+	/* Cherche les propriétés de l'interface */
 	if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
-		fprintf(stderr, "|Erreur| Impossible de récuprer le netmask pour le périph %s: %s\n", device, errbuf);
+		fprintf(stderr, "|Erreur| Impossible de récuprer le netmask pour l'interface %s: %s\n", device, errbuf);
 		net = 0;
 		mask = 0;
 	}
@@ -180,7 +189,7 @@ int main(int argc, char *argv[]){
 	/* Ouvre la session en mode "promiscuous" */
 	handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
 	if (handle == NULL){
-		fprintf(stderr, "|Erreur| Impossible d'ouvrir le périph %s: %s\n", device, errbuf);
+		fprintf(stderr, "|Erreur| Impossible d'ouvrir l'interface %s: %s\n", device, errbuf);
 		return EXIT_FAILURE;
 	}
 
@@ -195,7 +204,7 @@ int main(int argc, char *argv[]){
 	// }
 
 	/* Récupère des paquets */
-	if (pcap_loop(handle, 2, callback, NULL) < 0){ // Passer à -1 pour du continu
+	if (pcap_loop(handle, 3, callback, NULL) < 0){ // Passer l'argument à -1 pour du continu
 		fprintf(stderr, "|Erreur| Erreur lors de la lecture du paquet %s\n", device);
 		return EXIT_FAILURE;
 	}

@@ -1,35 +1,47 @@
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations" // Fix pour macOS (pcap_lookupdev deprecated)
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations" // Masque le warning sur macOS (pcap_lookupdev deprecated)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <pcap.h>
 
+#include <pcap.h>
 #include <net/ethernet.h>
 #include <netinet/ip.h>
 
+// Couleurs pour l'affichage
+#define ROUGE	"\033[31m"
+#define VERT	"\033[32m"
+#define ORANGE	"\033[33m"
+#define BLEU	"\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN	"\033[36m"
+#define JAUNE	"\033[00m"
+#define FIN		"\033[00m"
+
+// Fonctions d'affichage des titres
 void titreViolet(char* message){
-	printf("\033[35m*** %s ***\033[00m\n", message);
+	printf("%s*** %s ***%s\n", MAGENTA, message, FIN);
 }
 void titreCian(char* message, int compteur){
 	if (compteur == -1)
-		printf("\n\t\033[36m#### %s ####\033[00m\n", message);
+		printf("\n\t%s#### %s ####%s\n", CYAN, message, FIN);
 	else
-		printf("\n\t\033[36m#### %d%s ####\033[00m\n", compteur, message);
+		printf("\n\t%s#### %d%s ####%s\n", CYAN, compteur, message, FIN);
 }
 
-// Flag IO : 0 = src / 1 = dest
+// Fonction d'affichage des adresses MAC
+// int flagIO : 0 = src / 1 = dest
 void affichageMac(const struct ether_header *ethernet, int FlagIO){
 	int i;
 	unsigned addr;
-	printf("\033[33m");
+	printf(ORANGE);
 	if (FlagIO == 0)
 		printf("MAC src : ");
 	else if (FlagIO == 1)
 		printf("MAC dest : ");
 	else{
-		printf("\033[00m");
-		fprintf(stderr, "Mauvaise valeur du flag IO\n");
+		printf(FIN);
+		fprintf(stderr, "|Erreur| Mauvaise valeur du flag IO\n");
 		exit(-1);
 	}
 	for (i = 0; i < 6; i++){
@@ -42,129 +54,154 @@ void affichageMac(const struct ether_header *ethernet, int FlagIO){
 		if (i < 5)
 			printf(":");
 	}
-	printf("\033[00m\n");
+	printf("%s\n", FIN);
 }
 
-void my_callback(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char* packet){
+void callback(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char* paquet){
+	// Titre du paquet
 	static int compteurPaquets = 1;
 	if (compteurPaquets == 1)
 		titreCian("ère trame", compteurPaquets);
 	else
 		titreCian("ème trame", compteurPaquets);
+
+	// Structures pour le paquet
 	const struct ether_header *ethernet;
 	const struct ip *ip;
 	int size_ethernet = sizeof(struct ether_header);
-	ethernet = (struct ether_header*)(packet);
-	ip = (struct ip*)(packet + size_ethernet);
+	ethernet = (struct ether_header*)(paquet);
+	ip = (struct ip*)(paquet + size_ethernet);
 
+	// Affichage des adresses MAC
 	titreViolet("Informations MAC");
 	affichageMac(ethernet, 0); // src
 	affichageMac(ethernet, 1); // dest
-	printf("\033[33m");
+	printf(ORANGE);
 	printf("EtherType : %.2x", ntohs(ethernet->ether_type)); // EtherType
-	printf("\033[00m\n\n");
+	printf("%s\n\n", FIN);
 
+	// Affichage des adresses IP
 	titreViolet("Informations IP");
-	printf("\033[33m");
+	printf(ORANGE);
 	printf("IP src : %s\n", inet_ntoa(ip->ip_src)); // src
 	printf("IP dest : %s\n", inet_ntoa(ip->ip_dst)); // dest
-	printf("\033[00m");
+	printf(FIN);
 	compteurPaquets++;
 }
 
 int main(int argc, char *argv[]){
-	pcap_t *handle;					/* Session handle */
-	char *dev;						/* The device to sniff on */
+	pcap_t* handle;					/* Session handle */
+	char* device;					/* The device to sniff on */
 	char errbuf[PCAP_ERRBUF_SIZE];	/* Error string */
 	struct bpf_program fp;			/* The compiled filter */
 	char filter_exp[] = "port 80";	/* The filter expression */
 	bpf_u_int32 mask;				/* Our netmask */
 	bpf_u_int32 net;				/* Our IP */
 	struct pcap_pkthdr header;		/* The header that pcap gives us */
-	const u_char *packet;			/* The actual packet */
+	const u_char* paquet;			/* The actual packet */
 
+	// Gestion des commutateurs
 	int iFlag = 0, oFlag = 0, fFlag = 0, vFlag = 0;
 	int opt, niveau;
 	char* nomFichier;
 	while ((opt = getopt (argc, argv, "i:o:f:v:")) != -1){
 		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0)
 			titreCian("Options activées", -1);
-		printf("\033[32m");
+		printf(VERT);
 
 		switch (opt){
 			case 'i':
 				iFlag = 1;
-				printf("Flag i : %s\n", optarg);
+				if (optarg[0] == '-'){
+					fprintf(stderr, "%s|Erreur| Veuillez préciser l'interface (-i)%s\n", ROUGE, FIN);
+					return EXIT_FAILURE;
+				}
+				device = optarg;
+				printf("[-i] Interface %s\n", optarg);
 				break;
+
 			case 'o':
 				oFlag = 1;
-				printf("Flag o : %s\n", optarg);
+				printf("[-o] Fichier offline %s\n", optarg);
 				nomFichier = optarg;
 				if (access(nomFichier, F_OK) < 0){
-					fprintf(stderr, "\033[31mFichier introuvable\033[00m\n");
+					fprintf(stderr, "%s|Erreur| Fichier introuvable%s\n", ROUGE, FIN);
 					return EXIT_FAILURE;
 				}
 				break;
+
 			case 'f':
 				fFlag = 1;
-				printf("Flag f : %s\n", optarg);
+				printf("[-f] Filtrage %s\n", optarg);
 				break;
+
 			case 'v':
 				vFlag = 1;
-				printf("Flag v : %s\n", optarg);
 				niveau = atoi(optarg);
-				if (niveau < 1 || niveau > 3){
-					fprintf(stderr, "\033[31mNiveau de verbosité inconnu (1 [synthétique] à 3 [complet])\033[00m\n");
+				char* verbosite;
+				if (niveau == 1)
+					verbosite = "très concis";
+				else if (niveau == 2)
+					verbosite = "synthétique";
+				else if (niveau == 3)
+					verbosite = "complet";
+				else{
+					fprintf(stderr, "%s|Erreur| Niveau de verbosité inconnu (1 [synthétique] à 3 [complet])%s\n", ROUGE, FIN);
 					return EXIT_FAILURE;
 				}
+				printf("[-v] Niveau de verbosité %s [%s]\n", optarg, verbosite);
 				break;
+
 			case '?':
-				fprintf(stderr, "\033[31mOption \"-%c\" inconnue !\033[00m\n", optopt);
+				fprintf(stderr, "%s|Erreur| Option \"-%c\" inconnue !%s\n", ROUGE, optopt, FIN);
 				return EXIT_FAILURE;
+
 			default:
 				return EXIT_FAILURE;
 		}
 		printf("\033[00m");
 	}
+	fprintf(stderr, "\033[31m");
 
 	/* Define the device */
-	dev = pcap_lookupdev(errbuf);
-	if (dev == NULL){
-		fprintf(stderr, "Couldn't find default device: %s\n", errbuf);
-		return(2);
-	}
+	// device = pcap_lookupdev(errbuf);
+	// if (device == NULL){
+	// 	fprintf(stderr, "|Erreur| Impossible de trouver le périph : %s\n", errbuf);
+	// 	return EXIT_FAILURE;
+	// }
 
-	/* Find the properties for the device */
-	if (pcap_lookupnet(dev, &net, &mask, errbuf) < 0){
-		fprintf(stderr, "Couldn't get netmask for device %s: %s\n", dev, errbuf);
+	/* Cherche les propriétés du périphérique */
+	if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
+		fprintf(stderr, "|Erreur| Impossible de récuprer le netmask pour le périph %s: %s\n", device, errbuf);
 		net = 0;
 		mask = 0;
 	}
 
-	/* Open the session in promiscuous mode */
-	handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
+	/* Ouvre la session en mode "promiscuous" */
+	handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
 	if (handle == NULL){
-		fprintf(stderr, "Couldn't open device %s: %s\n", dev, errbuf);
-		return(2);
+		fprintf(stderr, "|Erreur| Impossible d'ouvrir le périph %s: %s\n", device, errbuf);
+		return EXIT_FAILURE;
 	}
 
-	/* Compile and apply the filter */
+	/* Compile et applique le filtre */
 	// if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
-	// 	fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(handle));
+	// 	fprintf(stderr, "Impossible de passer le filtre %s: %s\n", filter_exp, pcap_geterr(handle));
 	// 	return(2);
 	// }
 	// if (pcap_setfilter(handle, &fp) == -1) {
-	// 	fprintf(stderr, "Couldn't install filter %s: %s\n", filter_exp, pcap_geterr(handle));
+	// 	fprintf(stderr, "Impossible d'installer le filtre %s: %s\n", filter_exp, pcap_geterr(handle));
 	// 	return(2);
 	// }
 
-	/* Grab some packets */
-	if (pcap_loop(handle, 2, my_callback, NULL) < 0){
-		fprintf(stderr, "Error reading packet %s\n", dev);
-		return(2);
+	/* Récupère des paquets */
+	if (pcap_loop(handle, 2, callback, NULL) < 0){ // Passer à -1 pour du continu
+		fprintf(stderr, "|Erreur| Erreur lors de la lecture du paquet %s\n", device);
+		return EXIT_FAILURE;
 	}
 
-	/* And close the session */
+	/* Ferme la session */
+	fprintf(stderr, "\033[00m");
 	pcap_close(handle);
-	return(0);
+	return(EXIT_SUCCESS);
 }

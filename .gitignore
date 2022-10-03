@@ -1,4 +1,5 @@
-analyseur
+.vscode
+.Documentation
 *.pdf
 *.o
-.vscode
+main

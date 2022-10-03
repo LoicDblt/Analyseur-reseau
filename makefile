@@ -1,12 +1,16 @@
 CC=gcc
-CFLAGS=-Wall -Wextra
-EXEC=main
 
-all: main
+all: main.o utile.o ethernet.o
+	$(CC) main.o utile.o ethernet.o -o main -Wall -Wextra -Werror -lpcap
 
-main: analyseur.c
-	$(CC) -c analyseur.c
-	$(CC) analyseur.o -o analyseur -lpcap
+main: main.c ethernet.h utile.h
+	$(CC) -c main.c -o main.o
+
+utile: utile.c utile.h
+	$(CC) -c utile.c -o utile.o
+
+ethernet: ethernet.c ethernet.h utile.h
+	$(CC) -c ethernet.c -o ethernet.o
 
 clean:
-	rm analyseur
+	rm *.o

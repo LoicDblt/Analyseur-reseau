@@ -5,93 +5,12 @@
 #include <unistd.h>
 
 #include <pcap.h>
-#include <net/ethernet.h>
-#include <netinet/ip.h>
-
-// Couleurs pour l'affichage
-#define ROUGE	"\033[31m"
-#define VERT	"\033[32m"
-#define ORANGE	"\033[33m"
-#define BLEU	"\033[34m"
-#define MAGENTA "\033[35m"
-#define CYAN	"\033[36m"
-#define JAUNE	"\033[00m"
-#define FIN		"\033[00m"
-
-// Fonctions d'affichage des titres
-void titreViolet(char* message){
-	printf("%s*** %s ***%s\n", MAGENTA, message, FIN);
-}
-void titreCian(char* message, int compteur){
-	if (compteur == -1)
-		printf("\t%s#### %s ####%s\n", CYAN, message, FIN);
-	else
-		printf("\t%s#### %d%s ####%s\n", CYAN, compteur, message, FIN);
-}
-
-// Fonction d'affichage des adresses MAC
-// int flagIO : 0 = src / 1 = dest
-void affichageMac(const struct ether_header *ethernet, int FlagIO){
-	int i;
-	unsigned addr;
-	printf(ORANGE);
-	if (FlagIO == 0)
-		printf("MAC src : ");
-	else if (FlagIO == 1)
-		printf("MAC dest : ");
-	else{
-		printf(FIN);
-		fprintf(stderr, "|Erreur| Mauvaise valeur du flag IO\n");
-		exit(-1);
-	}
-	for (i = 0; i < 6; i++){
-		if (FlagIO == 0)
-			addr = (unsigned) ethernet->ether_shost[i];
-		else if (FlagIO == 1)
-			addr = (unsigned) ethernet->ether_dhost[i];
-		
-		printf("%.2x", addr);
-		if (i < 5)
-			printf(":");
-	}
-	printf("%s\n", FIN);
-}
-
-void callback(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char* paquet){
-	// Titre du paquet
-	static int compteurPaquets = 1;
-	if (compteurPaquets == 1)
-		titreCian("ère trame", compteurPaquets);
-	else
-		titreCian("ème trame", compteurPaquets);
-
-	// Structures pour le paquet
-	const struct ether_header *ethernet;
-	const struct ip *ip;
-	int size_ethernet = sizeof(struct ether_header);
-	ethernet = (struct ether_header*)(paquet);
-	ip = (struct ip*)(paquet + size_ethernet);
-
-	// Affichage des adresses MAC
-	titreViolet("Informations MAC");
-	affichageMac(ethernet, 0); // src
-	affichageMac(ethernet, 1); // dest
-	printf(ORANGE);
-	printf("EtherType : %.2x", ntohs(ethernet->ether_type)); // EtherType
-	printf("%s\n\n", FIN);
-
-	// Affichage des adresses IP
-	titreViolet("Informations IP");
-	printf(ORANGE);
-	printf("IP src : %s\n", inet_ntoa(ip->ip_src)); // src
-	printf("IP dest : %s\n", inet_ntoa(ip->ip_dst)); // dest
-	printf("%s\n", FIN);
-	compteurPaquets++;
-}
+#include "utile.h"
+#include "ethernet.h"
 
 int main(int argc, char *argv[]){
 	pcap_t* handle;					/* Session handle */
-	char* device = "";					/* The device to sniff on */
+	char* device = "";				/* The device to sniff on */
 	char errbuf[PCAP_ERRBUF_SIZE];	/* Error string */
 	struct bpf_program fp;			/* The compiled filter */
 	char filter_exp[] = "port 80";	/* The filter expression */
@@ -111,7 +30,7 @@ int main(int argc, char *argv[]){
 		printf(VERT);
 
 		switch(opt){
-			case 'i':
+			case 'i': // Interface
 				iFlag = 1;
 				if (optarg[0] == '-'){
 					fprintf(stderr, "%s|Erreur| Veuillez préciser l'interface (-i)%s\n", ROUGE, FIN);
@@ -121,7 +40,7 @@ int main(int argc, char *argv[]){
 				printf("[-i] Interface %s\n", optarg);
 				break;
 
-			case 'o':
+			case 'o': // Fichier offline
 				oFlag = 1;
 				printf("[-o] Fichier offline %s\n", optarg);
 				nomFichier = optarg;
@@ -131,12 +50,12 @@ int main(int argc, char *argv[]){
 				}
 				break;
 
-			case 'f':
+			case 'f': // Filtrage
 				fFlag = 1;
 				printf("[-f] Filtrage %s\n", optarg);
 				break;
 
-			case 'v':
+			case 'v': // Verbosité
 				vFlag = 1;
 				niveau = atoi(optarg);
 				char* verbosite;
@@ -167,9 +86,9 @@ int main(int argc, char *argv[]){
 			default:
 				return EXIT_FAILURE;
 		}
-		printf("\033[00m");
+		printf(FIN);
 	}
-	fprintf(stderr, "\033[31m\n");
+	fprintf(stderr, "%s\n", ROUGE);
 
 	/* Défini l'interface si elle ne l'a pas été avec un commutateur */
 	if (device == NULL || device[0] == '\0')
@@ -210,7 +129,7 @@ int main(int argc, char *argv[]){
 	}
 
 	/* Ferme la session */
-	fprintf(stderr, "\033[00m");
+	fprintf(stderr, FIN);
 	pcap_close(handle);
 	return(EXIT_SUCCESS);
 }

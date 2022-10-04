@@ -1,10 +1,8 @@
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations" // Masque le warning sur macOS (pcap_lookupdev deprecated)
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations" // Masque le warning "pcap_lookupdev deprecated"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
-
 #include <pcap.h>
+
 #include "utile.h"
 #include "ethernet.h"
 
@@ -13,7 +11,7 @@ int main(int argc, char *argv[]){
 	char* device = "";				/* The device to sniff on */
 	char errbuf[PCAP_ERRBUF_SIZE];	/* Error string */
 	struct bpf_program fp;			/* The compiled filter */
-	char filter_exp[] = "port 80";	/* The filter expression */
+	char filter_exp[] = "port 443";	/* The filter expression */
 	bpf_u_int32 mask;				/* Our netmask */
 	bpf_u_int32 net;				/* Our IP */
 	struct pcap_pkthdr header;		/* The header that pcap gives us */
@@ -24,7 +22,7 @@ int main(int argc, char *argv[]){
 	int opt, niveau;
 	char* nomFichier;
 
-	while ((opt = getopt (argc, argv, "i:o:f:v:")) != -1){
+	while((opt = getopt (argc, argv, "i:o:f:v:")) != -1){
 		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0)
 			titreCian("Options activées", -1);
 		printf(VERT);
@@ -65,7 +63,7 @@ int main(int argc, char *argv[]){
 						break;
 
 					case 2:
-						verbosite = "très concis";
+						verbosite = "synthétique";
 						break;
 
 					case 3:
@@ -80,7 +78,7 @@ int main(int argc, char *argv[]){
 				break;
 
 			case '?':
-				fprintf(stderr, "%s|Erreur| Option \"-%c\" inconnue !%s\n", ROUGE, optopt, FIN);
+				fprintf(stderr, "%s|Erreur| Option \"-%c\" inconnue%s\n", ROUGE, optopt, FIN);
 				return EXIT_FAILURE;
 
 			default:
@@ -113,17 +111,17 @@ int main(int argc, char *argv[]){
 	}
 
 	/* Compile et applique le filtre */
-	// if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
-	// 	fprintf(stderr, "Impossible de passer le filtre %s: %s\n", filter_exp, pcap_geterr(handle));
-	// 	return(2);
-	// }
-	// if (pcap_setfilter(handle, &fp) == -1) {
-	// 	fprintf(stderr, "Impossible d'installer le filtre %s: %s\n", filter_exp, pcap_geterr(handle));
-	// 	return(2);
-	// }
+	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
+		fprintf(stderr, "Impossible de passer le filtre %s: %s\n", filter_exp, pcap_geterr(handle));
+		return(2);
+	}
+	if (pcap_setfilter(handle, &fp) == -1) {
+		fprintf(stderr, "Impossible d'installer le filtre %s: %s\n", filter_exp, pcap_geterr(handle));
+		return(2);
+	}
 
 	/* Récupère des paquets */
-	if (pcap_loop(handle, 3, callback, NULL) < 0){ // Passer l'argument à -1 pour du continu
+	if (pcap_loop(handle, 3, gestionEthernet, NULL) < 0){ // Passer l'argument à -1 pour du continu
 		fprintf(stderr, "|Erreur| Erreur lors de la lecture du paquet %s\n", device);
 		return EXIT_FAILURE;
 	}

@@ -1,7 +1,5 @@
 #include "ethernet.h"
 
-// Fonction d'affichage des adresses MAC
-// int flagIO : 0 = src / 1 = dest
 void affichageMac(const struct ether_header *ethernet, int FlagIO){
 	int i;
 	unsigned addr;
@@ -29,8 +27,8 @@ void affichageMac(const struct ether_header *ethernet, int FlagIO){
 	printf("\n");
 }
 
-void callback(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char* paquet){
-	// Titre du paquet
+void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char* paquet){
+	// Titre de second niveau, du paquet
 	static int compteurPaquets = 1;
 	if (compteurPaquets == 1)
 		titreCian("ère trame", compteurPaquets);
@@ -39,52 +37,57 @@ void callback(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char* paqu
 	compteurPaquets++;
 
 	// Structures pour le paquet
-	const struct ether_header *ethernet;
-	const struct ip *ip;
-	int size_ethernet = sizeof(struct ether_header);
+	const struct ether_header* ethernet;
 	ethernet = (struct ether_header*)(paquet);
-	ip = (struct ip*)(paquet + size_ethernet);
 
 	// Affichage des adresses MAC
 	titreViolet("Informations MAC");
 	printf(ORANGE);
-	affichageMac(ethernet, 0); // src
-	affichageMac(ethernet, 1); // dest
+	affichageMac(ethernet, 0); // Adresse src
+	affichageMac(ethernet, 1); // Adresse dest
 	printf("EtherType : "); // EtherType
-	switch (ntohs(ethernet->ether_type)){
-		case ETHERTYPE_PUP: /* PUP protocol */
+	switch(ntohs(ethernet->ether_type)){
+		/* PUP protocol */
+		case ETHERTYPE_PUP:
 			printf("PUP");
 			break;
-		case ETHERTYPE_IP: /* IP protocol */
+
+			/* IP protocol */
+		case ETHERTYPE_IP:
 			printf("IP");
+			int size_ethernet = sizeof(struct ether_header);
+			affichageIP(paquet, size_ethernet);
 			break;
-		case ETHERTYPE_ARP: /* Addr. resolution protocol (ARP) */
+
+		/* Addr. resolution protocol (ARP) */
+		case ETHERTYPE_ARP:
 			printf("ARP");
 			break;
-		case ETHERTYPE_REVARP: /* Reverse ARP */
+
+		/* Reverse ARP */
+		case ETHERTYPE_REVARP:
 			printf("RevARP");
 			break;
-		case ETHERTYPE_VLAN: /* IEEE 802.1Q VLAN tagging */
+
+		/* IEEE 802.1Q VLAN tagging */
+		case ETHERTYPE_VLAN:
 			printf("VLAN");
 			break;
-		case ETHERTYPE_IPV6: /* IPv6 */
+
+		/* IPv6 */
+		case ETHERTYPE_IPV6:
 			printf("IPv6");
 			break;
-		case ETHERTYPE_LOOPBACK: /* Used to test interfaces */
+
+		/* Used to test interfaces */
+		case ETHERTYPE_LOOPBACK:
 			printf("Loopback");
 			break;
+
+		/* Protocole non pris en charge */
 		default:
-			printf("Protocole inconnu (0x%d)", ethernet->ether_type);
+			printf("Protocole non pris en charge (0x%d)", ethernet->ether_type);
 			break;
-        }
+	}
 	printf("%s\n\n", FIN);
-
-
-
-	// Affichage des adresses IP (à mettre dans ip.c)
-	titreViolet("Informations IP");
-	printf(ORANGE);
-	printf("IP src : %s\n", inet_ntoa(ip->ip_src)); // src
-	printf("IP dest : %s\n", inet_ntoa(ip->ip_dst)); // dest
-	printf("%s\n", FIN);
 }

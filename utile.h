@@ -12,5 +12,8 @@
 #define JAUNE	"\033[00m"
 #define FIN		"\033[00m"
 
-void titreViolet(char* message);
+// Titre de premier niveau
 void titreCian(char* message, int compteur);
+
+// Titre de second niveau
+void titreViolet(char* message);

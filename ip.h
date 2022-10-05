@@ -5,4 +5,4 @@
 #include "utile.h"
 
 // Fonction d'affichage des adresses IP
-void affichageIP(const u_char* paquet, int size_ethernet);
+void gestionIP(const u_char* paquet, int size_ethernet);

@@ -41,7 +41,7 @@ void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr, const u_cha
 	ethernet = (struct ether_header*)(paquet);
 
 	// Affichage des adresses MAC
-	titreViolet("Informations MAC");
+	titreViolet("Informations Ethernet");
 	printf(ORANGE);
 	affichageMac(ethernet, 0); // Adresse src
 	affichageMac(ethernet, 1); // Adresse dest
@@ -56,7 +56,7 @@ void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr, const u_cha
 		case ETHERTYPE_IP:
 			printf("IP");
 			int size_ethernet = sizeof(struct ether_header);
-			affichageIP(paquet, size_ethernet);
+			gestionIP(paquet, size_ethernet);
 			break;
 
 		/* Addr. resolution protocol (ARP) */
@@ -86,7 +86,7 @@ void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr, const u_cha
 
 		/* Protocole non pris en charge */
 		default:
-			printf("Protocole non pris en charge (0x%d)", ethernet->ether_type);
+			printf("Protocole non pris en charge (%d)", ethernet->ether_type);
 			break;
 	}
 	printf("%s\n\n", FIN);

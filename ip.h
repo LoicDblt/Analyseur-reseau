@@ -1,4 +1,3 @@
-#include <string.h>
 #include <netinet/ip.h>
 #include <pcap.h>
 

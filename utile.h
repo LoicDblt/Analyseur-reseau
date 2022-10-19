@@ -5,12 +5,11 @@
 // Couleurs pour l'affichage
 #define ROUGE	"\033[31m"
 #define VERT	"\033[32m"
-#define ORANGE	"\033[33m"
+#define JAUNE	"\033[33m"
 #define BLEU	"\033[34m"
 #define MAGENTA "\033[35m"
 #define CYAN	"\033[36m"
-#define JAUNE	"\033[00m"
-#define FIN		"\033[00m"
+#define RESET	"\033[00m"
 
 // Titre de premier niveau
 void titreCian(char* message, int compteur);

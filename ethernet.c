@@ -9,7 +9,7 @@ void affichageMac(const struct ether_header *ethernet, int FlagIO){
 	else if (FlagIO == 1)
 		printf("MAC dest : ");
 	else{
-		printf(FIN);
+		printf(RESET);
 		fprintf(stderr, "|Erreur| Mauvaise valeur du flag IO\n");
 		exit(-1);
 	}
@@ -30,6 +30,8 @@ void affichageMac(const struct ether_header *ethernet, int FlagIO){
 void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr, const u_char* paquet){
 	// Titre de second niveau, du paquet
 	static int compteurPaquets = 1;
+
+	printf("\n");
 	if (compteurPaquets == 1)
 		titreCian("ère trame", compteurPaquets);
 	else
@@ -42,7 +44,7 @@ void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr, const u_cha
 
 	// Affichage des adresses MAC
 	titreViolet("Informations Ethernet");
-	printf(ORANGE);
+	printf(JAUNE);
 	affichageMac(ethernet, 0); // Adresse src
 	affichageMac(ethernet, 1); // Adresse dest
 	printf("EtherType : "); // EtherType
@@ -52,11 +54,10 @@ void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr, const u_cha
 			printf("PUP");
 			break;
 
-			/* IP protocol */
+		/* IP protocol */
 		case ETHERTYPE_IP:
 			printf("IP");
-			int size_ethernet = sizeof(struct ether_header);
-			gestionIP(paquet, size_ethernet);
+			gestionIP(paquet, sizeof(struct ether_header));
 			break;
 
 		/* Addr. resolution protocol (ARP) */
@@ -89,5 +90,5 @@ void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr, const u_cha
 			printf("Protocole non pris en charge (%d)", ethernet->ether_type);
 			break;
 	}
-	printf("%s\n\n", FIN);
+	printf("%s\n\n", RESET);
 }

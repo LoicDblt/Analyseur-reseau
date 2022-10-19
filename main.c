@@ -11,7 +11,7 @@ int main(int argc, char *argv[]){
 	char* device = "";				/* The device to sniff on */
 	char errbuf[PCAP_ERRBUF_SIZE];	/* Error string */
 	struct bpf_program fp;			/* The compiled filter */
-	char filter_exp[] = "port 443";	/* The filter expression */
+	char* filter_exp = "";	/* The filter expression */
 	bpf_u_int32 mask;				/* Our netmask */
 	bpf_u_int32 net;				/* Our IP */
 	struct pcap_pkthdr header;		/* The header that pcap gives us */
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
 			case 'i': // Interface
 				iFlag = 1;
 				if (optarg[0] == '-'){
-					fprintf(stderr, "%s|Erreur| Veuillez préciser l'interface (-i)%s\n", ROUGE, FIN);
+					fprintf(stderr, "%s|Erreur| Veuillez préciser l'interface (-i)%s\n", ROUGE, RESET);
 					return EXIT_FAILURE;
 				}
 				device = optarg;
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
 				printf("[-o] Fichier offline %s\n", optarg);
 				nomFichier = optarg;
 				if (access(nomFichier, F_OK) < 0){
-					fprintf(stderr, "%s|Erreur| Fichier introuvable%s\n", ROUGE, FIN);
+					fprintf(stderr, "%s|Erreur| Fichier introuvable%s\n", ROUGE, RESET);
 					return EXIT_FAILURE;
 				}
 				break;
@@ -51,6 +51,7 @@ int main(int argc, char *argv[]){
 			case 'f': // Filtrage
 				fFlag = 1;
 				printf("[-f] Filtrage %s\n", optarg);
+				filter_exp = optarg;
 				break;
 
 			case 'v': // Verbosité
@@ -71,20 +72,20 @@ int main(int argc, char *argv[]){
 						break;
 
 					default:
-						fprintf(stderr, "%s|Erreur| Niveau de verbosité inconnu (1 [très concis] à 3 [complet])%s\n", ROUGE, FIN);
+						fprintf(stderr, "%s|Erreur| Niveau de verbosité inconnu (1 [très concis] à 3 [complet])%s\n", ROUGE, RESET);
 						return EXIT_FAILURE;
 				}
 				printf("[-v] Niveau de verbosité %s [%s]\n", optarg, verbosite);
 				break;
 
 			case '?':
-				fprintf(stderr, "%s|Erreur| Option \"-%c\" inconnue%s\n", ROUGE, optopt, FIN);
+				fprintf(stderr, "%s|Erreur| Option \"-%c\" inconnue%s\n", ROUGE, optopt, RESET);
 				return EXIT_FAILURE;
 
 			default:
 				return EXIT_FAILURE;
 		}
-		printf(FIN);
+		printf(RESET);
 	}
 	fprintf(stderr, "%s\n", ROUGE);
 
@@ -127,7 +128,7 @@ int main(int argc, char *argv[]){
 	}
 
 	/* Ferme la session */
-	fprintf(stderr, FIN);
+	fprintf(stderr, RESET);
 	pcap_close(handle);
 	return(EXIT_SUCCESS);
 }

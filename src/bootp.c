@@ -1,4 +1,4 @@
-#include "bootpHeader.h"
+#include "../inc/bootpHeader.h"
 
 void gestionBootp(const u_char* paquet, int size_udp){
 	const struct bootp* bootp;
@@ -23,7 +23,7 @@ void gestionBootp(const u_char* paquet, int size_udp){
 	printf("Id transaction : %u\n", bootp->bp_xid);
 	printf("Nbr de secondes : %hu\n", bootp->bp_secs);
 	printf("IP client : %s\n", inet_ntoa(bootp->bp_ciaddr));
-	printf("\"votre\" IP : %s\n", inet_ntoa(bootp->bp_yiaddr));
+	printf("\"Votre\" IP : %s\n", inet_ntoa(bootp->bp_yiaddr));
 	printf("IP serveur : %s\n", inet_ntoa(bootp->bp_siaddr));
 	printf("IP gateway : %s\n", inet_ntoa(bootp->bp_giaddr));
 	printf("Addr matériel client : %s\n", bootp->bp_chaddr);

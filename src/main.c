@@ -3,8 +3,8 @@
 #include <unistd.h>
 #include <pcap.h>
 
-#include "utile.h"
-#include "ethernet.h"
+#include "../inc/utile.h"
+#include "../inc/ethernet.h"
 
 int main(int argc, char *argv[]){
 	pcap_t* handle;					/* Session handle */

@@ -1,5 +1,5 @@
-#include "ip.h"
-#include "udp.h"
+#include "../inc/ip.h"
+#include "../inc/udp.h"
 
 void gestionIP(const u_char* paquet, int size_ethernet){
 	const struct ip* ip;

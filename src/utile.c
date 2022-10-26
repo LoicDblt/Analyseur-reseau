@@ -1,4 +1,4 @@
-#include "utile.h"
+#include "../inc/utile.h"
 
 void titreCian(char* message, int compteur){
 	if (compteur == -1)

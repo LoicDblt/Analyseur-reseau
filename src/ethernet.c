@@ -1,4 +1,4 @@
-#include "ethernet.h"
+#include "../inc/ethernet.h"
 
 void affichageMac(const struct ether_header *ethernet, int FlagIO){
 	int i;
@@ -11,7 +11,7 @@ void affichageMac(const struct ether_header *ethernet, int FlagIO){
 	else{
 		printf(RESET);
 		fprintf(stderr, "|Erreur| Mauvaise valeur du flag IO\n");
-		exit(-1);
+		exit(EXIT_FAILURE);
 	}
 
 	for (i = 0; i < 6; i++){

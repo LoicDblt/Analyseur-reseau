@@ -1,25 +1,38 @@
 CC=gcc
+CFLAGS = -Wall -Werror -Wextra -lpcap
 
-all: main.o utile.o ethernet.o ip.o udp.o bootp.o
-	$(CC) main.o utile.o ethernet.o ip.o udp.o bootp.o -o main -Wall -Wextra -Werror -lpcap
+bin = bin/
+inc = inc/
+obj = obj/
+src = src/
 
-main: main.c ethernet.h utile.h
-	$(CC) -c main.c -o main.o
+all: message main utile ethernet ip udp bootp
+	$(CC) $(obj)main.o $(obj)utile.o $(obj)ethernet.o $(obj)ip.o $(obj)udp.o \
+		$(obj)bootp.o -o $(bin)main $(CFLAGS)
 
-utile: utile.c utile.h
-	$(CC) -c utile.c -o utile.o
+message:
+	$(info )
+	$(info *** Pour lancer le programme : sudo bin/main <flags> ***)
+	$(info )
 
-ethernet: ethernet.c ethernet.h utile.h
-	$(CC) -c ethernet.c -o ethernet.o
+main:
+	$(CC) -c $(src)main.c -o $(obj)main.o
 
-ip: ip.c ip.h utile.h
-	$(CC) -c ip.c -o ip.o
+utile:
+	$(CC) -c $(src)utile.c -o $(obj)utile.o
 
-udp: udp.c udp.h utile.h
-	$(CC) -c udp.c -o udp.o
+ethernet:
+	$(CC) -c $(src)ethernet.c -o $(obj)ethernet.o
 
-bootp: bootp.c bootp.h utile.h
-	$(CC) -c bootp.c -o bootp.o
+ip:
+	$(CC) -c $(src)ip.c -o $(obj)ip.o
+
+udp:
+	$(CC) -c $(src)udp.c -o $(obj)udp.o
+
+bootp:
+	$(CC) -c $(src)bootp.c -o $(obj)bootp.o
 
 clean:
-	rm *.o main
+	rm $(obj)*.o
+	rm $(bin)main

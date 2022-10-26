@@ -1,6 +1,5 @@
 .DS_Store
-.Documentation
 .vscode
-*.pdf
-*.o
-main
+Documentation
+bin
+obj

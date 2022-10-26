@@ -8,15 +8,13 @@ void gestionBootp(const u_char* paquet, int size_udp){
 	titreViolet("Informations Bootp");
 	printf(JAUNE);
 	printf("Code op : ");
-	if (bootp->bp_op == BOOTREQUEST){
+	if (bootp->bp_op == BOOTREQUEST)
 		printf("REQUEST\n");
-	}
-	else if (bootp->bp_op == BOOTREPLY){
+	else if (bootp->bp_op == BOOTREPLY)
 		printf("REPLY\n");
-	}
-	else{
+	else
 		printf("Inconnu\n");
-	}
+
 	printf("Type addr matériel : %d\n", bootp->bp_htype);
 	printf("Longueur addr : %d\n", bootp->bp_hlen);
 	printf("Cmpt sauts : %d\n", bootp->bp_hops);

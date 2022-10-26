@@ -1,4 +1,5 @@
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations" // Masque le warning "pcap_lookupdev deprecated"
+// Masque le warning "pcap_lookupdev deprecated"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #include <unistd.h>
 #include <pcap.h>
@@ -6,16 +7,18 @@
 #include "../inc/utile.h"
 #include "../inc/ethernet.h"
 
+#define NBRPAQUETS 3 // Passer à -1 pour un nombre infini
+
 int main(int argc, char *argv[]){
-	pcap_t* handle;					/* Session handle */
-	char* device = "";				/* The device to sniff on */
-	char errbuf[PCAP_ERRBUF_SIZE];	/* Error string */
-	struct bpf_program fp;			/* The compiled filter */
-	char* filter_exp = "";	/* The filter expression */
-	bpf_u_int32 mask;				/* Our netmask */
-	bpf_u_int32 net;				/* Our IP */
-	struct pcap_pkthdr header;		/* The header that pcap gives us */
-	const u_char* paquet;			/* The actual packet */
+	pcap_t* handle;					// Session handle
+	char* device = "";				// The device to sniff on
+	char errbuf[PCAP_ERRBUF_SIZE];	// Error string
+	struct bpf_program fp;			// The compiled filter
+	char* filter_exp = "";			// The filter expression
+	bpf_u_int32 mask;				// Our netmask
+	bpf_u_int32 net;				// Our IP
+	struct pcap_pkthdr header;		// The header that pcap gives us
+	const u_char* paquet;			// The actual packet
 
 	// Gestion des commutateurs
 	int iFlag = 0, oFlag = 0, fFlag = 0, vFlag = 0;
@@ -31,7 +34,8 @@ int main(int argc, char *argv[]){
 			case 'i': // Interface
 				iFlag = 1;
 				if (optarg[0] == '-'){
-					fprintf(stderr, "%s|Erreur| Veuillez préciser l'interface (-i)%s\n", ROUGE, RESET);
+					fprintf(stderr, "%s|Erreur| Veuillez préciser l'interface "
+						"(-i)%s\n", ROUGE, RESET);
 					return EXIT_FAILURE;
 				}
 				device = optarg;
@@ -43,7 +47,8 @@ int main(int argc, char *argv[]){
 				printf("[-o] Fichier offline %s\n", optarg);
 				nomFichier = optarg;
 				if (access(nomFichier, F_OK) < 0){
-					fprintf(stderr, "%s|Erreur| Fichier introuvable%s\n", ROUGE, RESET);
+					fprintf(stderr, "%s|Erreur| Fichier introuvable%s\n",
+						ROUGE, RESET);
 					return EXIT_FAILURE;
 				}
 				break;
@@ -72,14 +77,17 @@ int main(int argc, char *argv[]){
 						break;
 
 					default:
-						fprintf(stderr, "%s|Erreur| Niveau de verbosité inconnu (1 [très concis] à 3 [complet])%s\n", ROUGE, RESET);
+						fprintf(stderr, "%s|Erreur| Niveau de verbosité "
+							"inconnu (1 [très concis] à 3 [complet])%s\n",
+							ROUGE, RESET);
 						return EXIT_FAILURE;
 				}
 				printf("[-v] Niveau de verbosité %s [%s]\n", optarg, verbosite);
 				break;
 
 			case '?':
-				fprintf(stderr, "%s|Erreur| Option \"-%c\" inconnue%s\n", ROUGE, optopt, RESET);
+				fprintf(stderr, "%s|Erreur| Option \"-%c\" inconnue%s\n",
+					ROUGE, optopt, RESET);
 				return EXIT_FAILURE;
 
 			default:
@@ -89,45 +97,51 @@ int main(int argc, char *argv[]){
 	}
 	fprintf(stderr, "%s\n", ROUGE);
 
-	/* Défini l'interface si elle ne l'a pas été avec un commutateur */
+	// Défini l'interface si elle ne l'a pas été avec un flag
 	if (device == NULL || device[0] == '\0')
 		device = pcap_lookupdev(errbuf);
 	if (device == NULL){
-		fprintf(stderr, "|Erreur| Impossible de trouver le périphérique : %s\n", errbuf);
+		fprintf(stderr, "|Erreur| Impossible de trouver le périphérique : %s\n",
+			errbuf);
 		return EXIT_FAILURE;
 	}
 
-	/* Cherche les propriétés de l'interface */
+	// Cherche les propriétés de l'interface
 	if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
-		fprintf(stderr, "|Erreur| Impossible de récuprer le netmask pour l'interface %s: %s\n", device, errbuf);
+		fprintf(stderr, "|Erreur| Impossible de récuprer le netmask pour "
+			"l'interface %s: %s\n", device, errbuf);
 		net = 0;
 		mask = 0;
 	}
 
-	/* Ouvre la session en mode "promiscuous" */
+	// Ouvre la session en mode "promiscuous"
 	handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
 	if (handle == NULL){
-		fprintf(stderr, "|Erreur| Impossible d'ouvrir l'interface %s: %s\n", device, errbuf);
+		fprintf(stderr, "|Erreur| Impossible d'ouvrir l'interface %s: %s\n",
+			device, errbuf);
 		return EXIT_FAILURE;
 	}
 
-	/* Compile et applique le filtre */
-	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
-		fprintf(stderr, "Impossible de passer le filtre %s: %s\n", filter_exp, pcap_geterr(handle));
+	// Compile et applique le filtre
+	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1){
+		fprintf(stderr, "Impossible de passer le filtre %s: %s\n",
+			filter_exp, pcap_geterr(handle));
 		return(2);
 	}
-	if (pcap_setfilter(handle, &fp) == -1) {
-		fprintf(stderr, "Impossible d'installer le filtre %s: %s\n", filter_exp, pcap_geterr(handle));
+	if (pcap_setfilter(handle, &fp) == -1){
+		fprintf(stderr, "Impossible d'installer le filtre %s: %s\n",
+			filter_exp, pcap_geterr(handle));
 		return(2);
 	}
 
-	/* Récupère des paquets */
-	if (pcap_loop(handle, 3, gestionEthernet, NULL) < 0){ // Passer l'argument à -1 pour du continu
-		fprintf(stderr, "|Erreur| Erreur lors de la lecture du paquet %s\n", device);
+	// Récupère des paquets
+	if (pcap_loop(handle, NBRPAQUETS, gestionEthernet, NULL) < 0){
+		fprintf(stderr, "|Erreur| Erreur lors de la lecture du paquet %s\n",
+			device);
 		return EXIT_FAILURE;
 	}
 
-	/* Ferme la session */
+	// Ferme la session
 	fprintf(stderr, RESET);
 	pcap_close(handle);
 	return(EXIT_SUCCESS);

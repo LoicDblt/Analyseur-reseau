@@ -28,7 +28,7 @@ void affichageMac(const struct ether_header *ethernet, int FlagIO){
 }
 
 void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr,
-	const u_char* paquet){
+const u_char* paquet){
 	// Titre de second niveau, du paquet
 	static int compteurPaquets = 1;
 
@@ -43,7 +43,7 @@ void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr,
 	ethernet = (struct ether_header*)(paquet);
 
 	// Affichage des adresses MAC
-	titreViolet("Informations Ethernet");
+	titreViolet("Ethernet");
 	printf(JAUNE);
 	affichageMac(ethernet, 0); // Adresse src
 	affichageMac(ethernet, 1); // Adresse dest

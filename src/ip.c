@@ -1,11 +1,11 @@
 #include "../inc/ip.h"
 #include "../inc/udp.h"
+#include "../inc/tcp.h"
 
 void gestionIP(const u_char* paquet, int size_ethernet){
-	const struct ip* ip;
-	ip = (struct ip*)(paquet + size_ethernet);
+	const struct ip* ip = (struct ip*)(paquet + size_ethernet);
 
-	titreViolet("Informations IP");
+	titreViolet("IP");
 	printf(JAUNE);
 	printf("IP src : %s\n", inet_ntoa(ip->ip_src)); // src
 	printf("IP dest : %s\n", inet_ntoa(ip->ip_dst)); // dest
@@ -21,6 +21,7 @@ void gestionIP(const u_char* paquet, int size_ethernet){
 		/* TCP */
 		case 6:
 			printf("TCP");
+			gestionTCP(paquet, size_ethernet + sizeof(struct ip));
 			break;
 
 		/* UDP */

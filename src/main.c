@@ -126,12 +126,12 @@ int main(int argc, char *argv[]){
 	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1){
 		fprintf(stderr, "Impossible de passer le filtre %s: %s\n",
 			filter_exp, pcap_geterr(handle));
-		return(2);
+		return EXIT_FAILURE;
 	}
 	if (pcap_setfilter(handle, &fp) == -1){
 		fprintf(stderr, "Impossible d'installer le filtre %s: %s\n",
 			filter_exp, pcap_geterr(handle));
-		return(2);
+		return EXIT_FAILURE;
 	}
 
 	// Récupère des paquets
@@ -144,5 +144,5 @@ int main(int argc, char *argv[]){
 	// Ferme la session
 	fprintf(stderr, RESET);
 	pcap_close(handle);
-	return(EXIT_SUCCESS);
+	return EXIT_SUCCESS;
 }

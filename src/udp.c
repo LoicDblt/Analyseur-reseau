@@ -1,14 +1,13 @@
 #include "../inc/udp.h"
 
 void gestionUDP(const u_char* paquet, int size_ip){
-	const struct udphdr* udp;
-	udp = (struct udphdr*)(paquet + size_ip);
+	const struct udphdr* udp = (struct udphdr*)(paquet + size_ip);
 
 	ushort portSrc = ntohs(udp->uh_sport);
 	ushort portDst = ntohs(udp->uh_dport);
 
 	printf("\n\n");
-	titreViolet("Informations UDP");
+	titreViolet("UDP");
 	printf(JAUNE);
 	printf("Port src : %hu\n", portSrc); // src
 	printf("Port dest : %hu\n", portDst); // dest

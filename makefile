@@ -2,13 +2,12 @@ CC=gcc
 CFLAGS = -Wall -Werror -Wextra -lpcap
 
 bin = bin/
-inc = inc/
 obj = obj/
 src = src/
 
-all: message main utile ethernet ip udp bootp
+all: message main utile ethernet ip udp tcp bootp
 	$(CC) $(obj)main.o $(obj)utile.o $(obj)ethernet.o $(obj)ip.o $(obj)udp.o \
-		$(obj)bootp.o -o $(bin)main $(CFLAGS)
+		$(obj)tcp.o $(obj)bootp.o -o $(bin)main $(CFLAGS)
 
 message:
 	$(info )
@@ -29,6 +28,9 @@ ip:
 
 udp:
 	$(CC) -c $(src)udp.c -o $(obj)udp.o
+
+tcp:
+	$(CC) -c $(src)tcp.c -o $(obj)tcp.o
 
 bootp:
 	$(CC) -c $(src)bootp.c -o $(obj)bootp.o

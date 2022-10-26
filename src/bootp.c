@@ -1,11 +1,10 @@
 #include "../inc/bootpHeader.h"
 
 void gestionBootp(const u_char* paquet, int size_udp){
-	const struct bootp* bootp;
-	bootp = (struct bootp*)(paquet + size_udp);
+	const struct bootp* bootp = (struct bootp*)(paquet + size_udp);
 
 	printf("\n\n");
-	titreViolet("Informations Bootp");
+	titreViolet("Bootp");
 	printf(JAUNE);
 	printf("Code op : ");
 	if (bootp->bp_op == BOOTREQUEST)
@@ -17,7 +16,7 @@ void gestionBootp(const u_char* paquet, int size_udp){
 
 	printf("Type addr matériel : %d\n", bootp->bp_htype);
 	printf("Longueur addr : %d\n", bootp->bp_hlen);
-	printf("Cmpt sauts : %d\n", bootp->bp_hops);
+	printf("Compteur sauts : %d\n", bootp->bp_hops);
 	printf("Id transaction : %u\n", bootp->bp_xid);
 	printf("Nbr de secondes : %hu\n", bootp->bp_secs);
 	printf("IP client : %s\n", inet_ntoa(bootp->bp_ciaddr));

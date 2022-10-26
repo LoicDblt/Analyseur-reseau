@@ -10,5 +10,5 @@ void titreCian(char* message, int compteur){
 void titreViolet(char* message){
 	if (strstr(message, "IP")) // Corrige l'affichage pour les infos d'IP
 		printf("\n\n");
-	printf("%s*** %s ***%s\n", MAGENTA, message, RESET);
+	printf("%s*** Contenu %s ***%s\n", MAGENTA, message, RESET);
 }

@@ -1,3 +1,6 @@
+#ifndef IP_H 
+#define IP_H
+
 #include <netinet/ip.h>
 #include <pcap.h>
 
@@ -10,3 +13,5 @@
 
 // Fonction de gestion du protocole IP
 void gestionIP(const u_char* paquet, const int size_ethernet);
+
+#endif

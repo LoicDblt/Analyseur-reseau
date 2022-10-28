@@ -27,14 +27,14 @@ int main(int argc, char *argv[]){
 
 	while((opt = getopt (argc, argv, "i:o:f:v:")) != -1){
 		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0)
-			titreCian("Options activées", -1);
+			titreCian("Enabled options", -1);
 		printf(VERT);
 
 		switch(opt){
 			case 'i': // Interface
 				iFlag = 1;
 				if (optarg[0] == '-'){
-					fprintf(stderr, "%s|Erreur| Veuillez préciser l'interface "
+					fprintf(stderr, "%s|Error| Specify the interface "
 						"(-i)%s\n", ROUGE, RESET);
 					return EXIT_FAILURE;
 				}
@@ -44,10 +44,10 @@ int main(int argc, char *argv[]){
 
 			case 'o': // Fichier offline
 				oFlag = 1;
-				printf("[-o] Fichier offline : %s\n", optarg);
+				printf("[-o] Offline file : %s\n", optarg);
 				nomFichier = optarg;
 				if (access(nomFichier, F_OK) < 0){
-					fprintf(stderr, "%s|Erreur| Fichier introuvable%s\n",
+					fprintf(stderr, "%s|Error| File not found%s\n",
 						ROUGE, RESET);
 					return EXIT_FAILURE;
 				}
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]){
 
 			case 'f': // Filtrage
 				fFlag = 1;
-				printf("[-f] Filtrage : %s\n", optarg);
+				printf("[-f] Filter : %s\n", optarg);
 				filter_exp = optarg;
 				break;
 
@@ -66,28 +66,28 @@ int main(int argc, char *argv[]){
 				char* verbosite;
 				switch(niveau){
 					case 1:
-						verbosite = "très concis";
+						verbosite = "very concise";
 						break;
 
 					case 2:
-						verbosite = "synthétique";
+						verbosite = "synthetic";
 						break;
 
 					case 3:
-						verbosite = "complet";
+						verbosite = "complete";
 						break;
 
 					default:
-						fprintf(stderr, "%s|Erreur| Niveau de verbosité "
-							"inconnu (1 [très concis] à 3 [complet])%s\n",
+						fprintf(stderr, "%s|Error| Unknow level of verbosity "
+							"(1 [very concise] to 3 [complete])%s\n",
 							ROUGE, RESET);
 						return EXIT_FAILURE;
 				}
-				printf("[-v] Niveau de verbosité %s [%s]\n", optarg, verbosite);
+				printf("[-v] Level of verbosity %s [%s]\n", optarg, verbosite);
 				break;
 
 			case '?':
-				fprintf(stderr, "%s|Erreur| Option \"-%c\" inconnue%s\n",
+				fprintf(stderr, "%s|Error| Unknow option \"-%c\" %s\n",
 					ROUGE, optopt, RESET);
 				return EXIT_FAILURE;
 
@@ -104,15 +104,15 @@ int main(int argc, char *argv[]){
 		if (device == NULL || device[0] == '\0')
 			device = pcap_lookupdev(errbuf);
 		if (device == NULL){
-			fprintf(stderr, "|Erreur| Impossible de trouver le périphérique : %s\n",
+			fprintf(stderr, "|Error| Couldn't find default device : %s\n",
 				errbuf);
 			return EXIT_FAILURE;
 		}
 
 		// Cherche les propriétés de l'interface
 		if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
-			fprintf(stderr, "|Erreur| Impossible de récuprer le netmask pour "
-				"l'interface %s :\n%s\n", device, errbuf);
+			fprintf(stderr, "|Error| Couldn't get netmask for device %s "
+				":\n%s\n", device, errbuf);
 			net = 0;
 			mask = 0;
 		}
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]){
 		// Ouvre la session en mode "promiscuous"
 		handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
 		if (handle == NULL){
-			fprintf(stderr, "|Erreur| Impossible d'ouvrir l'interface %s :\n%s\n",
+			fprintf(stderr, "|Error| Couldn't open device %s :\n%s\n",
 				device, errbuf);
 			return EXIT_FAILURE;
 		}
@@ -128,19 +128,19 @@ int main(int argc, char *argv[]){
 
 	// Compile et applique le filtre
 	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1){
-		fprintf(stderr, "Impossible de passer le filtre %s :\n%s\n",
+		fprintf(stderr, "|Error| Couldn't parse filter %s :\n%s\n",
 			filter_exp, pcap_geterr(handle));
 		return EXIT_FAILURE;
 	}
 	if (pcap_setfilter(handle, &fp) == -1){
-		fprintf(stderr, "Impossible d'installer le filtre %s :\n%s\n",
+		fprintf(stderr, "|Error| Couldn't install filter %s :\n%s\n",
 			filter_exp, pcap_geterr(handle));
 		return EXIT_FAILURE;
 	}
 
 	// Récupère des paquets
 	if (pcap_loop(handle, NBRPAQUETS, gestionEthernet, NULL) < 0){
-		fprintf(stderr, "|Erreur| Erreur lors de la lecture du paquet %s\n",
+		fprintf(stderr, "|Error| Error while reading the package %s\n",
 			device);
 		return EXIT_FAILURE;
 	}

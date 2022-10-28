@@ -1,11 +1,26 @@
 #include "../inc/bootpHeader.h"
 
+void affichageIP(const u_int8_t* pointeur, const u_int8_t longueur){
+	int nbrPoints = 0;
+	for (int i = 0; i < longueur; i++){
+		printf("%d", pointeur[i]);
 
+		if (nbrPoints/3){
+			nbrPoints = 0;
+			if (i+1 < longueur)
+				printf(" and ");
+		}
+		else{
+			printf(".");
+			nbrPoints++;
+		}
+	}
+}
 
 void affichageString(const u_int8_t* pointeur, const u_int8_t longueur){
 	for (int i = 0; i < longueur; i++){
 		if (putchar(pointeur[i]) == EOF)
-			fprintf(stderr, "AffichageString | putchar");
+			fprintf(stderr, "|Error| AffichageString | putchar");
 	}
 }
 
@@ -18,7 +33,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 
 	titreViolet("BootP");
 	printf(JAUNE);
-	printf("Code opération : ");
+	printf("Operation : ");
 	switch(bootp->bp_op){
 		/* Bootrequest */
 		case BOOTREQUEST:
@@ -34,11 +49,11 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 		default:
 			printf("Inconnu");
 	}
-	printf("\nType addr matériel : 0x%02x\n", bootp->bp_htype);
-	printf("Longueur addr : %d\n", bootp->bp_hlen);
-	printf("Compteur sauts : %d\n", bootp->bp_hops);
-	printf("Id transaction : 0x%08x\n", ntohl(bootp->bp_xid));
-	printf("Nbr de secondes : %hu\n", bootp->bp_secs);
+	printf("\nHardware type : 0x%02x\n", bootp->bp_htype);
+	printf("Hardware adress length : %d\n", bootp->bp_hlen);
+	printf("Hops : %d\n", bootp->bp_hops);
+	printf("Transaction ID : 0x%08x\n", ntohl(bootp->bp_xid));
+	printf("Seconds elapsed : %hu\n", bootp->bp_secs);
 	printf("Flag : ");
 	switch(ntohs(bootp->bp_flags)){
 		/* Broadcast */
@@ -56,22 +71,22 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 			printf("Non pris en charge\n");
 			break;
 	}
-	printf("IP client : %s\n", inet_ntoa(bootp->bp_ciaddr));
-	printf("\"Votre\" IP : %s\n", inet_ntoa(bootp->bp_yiaddr));
-	printf("IP serveur : %s\n", inet_ntoa(bootp->bp_siaddr));
-	printf("IP gateway : %s\n", inet_ntoa(bootp->bp_giaddr));
-	printf("Addr matériel client : ");
-	affichageAdresseMac(bootp->bp_chaddr);
+	printf("Client IP address: %s\n", inet_ntoa(bootp->bp_ciaddr));
+	printf("\"Your\" IP address: %s\n", inet_ntoa(bootp->bp_yiaddr));
+	printf("Next server IP address : %s\n", inet_ntoa(bootp->bp_siaddr));
+	printf("Relay agent IP address : %s\n", inet_ntoa(bootp->bp_giaddr));
+	printf("Client MAC address : ");
+	affichageAdresseMAC(bootp->bp_chaddr);
 
-	printf("\nNom machine du serveur : ");
+	printf("\nServer host name : ");
 	if (strlen((char*) bootp->bp_sname) == 0)
-		printf("Non fourni\n");
+		printf("Not given\n");
 	else
 		printf("%s\n", bootp->bp_sname);
 
-	printf("Nom du fichier bootP : ");
+	printf("Boot file name : ");
 	if (strlen((char*) bootp->bp_file) == 0)
-		printf("Non fourni\n");
+		printf("Not given\n");
 	else
 		printf("%s\n", bootp->bp_file);
 
@@ -102,18 +117,18 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 			switch(type){
 				/* Subnet mask */
 				case TAG_SUBNET_MASK:
-					printf("Masque sous-réseau : ");
+					printf("Subnet mask : ");
 					affichageIP(copieVend, longueur);
 					break;
 
 				/* Offset */
 				case TAG_TIME_OFFSET:
-					affichageDurée("Différence temps", copieVend);
+					affichageDurée("Time offset", copieVend);
 					break;
 
 				/* Router */
 				case TAG_GATEWAY:
-					printf("Addr gateway : ");
+					printf("Gateway : ");
 					affichageIP(copieVend, longueur);
 					break;
 
@@ -131,30 +146,30 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 
 				/* Domain name */
 				case TAG_DOMAINNAME:
-					printf("Nom domaine : ");
+					printf("Domain name : ");
 					affichageString(copieVend, longueur);
 					break;
 
 				/* Broadcast address */
 				case TAG_BROAD_ADDR:
-					printf("Addr broadcast : ");
+					printf("Broadcast address : ");
 					affichageIP(copieVend, longueur);
 					break;
 
 				/* Requested IP address */
 				case TAG_REQUESTED_IP:
-					printf("IP demandée : ");
+					printf("Requested IP : ");
 					affichageIP(copieVend, longueur);
 					break;
 
 				/* Lease time */
 				case TAG_IP_LEASE:
-					affichageDurée("Durée attribution IP", copieVend);
+					affichageDurée("IP lease", copieVend);
 					break;
 
 				/* DHCP message type */
 				case TAG_DHCP_MESSAGE: {
-					printf("Message DHCP : ");
+					printf("DHCP message : ");
 
 					switch(*copieVend){
 						/* Discover */
@@ -194,7 +209,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 
 						/* Non pris en charge */
 						default:
-							printf("Non pris en charge (%d)", *copieVend);
+							printf("Not supported (%d)", *copieVend);
 							break;
 					}
 					break;
@@ -202,28 +217,28 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 
 				/* Server identifier */
 				case TAG_SERVER_ID:
-					printf("Identifiant serveur : ");
+					printf("Server ID : ");
 					affichageIP(copieVend, longueur);
 					break;
 
 				/* Parameter request list */
 				case TAG_PARM_REQUEST:
-					printf("Demande liste des paramètres");
+					printf("Parameters request");
 					break;
 
 				/* Renewal time */
 				case TAG_RENEWAL_TIME:
-					affichageDurée("Durée renouvellement", copieVend);
+					affichageDurée("Renewal time", copieVend);
 					break;
 
 				/* Rebind time */
 				case TAG_REBIND_TIME:
-					affichageDurée("Durée rebasage", copieVend);
+					affichageDurée("Rebind time", copieVend);
 					break;
 
 				/* Client identifier */
 				case TAG_CLIENT_ID:
-					printf("Identifiant client : ");
+					printf("Client ID : ");
 					affichageString(copieVend, longueur);
 					break;
 
@@ -233,7 +248,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 
 				/* Non pris en charge */
 				default:
-					printf("Option (%d) non prise en charge", type);
+					printf("Unsupported option (%d)", type);
 					break;
 			}
 			printf("\n");
@@ -245,5 +260,5 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 
 	// Si le magic cookie n'est pas reconnu
 	else
-		printf("Non reconnu");
+		printf("Unknown");
 }

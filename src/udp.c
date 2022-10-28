@@ -9,10 +9,10 @@ void gestionUDP(const u_char* paquet, const int size_ip){
 	titreViolet("UDP");
 	printf(JAUNE);
 
-	printf("Port src : %hu\n", portSrc);
-	printf("Port dest : %hu\n", portDst);
+	printf("Src port : %hu\n", portSrc);
+	printf("Dst port : %hu\n", portDst);
 
-	printf("Taille : %hu\n", ntohs(udp->uh_ulen));
+	printf("Length : %hu\n", ntohs(udp->uh_ulen));
 	printf("Checksum : 0x%04x\n", ntohs(udp->uh_sum));
 
 	// BootP
@@ -24,6 +24,6 @@ void gestionUDP(const u_char* paquet, const int size_ip){
 		gestionBootP(paquet, size_ip + sizeof(struct udphdr));
 	}
 	else{
-		printf("Service : Non pris en charge");
+		printf("Service : Unsupported");
 	}
 }

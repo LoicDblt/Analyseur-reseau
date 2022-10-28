@@ -1,3 +1,6 @@
+#ifndef UTILE_H 
+#define UTILE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,8 +21,4 @@ void titreCian(const char* message, const int compteur);
 // Titre de second niveau
 void titreViolet(const char* message);
 
-// Fonction d'affichage des adresses MAC
-void affichageAdresseMac(const u_char* adresse);
-
-// Fonction d'affichage d'IP depuis un pointeur
-void affichageIP(const u_int8_t* pointeur, const u_int8_t longueur);
+#endif

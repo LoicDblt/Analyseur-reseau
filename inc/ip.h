@@ -3,5 +3,5 @@
 
 #include "utile.h"
 
-// Fonction d'affichage des adresses IP
+// Fonction de gestion du protocole IP
 void gestionIP(const u_char* paquet, int size_ethernet);

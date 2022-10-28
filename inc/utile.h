@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 
 // Couleurs pour l'affichage
 #define ROUGE	"\033[31m"
@@ -16,3 +17,6 @@ void titreCian(char* message, int compteur);
 
 // Titre de second niveau
 void titreViolet(char* message);
+
+// Fonction d'affichage des adresses MAC
+void affichageAdresseMac(const u_char* adresse);

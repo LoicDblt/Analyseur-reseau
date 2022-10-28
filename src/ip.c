@@ -7,15 +7,18 @@ void gestionIP(const u_char* paquet, int size_ethernet){
 
 	titreViolet("IP");
 	printf(JAUNE);
-	printf("IP src : %s\n", inet_ntoa(ip->ip_src)); // src
-	printf("IP dest : %s\n", inet_ntoa(ip->ip_dst)); // dest
+
+	printf("IP src : %s\n", inet_ntoa(ip->ip_src));
+	printf("IP dest : %s\n", inet_ntoa(ip->ip_dst));
+
 	printf("Taille header : %d\n", ip->ip_hl);
 	printf("Type de service : %d\n", ip->ip_tos);
 	printf("Taille : %d\n", ntohs(ip->ip_len));
-	printf("Identificateur : %d\n", ntohs(ip->ip_id));
+	printf("Identificateur : 0x%04x\n", ntohs(ip->ip_id));
 	printf("Offset fragment : %hu\n", ip->ip_off);
 	printf("Time to live : %d\n", ip->ip_ttl);
-	printf("Checksum : %hu\n", ntohs(ip->ip_sum));
+	printf("Checksum : 0x%04x\n", ntohs(ip->ip_sum));
+
 	printf("Protocole de transport : ");
 	switch(ip->ip_p){
 		/* TCP */

@@ -39,12 +39,12 @@ int main(int argc, char *argv[]){
 					return EXIT_FAILURE;
 				}
 				device = optarg;
-				printf("[-i] Interface %s\n", optarg);
+				printf("[-i] Interface : %s\n", optarg);
 				break;
 
 			case 'o': // Fichier offline
 				oFlag = 1;
-				printf("[-o] Fichier offline %s\n", optarg);
+				printf("[-o] Fichier offline : %s\n", optarg);
 				nomFichier = optarg;
 				if (access(nomFichier, F_OK) < 0){
 					fprintf(stderr, "%s|Erreur| Fichier introuvable%s\n",
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]){
 
 			case 'f': // Filtrage
 				fFlag = 1;
-				printf("[-f] Filtrage %s\n", optarg);
+				printf("[-f] Filtrage : %s\n", optarg);
 				filter_exp = optarg;
 				break;
 
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]){
 		// Cherche les propriétés de l'interface
 		if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
 			fprintf(stderr, "|Erreur| Impossible de récuprer le netmask pour "
-				"l'interface %s: %s\n", device, errbuf);
+				"l'interface %s :\n%s\n", device, errbuf);
 			net = 0;
 			mask = 0;
 		}
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]){
 		// Ouvre la session en mode "promiscuous"
 		handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
 		if (handle == NULL){
-			fprintf(stderr, "|Erreur| Impossible d'ouvrir l'interface %s: %s\n",
+			fprintf(stderr, "|Erreur| Impossible d'ouvrir l'interface %s :\n%s\n",
 				device, errbuf);
 			return EXIT_FAILURE;
 		}
@@ -128,12 +128,12 @@ int main(int argc, char *argv[]){
 
 	// Compile et applique le filtre
 	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1){
-		fprintf(stderr, "Impossible de passer le filtre %s: %s\n",
+		fprintf(stderr, "Impossible de passer le filtre %s :\n%s\n",
 			filter_exp, pcap_geterr(handle));
 		return EXIT_FAILURE;
 	}
 	if (pcap_setfilter(handle, &fp) == -1){
-		fprintf(stderr, "Impossible d'installer le filtre %s: %s\n",
+		fprintf(stderr, "Impossible d'installer le filtre %s :\n%s\n",
 			filter_exp, pcap_geterr(handle));
 		return EXIT_FAILURE;
 	}

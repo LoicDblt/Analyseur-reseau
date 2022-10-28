@@ -6,10 +6,13 @@ void gestionTCP(const u_char* paquet, int size_ip){
 	printf("\n\n");
 	titreViolet("TCP");
 	printf(JAUNE);
-	printf("Port src : %hu\n", ntohs(tcp->th_sport)); // src
-	printf("Port dest : %hu\n", ntohs(tcp->th_dport)); // dest
-	printf("Num séquence : %u\n", ntohs(tcp->th_seq));
-	printf("Num ack : %u\n", ntohs(tcp->th_ack));
+
+	printf("Port src : %hu\n", ntohs(tcp->th_sport));
+	printf("Port dest : %hu\n", ntohs(tcp->th_dport));
+
+	printf("Num séquence : %u\n", ntohl(tcp->th_seq));
+	printf("Num ack : %u\n", ntohl(tcp->th_ack));
+
 	printf("Flag : ");
 	switch(tcp->th_flags){
 		/* URG */
@@ -47,8 +50,9 @@ void gestionTCP(const u_char* paquet, int size_ip){
 			printf("Aucun");
 			break;
 	}
+
 	printf("\nFenêtre : %hu\n", ntohs(tcp->th_win));
-	printf("Checksum : %hu\n", ntohs(tcp->th_sum));
+	printf("Checksum : 0x%04x\n", ntohs(tcp->th_sum));
 	printf("Pointeur urg : %hu\n", ntohs(tcp->th_urp));
 
 	// Ajout gestion ports (SMTP, FTP, HTTP, ...)

@@ -1,36 +1,10 @@
 #include "../inc/ethernet.h"
 
-void affichageMac(const struct ether_header *ethernet, int FlagIO){
-	int i;
-	unsigned addr;
-
-	if (FlagIO == 0)
-		printf("MAC src : ");
-	else if (FlagIO == 1)
-		printf("MAC dest : ");
-	else{
-		printf(RESET);
-		fprintf(stderr, "|Erreur| Mauvaise valeur du flag IO\n");
-		exit(EXIT_FAILURE);
-	}
-
-	for (i = 0; i < 6; i++){
-		if (FlagIO == 0)
-			addr = (unsigned) ethernet->ether_shost[i];
-		else if (FlagIO == 1)
-			addr = (unsigned) ethernet->ether_dhost[i];
-		
-		printf("%.2x", addr);
-		if (i < 5)
-			printf(":");
-	}
-	printf("\n");
-}
-
-void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr,
+void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 const u_char* paquet){
 	// Titre de second niveau, du paquet
 	static unsigned int compteurPaquets = 1;
+	int nonPrisCharge = 0;
 
 	if (compteurPaquets == 1)
 		titreCian("ère trame", compteurPaquets);
@@ -45,13 +19,18 @@ const u_char* paquet){
 	// Affichage des adresses MAC
 	titreViolet("Ethernet");
 	printf(JAUNE);
-	affichageMac(ethernet, 0); // Adresse src
-	affichageMac(ethernet, 1); // Adresse dest
-	printf("EtherType : "); // EtherType
+
+	printf("MAC src : ");
+	affichageAdresseMac(ethernet->ether_shost); // Adresse src
+	printf("MAC dst : ");
+	affichageAdresseMac(ethernet->ether_dhost); // Adresse dest
+
+	printf("EtherType : ");
 	switch(ntohs(ethernet->ether_type)){
 		/* PUP protocol */
 		case ETHERTYPE_PUP:
 			printf("PUP");
+			nonPrisCharge = 1;
 			break;
 
 		/* IP protocol */
@@ -63,32 +42,58 @@ const u_char* paquet){
 		/* Addr. resolution protocol (ARP) */
 		case ETHERTYPE_ARP:
 			printf("ARP");
+			nonPrisCharge = 1;
 			break;
 
 		/* Reverse ARP */
 		case ETHERTYPE_REVARP:
 			printf("RevARP");
+			nonPrisCharge = 1;
 			break;
 
 		/* IEEE 802.1Q VLAN tagging */
 		case ETHERTYPE_VLAN:
 			printf("VLAN");
+			nonPrisCharge = 1;
 			break;
 
 		/* IPv6 */
 		case ETHERTYPE_IPV6:
 			printf("IPv6");
+			nonPrisCharge = 1;
+			break;
+
+		/* EAPOL PAE/802.1x */
+		case ETHERTYPE_PAE:
+			printf("PAE");
+			nonPrisCharge = 1;
+			break;
+
+		/* 802.11i / RSN Pre-Authentication */
+		case ETHERTYPE_RSN_PREAUTH:
+			printf("RSN");
+			nonPrisCharge = 1;
+			break;
+
+		/* IEEE 1588 Precision Time Protocol */
+		case ETHERTYPE_PTP:
+			printf("PTP");
+			nonPrisCharge = 1;
 			break;
 
 		/* Used to test interfaces */
 		case ETHERTYPE_LOOPBACK:
 			printf("Loopback");
+			nonPrisCharge = 1;
 			break;
 
 		/* Protocole non pris en charge */
 		default:
 			printf("Protocole non pris en charge (%d)", ethernet->ether_type);
 			break;
+	}
+	if (nonPrisCharge == 1){
+		printf("\nNon pris en charge");
 	}
 	printf("%s\n\n", RESET);
 }

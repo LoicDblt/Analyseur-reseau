@@ -9,14 +9,16 @@ void gestionUDP(const u_char* paquet, int size_ip){
 	printf("\n\n");
 	titreViolet("UDP");
 	printf(JAUNE);
-	printf("Port src : %hu\n", portSrc); // src
-	printf("Port dest : %hu\n", portDst); // dest
+
+	printf("Port src : %hu\n", portSrc);
+	printf("Port dest : %hu\n", portDst);
+
 	printf("Taille : %hu\n", ntohs(udp->uh_ulen));
-	printf("Checksum : %hu\n", ntohs(udp->uh_sum));
+	printf("Checksum : 0x%04x\n", ntohs(udp->uh_sum));
 
 	// Bootp
 	if (portSrc == IPPORT_BOOTPS || portDst == IPPORT_BOOTPS){
 		printf("Service : Bootp");
-		gestionBootp(paquet, size_ip + sizeof(struct udphdr));
+		gestionBootP(paquet, size_ip + sizeof(struct udphdr));
 	}
 }

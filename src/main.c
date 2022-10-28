@@ -7,7 +7,7 @@
 #include "../inc/utile.h"
 #include "../inc/ethernet.h"
 
-#define NBRPAQUETS -1 // Passer à -1 pour un nombre infini
+#define NBRPAQUETS 2 // Passer à -1 pour un nombre infini
 
 int main(int argc, char *argv[]){
 	pcap_t* handle;					// Session handle

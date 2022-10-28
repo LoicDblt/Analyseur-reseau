@@ -4,4 +4,4 @@
 #include "utile.h"
 
 // Fonction de gestion du protocole TCP
-void gestionTCP(const u_char* paquet, int size_ip);
+void gestionTCP(const u_char* paquet, const int size_ip);

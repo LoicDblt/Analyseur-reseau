@@ -1,12 +1,11 @@
 #include "../inc/udp.h"
 
-void gestionUDP(const u_char* paquet, int size_ip){
+void gestionUDP(const u_char* paquet, const int size_ip){
 	const struct udphdr* udp = (struct udphdr*)(paquet + size_ip);
 
 	ushort portSrc = ntohs(udp->uh_sport);
 	ushort portDst = ntohs(udp->uh_dport);
 
-	printf("\n\n");
 	titreViolet("UDP");
 	printf(JAUNE);
 
@@ -16,9 +15,15 @@ void gestionUDP(const u_char* paquet, int size_ip){
 	printf("Taille : %hu\n", ntohs(udp->uh_ulen));
 	printf("Checksum : 0x%04x\n", ntohs(udp->uh_sum));
 
-	// Bootp
-	if (portSrc == IPPORT_BOOTPS || portDst == IPPORT_BOOTPS){
-		printf("Service : Bootp");
+	// BootP
+	if (
+		portSrc == IPPORT_BOOTPS || portSrc == IPPORT_BOOTPC ||
+		portDst == IPPORT_BOOTPS || portDst == IPPORT_BOOTPC
+	){
+		printf("Service : BootP");
 		gestionBootP(paquet, size_ip + sizeof(struct udphdr));
+	}
+	else{
+		printf("Service : Non pris en charge");
 	}
 }

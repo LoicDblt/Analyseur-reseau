@@ -13,10 +13,13 @@
 #define RESET	"\033[00m"
 
 // Titre de premier niveau
-void titreCian(char* message, int compteur);
+void titreCian(const char* message, const int compteur);
 
 // Titre de second niveau
-void titreViolet(char* message);
+void titreViolet(const char* message);
 
 // Fonction d'affichage des adresses MAC
 void affichageAdresseMac(const u_char* adresse);
+
+// Fonction d'affichage d'IP depuis un pointeur
+void affichageIP(const u_int8_t* pointeur, const u_int8_t longueur);

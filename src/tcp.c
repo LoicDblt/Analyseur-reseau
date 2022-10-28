@@ -1,9 +1,8 @@
 #include "../inc/tcp.h"
 
-void gestionTCP(const u_char* paquet, int size_ip){
+void gestionTCP(const u_char* paquet, const int size_ip){
 	const struct tcphdr* tcp = (struct tcphdr*)(paquet + size_ip);
 
-	printf("\n\n");
 	titreViolet("TCP");
 	printf(JAUNE);
 

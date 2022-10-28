@@ -17,15 +17,16 @@ const u_char* paquet){
 	ethernet = (struct ether_header*)(paquet);
 
 	// Affichage des adresses MAC
+	printf("\033[A\033[A"); // Hack pour retirer les \n du titre (pour le style)
 	titreViolet("Ethernet");
 	printf(JAUNE);
 
 	printf("MAC src : ");
 	affichageAdresseMac(ethernet->ether_shost); // Adresse src
-	printf("MAC dst : ");
+	printf("\nMAC dst : ");
 	affichageAdresseMac(ethernet->ether_dhost); // Adresse dest
 
-	printf("EtherType : ");
+	printf("\nEtherType : ");
 	switch(ntohs(ethernet->ether_type)){
 		/* PUP protocol */
 		case ETHERTYPE_PUP:
@@ -42,7 +43,7 @@ const u_char* paquet){
 		/* Addr. resolution protocol (ARP) */
 		case ETHERTYPE_ARP:
 			printf("ARP");
-			nonPrisCharge = 1;
+			gestionARP(paquet, sizeof(struct ether_header));
 			break;
 
 		/* Reverse ARP */
@@ -92,8 +93,8 @@ const u_char* paquet){
 			printf("Protocole non pris en charge (%d)", ethernet->ether_type);
 			break;
 	}
-	if (nonPrisCharge == 1){
+	if (nonPrisCharge == 1)
 		printf("\nNon pris en charge");
-	}
+
 	printf("%s\n\n", RESET);
 }

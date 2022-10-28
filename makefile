@@ -1,13 +1,13 @@
-CC=gcc
+CC = gcc
 CFLAGS = -Wall -Werror -Wextra -lpcap
 
 bin = bin/
 obj = obj/
 src = src/
 
-all: message main utile ethernet ip udp tcp bootp
+all: message main utile ethernet ip udp tcp bootp arp
 	$(CC) $(obj)main.o $(obj)utile.o $(obj)ethernet.o $(obj)ip.o $(obj)udp.o \
-		$(obj)tcp.o $(obj)bootp.o -o $(bin)main $(CFLAGS)
+		$(obj)tcp.o $(obj)bootp.o $(obj)arp.o -o $(bin)main $(CFLAGS)
 
 message:
 	$(info )
@@ -34,6 +34,9 @@ tcp:
 
 bootp:
 	$(CC) -c $(src)bootp.c -o $(obj)bootp.o
+
+arp:
+	$(CC) -c $(src)arp.c -o $(obj)arp.o
 
 clean:
 	rm $(obj)*.o

@@ -1,8 +1,6 @@
 #include "../inc/ip.h"
-#include "../inc/udp.h"
-#include "../inc/tcp.h"
 
-void gestionIP(const u_char* paquet, int size_ethernet){
+void gestionIP(const u_char* paquet, const int size_ethernet){
 	const struct ip* ip = (struct ip*)(paquet + size_ethernet);
 
 	titreViolet("IP");
@@ -22,13 +20,13 @@ void gestionIP(const u_char* paquet, int size_ethernet){
 	printf("Protocole de transport : ");
 	switch(ip->ip_p){
 		/* TCP */
-		case 6:
+		case TCP:
 			printf("TCP");
 			gestionTCP(paquet, size_ethernet + sizeof(struct ip));
 			break;
 
 		/* UDP */
-		case 17:
+		case UDP:
 			printf("UDP");
 			gestionUDP(paquet, size_ethernet + sizeof(struct ip));
 			break;

@@ -1,42 +1,40 @@
 #include "../inc/bootpHeader.h"
 
-void affichageIP(u_int8_t* pointeur, u_int8_t longueur){
-	int nbrPoints = 0;
-	for (int i = 0; i < longueur; i++){
-		printf("%d", pointeur[i]);
 
-		if (nbrPoints/3){
-			nbrPoints = 0;
-			if (i+1 < longueur)
-				printf("\n\t\t");
-		}
-		else{
-			printf(".");
-			nbrPoints++;
-		}
+
+void affichageString(const u_int8_t* pointeur, const u_int8_t longueur){
+	for (int i = 0; i < longueur; i++){
+		if (putchar(pointeur[i]) == EOF)
+			fprintf(stderr, "AffichageString | putchar");
 	}
 }
 
-void affichageString(u_int8_t* pointeur, u_int8_t longueur){
-	for (int i = 0; i < longueur; i++)
-		putchar(pointeur[i]);
+void affichageDurée(const char* message, const u_int8_t* pointeur){
+	printf("%s : %ds", message, ntohl(*((int*) pointeur)));
 }
 
-void gestionBootP(const u_char* paquet, int size_udp){
+void gestionBootP(const u_char* paquet, const int size_udp){
 	const struct bootp* bootp = (struct bootp*)(paquet + size_udp);
 
-	printf("\n\n");
-	titreViolet("Bootp");
+	titreViolet("BootP");
 	printf(JAUNE);
-	printf("Code op : ");
-	if (bootp->bp_op == BOOTREQUEST)
-		printf("REQUEST\n");
-	else if (bootp->bp_op == BOOTREPLY)
-		printf("REPLY\n");
-	else
-		printf("Inconnu\n");
+	printf("Code opération : ");
+	switch(bootp->bp_op){
+		/* Bootrequest */
+		case BOOTREQUEST:
+			printf("Request");
+			break;
 
-	printf("Type addr matériel : 0x%02x\n", bootp->bp_htype);
+		/* Bootreply */
+		case BOOTREPLY:
+			printf("Reply");
+			break;
+
+		/* Inconnu */
+		default:
+			printf("Inconnu");
+	}
+	printf("\nType addr matériel : 0x%02x\n", bootp->bp_htype);
 	printf("Longueur addr : %d\n", bootp->bp_hlen);
 	printf("Compteur sauts : %d\n", bootp->bp_hops);
 	printf("Id transaction : 0x%08x\n", ntohl(bootp->bp_xid));
@@ -65,13 +63,13 @@ void gestionBootP(const u_char* paquet, int size_udp){
 	printf("Addr matériel client : ");
 	affichageAdresseMac(bootp->bp_chaddr);
 
-	printf("Nom machine du serveur : ");
+	printf("\nNom machine du serveur : ");
 	if (strlen((char*) bootp->bp_sname) == 0)
 		printf("Non fourni\n");
 	else
 		printf("%s\n", bootp->bp_sname);
 
-	printf("Nom du fichier bootp : ");
+	printf("Nom du fichier bootP : ");
 	if (strlen((char*) bootp->bp_file) == 0)
 		printf("Non fourni\n");
 	else
@@ -79,11 +77,15 @@ void gestionBootP(const u_char* paquet, int size_udp){
 
 	// Vérification du magic cookie
 	printf("Magic cookie : ");
+
 	u_int8_t* copieVend = (u_int8_t*) bootp->bp_vend;
 	const u_int8_t magicCookie[4] = VM_RFC1048;
 
 	if (memcmp(copieVend, magicCookie, 4) == 0){
-		printf("DHCP\n");
+		printf("DHCP");
+
+		titreViolet("DHCP");
+		printf(JAUNE);
 
 		// On se déplace de la taille du magic cookie
 		copieVend += 4;
@@ -92,7 +94,6 @@ void gestionBootP(const u_char* paquet, int size_udp){
 		u_int8_t type, longueur;
 
 		while(1){
-			printf("\t");
 
 			// On avance d'un bit (Type puis Longueur et enfin Valeur)
 			type = *copieVend++;
@@ -105,6 +106,11 @@ void gestionBootP(const u_char* paquet, int size_udp){
 					affichageIP(copieVend, longueur);
 					break;
 
+				/* Offset */
+				case TAG_TIME_OFFSET:
+					affichageDurée("Différence temps", copieVend);
+					break;
+
 				/* Router */
 				case TAG_GATEWAY:
 					printf("Addr gateway : ");
@@ -113,7 +119,7 @@ void gestionBootP(const u_char* paquet, int size_udp){
 
 				/* DNS */
 				case TAG_DOMAIN_SERVER:
-					printf("DNS :\t");
+					printf("DNS : ");
 					affichageIP(copieVend, longueur);
 					break;
 
@@ -143,7 +149,7 @@ void gestionBootP(const u_char* paquet, int size_udp){
 
 				/* Lease time */
 				case TAG_IP_LEASE:
-					printf("Durée attribution IP : %ds", ntohl(*((int*)copieVend)));
+					affichageDurée("Durée attribution IP", copieVend);
 					break;
 
 				/* DHCP message type */
@@ -166,9 +172,19 @@ void gestionBootP(const u_char* paquet, int size_udp){
 							printf("Request");
 							break;
 
+						/* Decline */
+						case DHCPDECLINE:
+							printf("Decline");
+							break;
+
 						/* Ack */
 						case DHCPACK:
 							printf("Ack");
+							break;
+
+						/* Nak */
+						case DHCPNAK:
+							printf("Nak");
 							break;
 
 						/* Release */
@@ -193,6 +209,16 @@ void gestionBootP(const u_char* paquet, int size_udp){
 				/* Parameter request list */
 				case TAG_PARM_REQUEST:
 					printf("Demande liste des paramètres");
+					break;
+
+				/* Renewal time */
+				case TAG_RENEWAL_TIME:
+					affichageDurée("Durée renouvellement", copieVend);
+					break;
+
+				/* Rebind time */
+				case TAG_REBIND_TIME:
+					affichageDurée("Durée rebasage", copieVend);
 					break;
 
 				/* Client identifier */

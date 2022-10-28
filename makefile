@@ -11,7 +11,7 @@ all: message main utile ethernet ip udp tcp bootp
 
 message:
 	$(info )
-	$(info *** Pour lancer le programme : sudo bin/main <flags> ***)
+	$(info *** Pour lancer le programme : sudo bin/main <commutateurs> ***)
 	$(info )
 
 main:

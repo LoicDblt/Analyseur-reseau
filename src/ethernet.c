@@ -30,7 +30,7 @@ void affichageMac(const struct ether_header *ethernet, int FlagIO){
 void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr,
 const u_char* paquet){
 	// Titre de second niveau, du paquet
-	static int compteurPaquets = 1;
+	static unsigned int compteurPaquets = 1;
 
 	if (compteurPaquets == 1)
 		titreCian("ère trame", compteurPaquets);

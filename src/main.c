@@ -7,7 +7,7 @@
 #include "../inc/utile.h"
 #include "../inc/ethernet.h"
 
-#define NBRPAQUETS 3 // Passer à -1 pour un nombre infini
+#define NBRPAQUETS -1 // Passer à -1 pour un nombre infini
 
 int main(int argc, char *argv[]){
 	pcap_t* handle;					// Session handle
@@ -51,6 +51,7 @@ int main(int argc, char *argv[]){
 						ROUGE, RESET);
 					return EXIT_FAILURE;
 				}
+				handle = pcap_open_offline(nomFichier, errbuf);
 				break;
 
 			case 'f': // Filtrage
@@ -97,29 +98,32 @@ int main(int argc, char *argv[]){
 	}
 	fprintf(stderr, "%s\n", ROUGE);
 
-	// Défini l'interface si elle ne l'a pas été avec un flag
-	if (device == NULL || device[0] == '\0')
-		device = pcap_lookupdev(errbuf);
-	if (device == NULL){
-		fprintf(stderr, "|Erreur| Impossible de trouver le périphérique : %s\n",
-			errbuf);
-		return EXIT_FAILURE;
-	}
+	// Si on est pas en mode offline
+	if (oFlag == 0){
+		// Défini l'interface si elle ne l'a pas été avec un flag
+		if (device == NULL || device[0] == '\0')
+			device = pcap_lookupdev(errbuf);
+		if (device == NULL){
+			fprintf(stderr, "|Erreur| Impossible de trouver le périphérique : %s\n",
+				errbuf);
+			return EXIT_FAILURE;
+		}
 
-	// Cherche les propriétés de l'interface
-	if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
-		fprintf(stderr, "|Erreur| Impossible de récuprer le netmask pour "
-			"l'interface %s: %s\n", device, errbuf);
-		net = 0;
-		mask = 0;
-	}
+		// Cherche les propriétés de l'interface
+		if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
+			fprintf(stderr, "|Erreur| Impossible de récuprer le netmask pour "
+				"l'interface %s: %s\n", device, errbuf);
+			net = 0;
+			mask = 0;
+		}
 
-	// Ouvre la session en mode "promiscuous"
-	handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
-	if (handle == NULL){
-		fprintf(stderr, "|Erreur| Impossible d'ouvrir l'interface %s: %s\n",
-			device, errbuf);
-		return EXIT_FAILURE;
+		// Ouvre la session en mode "promiscuous"
+		handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
+		if (handle == NULL){
+			fprintf(stderr, "|Erreur| Impossible d'ouvrir l'interface %s: %s\n",
+				device, errbuf);
+			return EXIT_FAILURE;
+		}
 	}
 
 	// Compile et applique le filtre

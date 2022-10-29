@@ -9,21 +9,22 @@ void gestionUDP(const u_char* paquet, const int size_ip){
 	titreViolet("UDP");
 	printf(JAUNE);
 
-	printf("Src port : %hu\n", portSrc);
-	printf("Dst port : %hu\n", portDst);
+	printf("Src port : %u\n", portSrc);
+	printf("Dst port : %u\n", portDst);
 
-	printf("Length : %hu\n", ntohs(udp->uh_ulen));
-	printf("Checksum : 0x%04x\n", ntohs(udp->uh_sum));
+	printf("Length : %u\n", ntohs(udp->uh_ulen));
+	printf("Checksum : 0x%04x (Unverified)\n", ntohs(udp->uh_sum));
+	printf("Service : ");
 
 	// BootP
 	if (
 		portSrc == IPPORT_BOOTPS || portSrc == IPPORT_BOOTPC ||
 		portDst == IPPORT_BOOTPS || portDst == IPPORT_BOOTPC
 	){
-		printf("Service : BootP");
+		printf("BootP");
 		gestionBootP(paquet, size_ip + sizeof(struct udphdr));
 	}
 	else{
-		printf("Service : Unsupported");
+		printf("Unsupported");
 	}
 }

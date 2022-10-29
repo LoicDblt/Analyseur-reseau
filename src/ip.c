@@ -12,28 +12,29 @@ void gestionIP(const u_char* paquet, const int size_ethernet){
 	printf("Header length : %d\n", ip->ip_hl);
 	printf("Type of service : %d\n", ip->ip_tos);
 	printf("Total length : %d\n", ntohs(ip->ip_len));
-	printf("Identification: 0x%04x\n", ntohs(ip->ip_id));
-	printf("Fragment offset : %hu\n", ip->ip_off);
+	printf("Identification: 0x%04x (%d)\n", ntohs(ip->ip_id), ntohs(ip->ip_id));
+	printf("Fragment offset : %u\n", ip->ip_off);
 	printf("Time to live : %d\n", ip->ip_ttl);
-	printf("Checksum : 0x%04x\n", ntohs(ip->ip_sum));
+	printf("Checksum : 0x%04x (unverified)\n", ntohs(ip->ip_sum));
 
 	printf("Protocol : ");
-	switch(ip->ip_p){
+	unsigned int proto = ip->ip_p;
+	switch(proto){
 		/* TCP */
 		case TCP:
-			printf("TCP");
+			printf("TCP (%d)", proto);
 			gestionTCP(paquet, size_ethernet + sizeof(struct ip));
 			break;
 
 		/* UDP */
 		case UDP:
-			printf("UDP");
+			printf("UDP (%d)", proto);
 			gestionUDP(paquet, size_ethernet + sizeof(struct ip));
 			break;
 
 		/* Protocole non pris en charge */
 		default:
-			printf("Unsupported (%d)", ip->ip_p);
+			printf("Unsupported (%d)", proto);
 			break;
 	}
 	printf(RESET);

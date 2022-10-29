@@ -35,15 +35,17 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 
 		/* Inconnu */
 		default:
-			printf("Unknown (%u)", ntohs(arp->ar_hrd));
+			printf("Unknown");
 			break;
 	}
+	printf(" (%u)", ntohs(arp->ar_hrd));
 
 	printf("\nProtocol type : ");
 	affichageEtherType(ntohs(arp->ar_pro));
 	printf("\nMAC address length : %d\n", arp->ar_hln);
 	printf("Protocol address length : %d\n", arp->ar_pln);
-	printf("Operation : ");
+
+	printf("Opcode : ");
 	switch(ntohs(arp->ar_op)){
 		/* Request */
 		case ARPOP_REQUEST:
@@ -76,9 +78,10 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 			break;
 
 		default:
-			printf("Unknown (%d)", ntohs(arp->ar_op));
+			printf("Unknown");
 			break;
 	}
+	printf(" (%u)", ntohs(arp->ar_op));
 
 	u_int8_t* pointeurFinStruct = (u_int8_t*) (paquet + size_ethernet +
 		sizeof(struct arphdr*));

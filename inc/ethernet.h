@@ -9,6 +9,8 @@
 #include "ip.h"
 #include "utile.h"
 
+#define MACADDRSIZE 6
+
 // Fonction d'affichage des adresses Mac
 void affichageAdresseMAC(const u_char* adresse);
 

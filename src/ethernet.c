@@ -2,15 +2,24 @@
 
 void affichageAdresseMAC(const u_char* adresse){
 	int i;
-	unsigned addr;
+	unsigned int addr;
 
-	for (i = 0; i < 6; i++){
-		addr = (unsigned) adresse[i];
+	int typeAddr = 0;
+
+	for (i = 0; i < MACADDRSIZE; i++){
+		addr = (unsigned int) adresse[i];
+
+		// Permet de détecter les "ff"
+		if (addr == 255)
+			typeAddr++;
 
 		printf("%.2x", addr);
 		if (i < 5)
 			printf(":");
 	}
+
+	if (typeAddr == MACADDRSIZE)
+		printf(" (Broadcast)");
 }
 
 void affichageEtherType(uint16_t type){
@@ -65,11 +74,12 @@ void affichageEtherType(uint16_t type){
 			printf("Loopback");
 			break;
 
-		/* Protocole non pris en charge */
+		/* Protocole inconnu */
 		default:
-			printf("Unsupported protocol (%d)", type);
+			printf("Unknown protocol");
 			break;
 	}
+	printf(" (0x%04x)", type);
 }
 
 void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
@@ -97,6 +107,7 @@ const u_char* paquet){
 	printf("\nEtherType : ");
 	affichageEtherType(ntohs(ethernet->ether_type));
 
+	// Protocoles pris en charge
 	switch(ntohs(ethernet->ether_type)){
 		case ETHERTYPE_IP:
 			gestionIP(paquet, sizeof(struct ether_header));

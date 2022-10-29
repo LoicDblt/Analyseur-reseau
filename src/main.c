@@ -1,13 +1,9 @@
 // Masque le warning "pcap_lookupdev deprecated"
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
-#include <unistd.h>
-#include <pcap.h>
+#include "../inc/main.h"
 
-#include "../inc/utile.h"
-#include "../inc/ethernet.h"
-
-#define NBRPAQUETS 2 // Passer à -1 pour un nombre infini
+#define NBRPAQUETS 5 // Passer à -1 pour un nombre infini
 
 int main(int argc, char *argv[]){
 	pcap_t* handle;					// Session handle

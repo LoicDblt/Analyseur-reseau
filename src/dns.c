@@ -115,10 +115,34 @@ void affichageClasse(const unsigned int classe){
 		printf(" (0x%04x)", classe);
 }
 
+unsigned int recupereNiemeBit(const unsigned int nombre,
+	const unsigned int nieme
+){
+	return (nombre >> ((TAILLEBIT-1)-nieme)) & 1;
+}
+
+void affichageBinaire(const unsigned int nombre,
+	const unsigned int nieme, const unsigned int nbrContigu
+){
+	printf("\n");
+	for (int i = 0; i < TAILLEBIT; i++){
+		if (i == nieme){
+			printf("%d", recupereNiemeBit(nombre, nieme));
+			for (int j = 1; j < nbrContigu; j++){
+				printf("%d", recupereNiemeBit(nombre, nieme+j));
+				i++;
+			}
+		}
+		else
+			printf(".");
+	}
+}
+
 void gestionDNS(const u_char* paquet, const int size_udp){
 	// On se place après l'entête UDP
 	u_int8_t* pointeurDns =  (u_int8_t*) paquet + size_udp;
 	unsigned int hexUn, hexDeux, hexTrois, hexQuatre, concatHex;
+	unsigned int bitUn, bitDeux, bitTrois, bitQuatre, concatBit, retourBit;
 	unsigned int nbrQuestions, nbrReponses;
 
 	char nomDomaine[TAILLEMAX];
@@ -126,21 +150,166 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 	titreViolet("DNS");
 	printf(JAUNE);
 
-	printf("Transaction ID : 0x");
-	for (int i = 0; i < 2; i++){
-		printf("%02x", *pointeurDns);
-		pointeurDns++;
-	}
-
-	printf("\nFlags : 0x");
-	for (int i = 0; i < 2; i++){
-		printf("%02x", *pointeurDns);
-		pointeurDns++;
-	}
-
 	hexUn = *pointeurDns++; 				// Récupère le premier hexa
 	hexDeux = *pointeurDns++;				// Récupère le second hexa
 	concatHex = (hexUn << 8) | (hexDeux);	// Concatène les deux
+	printf("Transaction ID : 0x%04x", concatHex);
+
+	hexUn = *pointeurDns++;
+	hexDeux = *pointeurDns++;
+	concatHex = (hexUn << 8) | (hexDeux);
+	printf("\nFlags : 0x%04x", concatHex);
+	int niemeBit = 0;
+
+	printf("\n");
+	for (int i = niemeBit; i < TAILLEBIT; i++){
+		printf("%d ", recupereNiemeBit(concatHex, i));
+	}
+
+	// Response
+	affichageBinaire(concatHex, niemeBit, 1);
+	unsigned int typeReponse = recupereNiemeBit(concatHex, niemeBit);
+	printf("\tResponse : ");
+	if (typeReponse == REPONSE)
+		printf("Message is a response");
+	else
+		printf("Message is a query");
+
+	// Op code
+	bitUn = recupereNiemeBit(concatHex, ++niemeBit);
+	affichageBinaire(concatHex, niemeBit, 4);
+	bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
+	bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
+	bitQuatre = recupereNiemeBit(concatHex, ++niemeBit);
+	printf("\tOp code : ");
+	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
+
+	switch(concatBit){
+		/* Query */
+		case QUERY:
+			printf("Standard query");
+			break;
+
+		/* Iquery */
+		case IQUERY:
+			printf("Inverse query");
+			break;
+
+		/* Status */
+		case STATUS:
+			printf("Server status request");
+			break;
+
+		/* Inconnu */
+		default:
+			printf("Unknown");
+			break;
+	}
+	printf(" (%d)", concatBit);
+
+	// Authoritative
+	if (typeReponse == REPONSE){
+		retourBit = recupereNiemeBit(concatHex, ++niemeBit);
+		affichageBinaire(concatHex, niemeBit, 1);
+		printf("\tAuthoritative : ");
+		if (retourBit)
+			printf("Server is an authority for domain");
+		else
+			printf("Server is not an authority for domain");
+	}
+	else
+		++niemeBit;
+
+	// Truncated
+	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
+	affichageBinaire(concatHex, niemeBit, 1);
+	printf("\tTruncated : ");
+	if (retourBit)
+		printf("Message is truncated");
+	else
+		printf("Message is not truncated");
+
+	// Recursion desired
+	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
+	affichageBinaire(concatHex, niemeBit, 1);
+	printf("\tRecursion desired : ");
+	if (retourBit)
+		printf("Do query recursively");
+	else
+		printf("Don't query recursively");
+
+	// Recursion available
+	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
+	affichageBinaire(concatHex, niemeBit, 1);
+	printf("\tRecursion available : ");
+	if (retourBit)
+		printf("Server can do recursive queries");
+	else
+		printf("Server can't do recursive queries");
+
+	// Z (Reserved)
+	bitUn = recupereNiemeBit(concatHex, ++niemeBit);
+	affichageBinaire(concatHex, niemeBit, 3);
+	bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
+	bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
+	printf("\tZ : ");
+	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
+
+	if (concatBit == ALLNULL)
+		printf("Reserved (%d)", concatBit);
+
+	// Reply code
+	if (typeReponse == REPONSE){
+		bitUn = recupereNiemeBit(concatHex, ++niemeBit);
+		affichageBinaire(concatHex, niemeBit, 4);
+		bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
+		bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
+		bitQuatre = recupereNiemeBit(concatHex, ++niemeBit);
+		printf("\tReply code : ");
+		concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
+
+		switch(concatBit){
+			/* No error */
+			case NOERR:
+				printf("No error");
+				break;
+
+			/* Format error */
+			case FORMERR:
+				printf("Format error");
+				break;
+
+			/* Server failure */
+			case FAILERR:
+				printf("Server failure ");
+				break;
+
+			/* Name error */
+			case NAMEERR:
+				printf("Name error");
+				break;
+
+			/* Not implemented */
+			case NOTIMPL:
+				printf("Not implemented");
+				break;
+
+			/* Refused */
+			case REFUSED:
+				printf("Refused");
+				break;
+
+			/* Inconnu */
+			default:
+				printf("Unknown");
+				break;
+		}
+		printf(" (%d)", concatBit);
+	}
+
+	hexUn = *pointeurDns++;
+	hexDeux = *pointeurDns++;
+	concatHex = (hexUn << 8) | (hexDeux);
 	printf("\nQuestions : %d", concatHex);
 	nbrQuestions = (int) concatHex;
 

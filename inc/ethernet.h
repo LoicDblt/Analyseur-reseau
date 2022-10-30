@@ -23,6 +23,6 @@ void affichageEtherType(uint16_t type);
 
 // Fonction de gestion du protocole Ethernet
 void gestionEthernet(u_char *args, const struct pcap_pkthdr* pkthdr,
-const u_char* paquet);
+	const u_char* paquet);
 
 #endif

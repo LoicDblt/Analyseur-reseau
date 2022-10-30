@@ -26,6 +26,25 @@
 #define MX		15	// Mail exchange
 #define TXT		16	// Text strings
 
+// Op code
+#define QUERY	0b0000
+#define IQUERY	0b0001
+#define STATUS	0b0010
+
+// Z (Reserved)
+#define ALLNULL	0b0000
+
+// Reply code
+#define NOERR	0	// No error
+#define FORMERR	1	// Format error
+#define FAILERR	2	// Server failure
+#define NAMEERR	3	// Name error
+#define NOTIMPL	4	// Not implemented
+#define REFUSED	5	// Refused
+
+// Type
+#define REPONSE	1
+
 // Affichage ASCII nom de domaine
 #define FIN		0x00
 #define POINT1	0x03
@@ -34,7 +53,8 @@
 // Autre
 #define AFFICHEA		0xc00c
 #define AFFICHECNAME	0xc02f
-#define TAILLEMAX		254		// Taille maximale d'un nom de domaine
+#define TAILLEMAX		255		// Taille maximale d'un nom de domaine
+#define TAILLEBIT		16
 
 /************* FONCTIONS **************/
 
@@ -49,6 +69,14 @@ void affichageType(const unsigned int type);
 
 // Fonction d'affichage de la classe de requête depuis un pointeur
 void affichageClasse(const unsigned int classe);
+
+// Fonction renvoyant 1 si le 'n' ième bit est placé
+unsigned int recupereNiemeBit(const unsigned int nombre,
+	const unsigned int nieme);
+
+// Fonction d'affichage des bits du nombre
+void affichageBinaire(const unsigned int nombre,
+	const unsigned int nieme, const unsigned int nbrContigu);
 
 // Fonction de gestion du protocole DNS
 void gestionDNS(const u_char* paquet, const int size_udp);

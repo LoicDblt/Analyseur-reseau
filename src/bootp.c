@@ -19,8 +19,7 @@ void affichageIP(const u_int8_t* pointeur, const u_int8_t longueur){
 
 void affichageString(const u_int8_t* pointeur, const u_int8_t longueur){
 	for (int i = 0; i < longueur; i++){
-		if (putchar(pointeur[i]) == EOF)
-			fprintf(stderr, "|Error| AffichageString | putchar");
+		printf("%c", *pointeur++);
 	}
 }
 

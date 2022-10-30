@@ -1,6 +1,6 @@
 #include "../inc/dns.h"
 
-void verifTaille(int retourTaille, size_t element){
+void verifTaille(const int retourTaille, const size_t element){
 	if (retourTaille < 0 || ((size_t) retourTaille) >= element){
 		fflush(stdout);
 		fprintf(stderr, "\n%s|Error| snprintf%s\n", ROUGE, RESET);
@@ -8,7 +8,7 @@ void verifTaille(int retourTaille, size_t element){
 	}
 }
 
-void affichageDuree(unsigned int dureeSecondes){
+void affichageDuree(const unsigned int dureeSecondes){
 	unsigned int h, m, s;
 
 	h = dureeSecondes / 3600;
@@ -23,7 +23,7 @@ void affichageDuree(unsigned int dureeSecondes){
 		printf("(%d seconds)", s);
 }
 
-void affichageType(unsigned int type){
+void affichageType(const unsigned int type){
 	printf("\n\tType : ");
 		switch(type){
 			/* A */
@@ -84,7 +84,7 @@ void affichageType(unsigned int type){
 		printf(" (%d)", type);
 }
 
-void affichageClasse(unsigned int classe){
+void affichageClasse(const unsigned int classe){
 	printf("\n\tClass : ");
 		switch(classe){
 			/* IN */
@@ -178,14 +178,14 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 					printf(".");
 					nbrLabels++;
 
-					retourTaille = snprintf(nomDomaine, sizeof(nomDomaine), "%s.",
-						nomDomaine);
+					retourTaille = snprintf(nomDomaine, sizeof(nomDomaine),
+						"%s.", nomDomaine);
 					verifTaille(retourTaille, sizeof(nomDomaine));
 				}
 				else{
 					printf("%c", hexa);
-					retourTaille = snprintf(nomDomaine, sizeof(nomDomaine), "%s%c",
-						nomDomaine, hexa);
+					retourTaille = snprintf(nomDomaine, sizeof(nomDomaine),
+						"%s%c", nomDomaine, hexa);
 					verifTaille(retourTaille, sizeof(nomDomaine));
 				}
 				tailleNom++;
@@ -271,14 +271,14 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 						break;
 					if (hexa == POINT1 || hexa == POINT2){
 						printf(".");
-						retourTaille = snprintf(nomDomaine, sizeof(nomDomaine), "%s.",
-							nomDomaine);
+						retourTaille = snprintf(nomDomaine, sizeof(nomDomaine),
+							"%s.", nomDomaine);
 						verifTaille(retourTaille, sizeof(nomDomaine));
 					}
 					else{
 						printf("%c", hexa);
-						retourTaille = snprintf(nomDomaine, sizeof(nomDomaine), "%s%c",
-							nomDomaine, hexa);
+						retourTaille = snprintf(nomDomaine, sizeof(nomDomaine),
+							"%s%c", nomDomaine, hexa);
 						verifTaille(retourTaille, sizeof(nomDomaine));
 					}
 				}

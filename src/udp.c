@@ -24,7 +24,7 @@ void gestionUDP(const u_char* paquet, const int size_ip){
 		printf("BootP");
 		gestionBootP(paquet, size_ip + sizeof(struct udphdr));
 	}
-	if (portSrc == PORTDNS || portDst == PORTDNS){
+	else if (portSrc == PORTDNS || portDst == PORTDNS){
 		printf("DNS");
 		gestionDNS(paquet, size_ip + sizeof(struct udphdr));
 	}

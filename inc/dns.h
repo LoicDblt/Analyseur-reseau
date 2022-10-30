@@ -34,18 +34,21 @@
 // Autre
 #define AFFICHEA		0xc00c
 #define AFFICHECNAME	0xc02f
-#define TAILLEMAX		254
+#define TAILLEMAX		254		// Taille maximale d'un nom de domaine
 
 /************* FONCTIONS **************/
 
-// Fonction d'affichage de la durée, convertie en heures, minutes, secondes
-void affichageDuree(unsigned int dureeSecondes);
+// Fonction de vérification du retour de snprintf
+void verifTaille(const int retourTaille, const size_t element);
+
+// Fonction de conversion et d'affichage de la durée (heures, minutes, secondes)
+void affichageDuree(const unsigned int dureeSecondes);
 
 // Fonction d'affichage du type de requête depuis un pointeur
-void affichageType(unsigned int type);
+void affichageType(const unsigned int type);
 
 // Fonction d'affichage de la classe de requête depuis un pointeur
-void affichageClasse(unsigned int classe);
+void affichageClasse(const unsigned int classe);
 
 // Fonction de gestion du protocole DNS
 void gestionDNS(const u_char* paquet, const int size_udp);

@@ -3,8 +3,6 @@
 
 #include "../inc/main.h"
 
-#define NBRPAQUETS 5 // Passer à -1 pour un nombre infini
-
 int main(int argc, char *argv[]){
 	pcap_t* handle;					// Session handle
 	char* device = "";				// The device to sniff on

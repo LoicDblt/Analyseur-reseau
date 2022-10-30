@@ -5,9 +5,10 @@ bin = bin/
 obj = obj/
 src = src/
 
-all: message main utile ethernet ip udp tcp bootp arp
+all: message main utile ethernet ip udp tcp bootp arp dns
 	$(CC) $(obj)main.o $(obj)utile.o $(obj)ethernet.o $(obj)ip.o $(obj)udp.o \
-		$(obj)tcp.o $(obj)bootp.o $(obj)arp.o -o $(bin)main $(CFLAGS)
+		$(obj)tcp.o $(obj)bootp.o $(obj)arp.o $(obj)dns.o \
+		-o $(bin)main $(CFLAGS)
 
 message:
 	$(info )
@@ -37,6 +38,9 @@ bootp:
 
 arp:
 	$(CC) -c $(src)arp.c -o $(obj)arp.o
+
+dns:
+	$(CC) -c $(src)dns.c -o $(obj)dns.o
 
 clean:
 	rm $(obj)*.o

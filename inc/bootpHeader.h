@@ -1,16 +1,21 @@
 #ifndef BOOTPHEADER_H 
 #define BOOTPHEADER_H
 
+/************** INCLUDES **************/
+
 #include <pcap.h>
 
 #include "bootp.h"
-
 #include "ethernet.h"
 #include "utile.h"
+
+/************* CONSTANTES *************/
 
 #define ETHERNET	0x01
 #define BROADCAST	0x8000
 #define UNICAST		0x0000
+
+/************* FONCTIONS **************/
 
 // Fonction d'affichage d'IP depuis un pointeur
 void affichageIP(const u_int8_t* pointeur, const u_int8_t longueur);

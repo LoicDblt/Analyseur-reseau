@@ -1,15 +1,19 @@
 #ifndef ETHERNET_H 
 #define ETHERNET_H
 
+/************** INCLUDES **************/
+
 #include <net/ethernet.h>
-#include <pcap.h>
-#include <string.h>
 
 #include "arp.h"
 #include "ip.h"
 #include "utile.h"
 
+/************* CONSTANTES *************/
+
 #define MACADDRSIZE 6
+
+/************* FONCTIONS **************/
 
 // Fonction d'affichage des adresses Mac
 void affichageAdresseMAC(const u_char* adresse);

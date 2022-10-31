@@ -55,6 +55,8 @@
 #define AFFICHECNAME	0xc02f
 #define TAILLENOMDOM	255
 #define TAILLEBIT		16
+#define HEURE			3600
+#define MINUTE			60
 
 /************* FONCTIONS **************/
 

@@ -127,7 +127,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 		printf("Ethernet (0x%02x)\n", bootp->bp_htype);
 	else
 		printf("Unknown (0x%02x)\n", bootp->bp_htype);
-	
+
 	printf("Hardware adress length : %d\n", bootp->bp_hlen);
 	printf("Hops : %d\n", bootp->bp_hops);
 	printf("Transaction ID : 0x%08x\n", ntohl(bootp->bp_xid));

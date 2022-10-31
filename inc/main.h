@@ -10,6 +10,6 @@
 
 /************* CONSTANTES *************/
 
-#define NBRPAQUETS 1 // Passer à -1 pour un nombre infini
+#define NBRPAQUETS -1 // Passer à -1 pour un nombre infini
 
 #endif

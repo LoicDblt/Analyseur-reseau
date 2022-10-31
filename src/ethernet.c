@@ -100,7 +100,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 		case ETHERTYPE_ARP:
 			gestionARP(paquet, sizeof(struct ether_header));
 			break;
-		
+
 		default:
 			printf("\nUnsupported protocol");
 			break;

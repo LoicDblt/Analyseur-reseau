@@ -11,9 +11,9 @@ void verifTaille(const int retourTaille, const size_t tailleBuffer){
 void affichageDureeConvertie(const unsigned int dureeSecondes){
 	unsigned int h, m, s;
 
-	h = dureeSecondes / 3600;
-	m = (dureeSecondes - (3600 * h)) / 60;
-	s = dureeSecondes - (3600 * h) - (m * 60);
+	h = dureeSecondes / HEURE;
+	m = (dureeSecondes - (HEURE * h)) / MINUTE;
+	s = dureeSecondes - (HEURE * h) - (m * MINUTE);
 
 	if (h > 0)
 		printf("(%d hours, %d minutes, %d seconds)", h, m, s);
@@ -207,7 +207,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 		retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 		affichageBinaire(concatHex, niemeBit, 1);
 		printf("\tAuthoritative : ");
-		if (retourBit)
+		if (retourBit > 0)
 			printf("Server is an authority for domain");
 		else
 			printf("Server is not an authority for domain");
@@ -219,7 +219,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	affichageBinaire(concatHex, niemeBit, 1);
 	printf("\tTruncated : ");
-	if (retourBit)
+	if (retourBit > 0)
 		printf("Message is truncated");
 	else
 		printf("Message is not truncated");
@@ -228,7 +228,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	affichageBinaire(concatHex, niemeBit, 1);
 	printf("\tRecursion desired : ");
-	if (retourBit)
+	if (retourBit > 0)
 		printf("Do query recursively");
 	else
 		printf("Don't query recursively");
@@ -237,7 +237,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	affichageBinaire(concatHex, niemeBit, 1);
 	printf("\tRecursion available : ");
-	if (retourBit)
+	if (retourBit > 0)
 		printf("Server can do recursive queries");
 	else
 		printf("Server can't do recursive queries");

@@ -14,17 +14,17 @@ void gestionTCP(const u_char* paquet, const int size_ip){
 
 	// Impossible de faire un switch pour gérer de multiples flags
 	printf("Flags : ");
-	if (tcp->th_flags & TH_FIN)
+	if ((tcp->th_flags & TH_FIN) > 0)
 		printf("FIN ");
-	if (tcp->th_flags & TH_SYN)
+	if ((tcp->th_flags & TH_SYN) > 0)
 		printf("SYN ");
-	if (tcp->th_flags & TH_RST)
+	if ((tcp->th_flags & TH_RST) > 0)
 		printf("RST ");
-	if (tcp->th_flags & TH_PUSH)
+	if ((tcp->th_flags & TH_PUSH) > 0)
 		printf("PUSH ");
-	if (tcp->th_flags & TH_ACK)
+	if ((tcp->th_flags & TH_ACK) > 0)
 		printf("ACK ");
-	if (tcp->th_flags & TH_URG)
+	if ((tcp->th_flags & TH_URG) > 0)
 		printf("URG ");
 	printf("(0x%03x)", tcp->th_flags);
 

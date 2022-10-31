@@ -4,7 +4,7 @@ void affichageAdresseMAC(const u_char* adresse){
 	unsigned int addr;
 	int typeAddr = 0;
 
-	for (int i = 0; i < MACADDRSIZE; i++){
+	for (unsigned int i = 0; i < MAC_ADDR_SIZE; i++){
 		addr = (unsigned int) adresse[i];
 
 		// Permet de détecter les "ff"
@@ -16,7 +16,7 @@ void affichageAdresseMAC(const u_char* adresse){
 			printf(":");
 	}
 
-	if (typeAddr == MACADDRSIZE)
+	if (typeAddr == MAC_ADDR_SIZE)
 		printf(" (Broadcast)");
 }
 
@@ -65,21 +65,46 @@ void affichageEtherType(uint16_t type){
 	printf(" (0x%04x)", type);
 }
 
+void affichageConvertiTimestamp(const struct timeval* tv){
+	int retourTaille = 0, offset = 0;
+	char buffer[TAILLE_TIMESTAMP];
+	struct tm *heureLocale = localtime(&tv->tv_sec);
+
+	retourTaille = strftime(buffer, TAILLE_TIMESTAMP, "%b %d, %Y %H:%M:%S",
+		heureLocale);
+
+	if (retourTaille != 0){
+		offset = strlen(buffer);
+		retourTaille = snprintf(buffer + offset, sizeof(buffer) - offset,
+			".%06d", tv->tv_usec);
+		verifTaille(retourTaille, sizeof(buffer));
+	}
+	printf("%s", buffer);
+}
+
 void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	const u_char* paquet
 ){
+	// Argument inutilisé
+	(void) args;
+
 	// Titre de second niveau, du paquet
 	static unsigned int compteurPaquets = 1;
-
 	titreCian("Frame", compteurPaquets);
-	compteurPaquets++;
+
+	// Informations générales sur le paquet
+	printf(VIDER_LIGNE); // Hack pour retirer les \n du titre (pour le style)
+	titreViolet("General");
+
+	printf(JAUNE);
+	printf("Arrival time : ");
+	affichageConvertiTimestamp(&pkthdr->ts);
 
 	// Structures pour le paquet
 	const struct ether_header* ethernet;
 	ethernet = (struct ether_header*)(paquet);
 
 	// Affichage des adresses MAC
-	printf("\033[A\033[A"); // Hack pour retirer les \n du titre (pour le style)
 	titreViolet("Ethernet");
 	printf(JAUNE);
 
@@ -107,4 +132,5 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	}
 
 	printf("%s\n\n", RESET);
+	compteurPaquets++;
 }

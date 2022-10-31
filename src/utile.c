@@ -10,3 +10,11 @@ void titreCian(const char* message, const int compteur){
 void titreViolet(const char* message){
 	printf("\n\n%s*** %s ***%s\n", MAGENTA, message, RESET);
 }
+
+void verifTaille(const int retourTaille, const size_t tailleBuffer){
+	if (retourTaille < 0 || ((size_t) retourTaille) > tailleBuffer){
+		fflush(stdout);
+		fprintf(stderr, "\n%s|Error| snprintf%s\n", ROUGE, RESET);
+		exit(EXIT_FAILURE);
+	}
+}

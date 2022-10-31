@@ -2,7 +2,7 @@
 
 void affichageIP(const u_int8_t* pointeur, const u_int8_t longueur){
 	int nbrPoints = 0;
-	for (int i = 0; i < longueur; i++){
+	for (unsigned int i = 0; i < longueur; i++){
 		printf("%d", pointeur[i]);
 
 		if (nbrPoints/3){
@@ -18,7 +18,7 @@ void affichageIP(const u_int8_t* pointeur, const u_int8_t longueur){
 }
 
 void affichageString(const u_int8_t* pointeur, const u_int8_t longueur){
-	for (int i = 0; i < longueur; i++){
+	for (unsigned int i = 0; i < longueur; i++){
 		printf("%c", *pointeur++);
 	}
 }
@@ -307,7 +307,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 				/* Parameter request list */
 				case TAG_PARM_REQUEST:
 					printf("Parameters request :");
-					for (int i = 0; i < longueur; i++){
+					for (unsigned int i = 0; i < longueur; i++){
 						printf("\n\t");
 						affichageParam(&copieVend[i]);
 					}

@@ -1,19 +1,11 @@
 #include "../inc/dns.h"
 
-void verifTaille(const int retourTaille, const size_t tailleBuffer){
-	if (retourTaille < 0 || ((size_t) retourTaille) >= tailleBuffer){
-		fflush(stdout);
-		fprintf(stderr, "\n%s|Error| snprintf%s\n", ROUGE, RESET);
-		exit(EXIT_FAILURE);
-	}
-}
-
 void affichageDureeConvertie(const unsigned int dureeSecondes){
 	unsigned int h, m, s;
 
-	h = dureeSecondes / HEURE;
-	m = (dureeSecondes - (HEURE * h)) / MINUTE;
-	s = dureeSecondes - (HEURE * h) - (m * MINUTE);
+	h = dureeSecondes / SEC_DANS_HEURE;
+	m = (dureeSecondes - (SEC_DANS_HEURE * h)) / SEC_DANS_MIN;
+	s = dureeSecondes - (SEC_DANS_HEURE * h) - (m * SEC_DANS_MIN);
 
 	if (h > 0)
 		printf("(%d hours, %d minutes, %d seconds)", h, m, s);
@@ -118,17 +110,17 @@ void affichageClasse(const unsigned int classe){
 unsigned int recupereNiemeBit(const unsigned int nombre,
 	const unsigned int nieme
 ){
-	return (nombre >> ((TAILLEBIT-1)-nieme)) & 1;
+	return (nombre >> ((TAILLE_BIT-1)-nieme)) & 1;
 }
 
 void affichageBinaire(const unsigned int nombre,
 	const unsigned int nieme, const unsigned int nbrContigu
 ){
 	printf("\n");
-	for (int i = 0; i < TAILLEBIT; i++){
+	for (unsigned int i = 0; i < TAILLE_BIT; i++){
 		if (i == nieme){
 			printf("%d", recupereNiemeBit(nombre, nieme));
-			for (int j = 1; j < nbrContigu; j++){
+			for (unsigned int j = 1; j < nbrContigu; j++){
 				printf("%d", recupereNiemeBit(nombre, nieme+j));
 				i++;
 			}
@@ -145,7 +137,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 	unsigned int bitUn, bitDeux, bitTrois, bitQuatre, concatBit, retourBit;
 	unsigned int nbrQuestions, nbrReponses;
 
-	char nomDomaine[TAILLENOMDOM];
+	char nomDomaine[TAILLE_NOM_DOM];
 
 	titreViolet("DNS");
 	printf(JAUNE);
@@ -261,7 +253,8 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 		bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
 		bitQuatre = recupereNiemeBit(concatHex, ++niemeBit);
 		printf("\tReply code : ");
-		concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
+		concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) |
+			(bitQuatre);
 
 		switch (concatBit){
 			/* No error */
@@ -331,8 +324,8 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 		while (nbrQuestions > 0){
 			nbrQuestions--;
 			u_int8_t hexa = *pointeurDns++;
-			int tailleNom = 0, nbrLabels = 1, i = 0, retourTaille = 0;
-			while (tailleNom < TAILLENOMDOM){
+			int tailleNom = 0, nbrLabels = 1, retourTaille = 0;
+			while (tailleNom < TAILLE_NOM_DOM){
 				hexa = *pointeurDns++;
 				int offset;
 
@@ -386,7 +379,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 			hexDeux = *pointeurDns++;
 			concatHex = (hexUn << 8) | (hexDeux);
 			printf("\n\tName : ");
-			if (concatHex == AFFICHEA || concatHex == AFFICHECNAME)
+			if (concatHex == AFFICHE_A || concatHex == AFFICHE_CNAME)
 				printf("%s", nomDomaine);
 			else
 				printf("Unknown (0x%04x)", concatHex);
@@ -429,7 +422,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 				unsigned int hexa = *pointeurDns++;
 
 				int retourTaille = 0;
-				for (int i = 0; i < concatHex; i++){
+				for (unsigned int i = 0; i < concatHex; i++){
 					hexa = *pointeurDns++;
 					int offset;
 

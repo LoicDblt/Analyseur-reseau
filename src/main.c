@@ -10,9 +10,7 @@ int main(int argc, char *argv[]){
 	struct bpf_program fp;			// The compiled filter
 	char* filter_exp = "";			// The filter expression
 	bpf_u_int32 mask;				// Our netmask
-	bpf_u_int32 net;				// Our IP
-	struct pcap_pkthdr header;		// The header that pcap gives us
-	const u_char* paquet;			// The actual packet
+	bpf_u_int32 net = 0;			// Our IP
 
 	// Gestion des commutateurs
 	int iFlag = 0, oFlag = 0, fFlag = 0, vFlag = 0;
@@ -107,7 +105,6 @@ int main(int argc, char *argv[]){
 		if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
 			fprintf(stderr, "|Error| Couldn't get netmask for device %s "
 				":\n%s\n", device, errbuf);
-			net = 0;
 			mask = 0;
 		}
 

@@ -11,7 +11,7 @@
 
 /************* CONSTANTES *************/
 
-#define PORTDNS	53
+#define PORT_DNS	53
 
 /************* FONCTIONS **************/
 

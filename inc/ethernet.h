@@ -11,7 +11,8 @@
 
 /************* CONSTANTES *************/
 
-#define MACADDRSIZE 6
+#define MAC_ADDR_SIZE		6
+#define TAILLE_TIMESTAMP	48
 
 /************* FONCTIONS **************/
 

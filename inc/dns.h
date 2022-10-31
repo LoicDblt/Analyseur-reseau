@@ -51,17 +51,14 @@
 #define POINT2	0x08
 
 // Autre
-#define AFFICHEA		0xc00c
-#define AFFICHECNAME	0xc02f
-#define TAILLENOMDOM	255
-#define TAILLEBIT		16
-#define HEURE			3600
-#define MINUTE			60
+#define AFFICHE_A		0xc00c
+#define AFFICHE_CNAME	0xc02f
+#define TAILLE_NOM_DOM	255
+#define TAILLE_BIT		16
+#define SEC_DANS_MIN	60
+#define SEC_DANS_HEURE	3600
 
 /************* FONCTIONS **************/
-
-// Fonction de vérification du retour de snprintf
-void verifTaille(const int retourTaille, const size_t tailleBuffer);
 
 // Fonction de conversion et d'affichage de la durée (heures, minutes, secondes)
 void affichageDureeConvertie(const unsigned int dureeSecondes);

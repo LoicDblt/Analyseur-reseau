@@ -26,10 +26,6 @@ void gestionTCP(const u_char* paquet, const int size_ip){
 		printf("ACK ");
 	if (tcp->th_flags & TH_URG)
 		printf("URG ");
-	if (tcp->th_flags & TH_ECE)
-		printf("ECE ");
-	if (tcp->th_flags & TH_CWR)
-		printf("CWR ");
 	printf("(0x%03x)", tcp->th_flags);
 
 	printf("\nWindow : %u\n", ntohs(tcp->th_win));

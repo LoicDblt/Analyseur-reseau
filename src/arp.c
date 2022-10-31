@@ -7,7 +7,7 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 	printf(JAUNE);
 
 	printf("Hardware  type : ");
-	switch(ntohs(arp->ar_hrd)){
+	switch (ntohs(arp->ar_hrd)){
 		/* Ethernet hardware format */
 		case ARPHRD_ETHER:
 			printf("Ethernet");
@@ -19,7 +19,11 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 			break;
 
 		/* Frame relay hardware format */
-		case ARPHRD_FRELAY:
+		#if __APPLE__ // Noms de constantes différents sur MacOS
+			case ARPHRD_FRELAY:
+		#else
+			case ARPHRD_DLCI:
+		#endif
 			printf("Frame relay");
 			break;
 
@@ -29,7 +33,11 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 			break;
 
 		/* IEEE1394 EUI-64 */
-		case ARPHRD_IEEE1394_EUI64:
+		#if __APPLE__
+			case ARPHRD_IEEE1394_EUI64:
+		#else
+			case ARPHRD_EUI64:
+		#endif
 			printf("IEEE1394 EUI64");
 			break;
 
@@ -46,7 +54,7 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 	printf("Protocol address length : %d\n", arp->ar_pln);
 
 	printf("Opcode : ");
-	switch(ntohs(arp->ar_op)){
+	switch (ntohs(arp->ar_op)){
 		/* Request */
 		case ARPOP_REQUEST:
 			printf("Request");
@@ -58,22 +66,38 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 			break;
 
 		/* Revrequest */
-		case ARPOP_REVREQUEST:
+		#if __APPLE__
+			case ARPOP_REVREQUEST:
+		#else
+			case ARPOP_RREQUEST:
+		#endif
 			printf("Revrequest");
 			break;
 
 		/* Revreply */
-		case ARPOP_REVREPLY:
+		#if __APPLE__
+			case ARPOP_REVREPLY:
+		#else
+			case ARPOP_RREPLY:
+		#endif
 			printf("Revreply");
 			break;
 
 		/* Invrequest */
-		case ARPOP_INVREQUEST:
+		#if __APPLE__
+			case ARPOP_INVREQUEST:
+		#else
+			case ARPOP_InREQUEST:
+		#endif
 			printf("Invrequest");
 			break;
 
 		/* Invreply */
-		case ARPOP_INVREPLY:
+		#if __APPLE__
+			case ARPOP_INVREPLY:
+		#else
+			case ARPOP_InREPLY:
+		#endif
 			printf("Invreply");
 			break;
 

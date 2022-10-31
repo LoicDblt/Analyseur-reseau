@@ -23,12 +23,12 @@ void affichageString(const u_int8_t* pointeur, const u_int8_t longueur){
 	}
 }
 
-void affichageDurée(const u_int8_t* pointeur){
+void affichageDuree(const u_int8_t* pointeur){
 	printf("%ds", ntohl(*((int*) pointeur)));
 }
 
 void affichageParam(const u_int8_t* pointeur){
-	switch(*pointeur){
+	switch (*pointeur){
 		/* Subnet mask */
 		case TAG_SUBNET_MASK:
 			printf("(%d)\tSubnet mask", *pointeur);
@@ -107,7 +107,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 	titreViolet("BootP");
 	printf(JAUNE);
 	printf("Message type : ");
-	switch(bootp->bp_op){
+	switch (bootp->bp_op){
 		/* Bootrequest */
 		case BOOTREQUEST:
 			printf("Request (%d)", BOOTREQUEST);
@@ -134,7 +134,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 	printf("Seconds elapsed : %u\n", bootp->bp_secs);
 
 	printf("Flags : ");
-	switch(ntohs(bootp->bp_flags)){
+	switch (ntohs(bootp->bp_flags)){
 		/* Broadcast */
 		case BROADCAST:
 			printf("Broadcast");
@@ -186,7 +186,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 		u_int8_t type, longueur;
 		copieVend += 4;
 
-		while(1){
+		while (1){
 			// On avance (Type, puis Longueur et enfin Valeur)
 			type = *copieVend++;
 			longueur = *copieVend++;
@@ -194,7 +194,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 			if (type != TAG_END)
 				printf("(%d) ", type);
 
-			switch(type){
+			switch (type){
 				/* Subnet mask */
 				case TAG_SUBNET_MASK:
 					printf("Subnet mask : ");
@@ -204,7 +204,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 				/* Offset */
 				case TAG_TIME_OFFSET:
 					printf("Time offset : ");
-					affichageDurée(copieVend);
+					affichageDuree(copieVend);
 					break;
 
 				/* Router */
@@ -246,14 +246,14 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 				/* Lease time */
 				case TAG_IP_LEASE:
 					printf("IP lease : ");
-					affichageDurée(copieVend);
+					affichageDuree(copieVend);
 					break;
 
 				/* DHCP message type */
 				case TAG_DHCP_MESSAGE: {
 					printf("DHCP message : ");
 
-					switch(*copieVend){
+					switch (*copieVend){
 						/* Discover */
 						case DHCPDISCOVER:
 							printf("Discover");
@@ -316,13 +316,13 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 				/* Renewal time */
 				case TAG_RENEWAL_TIME:
 					printf("Renewal time : ");
-					affichageDurée(copieVend);
+					affichageDuree(copieVend);
 					break;
 
 				/* Rebind time */
 				case TAG_REBIND_TIME:
 					printf("Rebind time : ");
-					affichageDurée(copieVend);
+					affichageDuree(copieVend);
 					break;
 
 				/* Client identifier */

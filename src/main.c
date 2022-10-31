@@ -19,12 +19,12 @@ int main(int argc, char *argv[]){
 	int opt, niveau;
 	char* nomFichier;
 
-	while((opt = getopt (argc, argv, "i:o:f:v:")) != -1){
+	while ((opt = getopt (argc, argv, "i:o:f:v:")) != -1){
 		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0)
 			titreCian("Enabled options", -1);
 		printf(VERT);
 
-		switch(opt){
+		switch (opt){
 			case 'i': // Interface
 				iFlag = 1;
 				if (optarg[0] == '-'){
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 				vFlag = 1;
 				niveau = atoi(optarg);
 				char* verbosite;
-				switch(niveau){
+				switch (niveau){
 					case 1:
 						verbosite = "very concise";
 						break;

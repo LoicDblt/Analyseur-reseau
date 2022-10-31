@@ -1,12 +1,10 @@
 #include "../inc/ethernet.h"
 
 void affichageAdresseMAC(const u_char* adresse){
-	int i;
 	unsigned int addr;
-
 	int typeAddr = 0;
 
-	for (i = 0; i < MACADDRSIZE; i++){
+	for (int i = 0; i < MACADDRSIZE; i++){
 		addr = (unsigned int) adresse[i];
 
 		// Permet de détecter les "ff"
@@ -23,7 +21,7 @@ void affichageAdresseMAC(const u_char* adresse){
 }
 
 void affichageEtherType(uint16_t type){
-	switch(type){
+	switch (type){
 		/* PUP protocol */
 		case ETHERTYPE_PUP:
 			printf("PUP");
@@ -52,21 +50,6 @@ void affichageEtherType(uint16_t type){
 		/* IPv6 */
 		case ETHERTYPE_IPV6:
 			printf("IPv6");
-			break;
-
-		/* EAPOL PAE/802.1x */
-		case ETHERTYPE_PAE:
-			printf("PAE");
-			break;
-
-		/* 802.11i / RSN Pre-Authentication */
-		case ETHERTYPE_RSN_PREAUTH:
-			printf("RSN");
-			break;
-
-		/* IEEE 1588 Precision Time Protocol */
-		case ETHERTYPE_PTP:
-			printf("PTP");
 			break;
 
 		/* Used to test interfaces */
@@ -109,7 +92,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	affichageEtherType(ntohs(ethernet->ether_type));
 
 	// Protocoles pris en charge
-	switch(ntohs(ethernet->ether_type)){
+	switch (ntohs(ethernet->ether_type)){
 		case ETHERTYPE_IP:
 			gestionIP(paquet, sizeof(struct ether_header));
 			break;

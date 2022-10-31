@@ -53,16 +53,16 @@
 // Autre
 #define AFFICHEA		0xc00c
 #define AFFICHECNAME	0xc02f
-#define TAILLEMAX		255		// Taille maximale d'un nom de domaine
+#define TAILLENOMDOM	255
 #define TAILLEBIT		16
 
 /************* FONCTIONS **************/
 
 // Fonction de vérification du retour de snprintf
-void verifTaille(const int retourTaille, const size_t element);
+void verifTaille(const int retourTaille, const size_t tailleBuffer);
 
 // Fonction de conversion et d'affichage de la durée (heures, minutes, secondes)
-void affichageDuree(const unsigned int dureeSecondes);
+void affichageDureeConvertie(const unsigned int dureeSecondes);
 
 // Fonction d'affichage du type de requête depuis un pointeur
 void affichageType(const unsigned int type);

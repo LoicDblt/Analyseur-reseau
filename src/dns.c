@@ -1,14 +1,14 @@
 #include "../inc/dns.h"
 
-void verifTaille(const int retourTaille, const size_t element){
-	if (retourTaille < 0 || ((size_t) retourTaille) >= element){
+void verifTaille(const int retourTaille, const size_t tailleBuffer){
+	if (retourTaille < 0 || ((size_t) retourTaille) >= tailleBuffer){
 		fflush(stdout);
 		fprintf(stderr, "\n%s|Error| snprintf%s\n", ROUGE, RESET);
 		exit(EXIT_FAILURE);
 	}
 }
 
-void affichageDuree(const unsigned int dureeSecondes){
+void affichageDureeConvertie(const unsigned int dureeSecondes){
 	unsigned int h, m, s;
 
 	h = dureeSecondes / 3600;
@@ -25,7 +25,7 @@ void affichageDuree(const unsigned int dureeSecondes){
 
 void affichageType(const unsigned int type){
 	printf("\n\tType : ");
-		switch(type){
+		switch (type){
 			/* A */
 			case A:
 				printf("A (Host adress)");
@@ -86,7 +86,7 @@ void affichageType(const unsigned int type){
 
 void affichageClasse(const unsigned int classe){
 	printf("\n\tClass : ");
-		switch(classe){
+		switch (classe){
 			/* IN */
 			case IN:
 				printf("IN");
@@ -145,7 +145,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 	unsigned int bitUn, bitDeux, bitTrois, bitQuatre, concatBit, retourBit;
 	unsigned int nbrQuestions, nbrReponses;
 
-	char nomDomaine[TAILLEMAX];
+	char nomDomaine[TAILLENOMDOM];
 
 	titreViolet("DNS");
 	printf(JAUNE);
@@ -160,11 +160,6 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 	concatHex = (hexUn << 8) | (hexDeux);
 	printf("\nFlags : 0x%04x", concatHex);
 	int niemeBit = 0;
-
-	printf("\n");
-	for (int i = niemeBit; i < TAILLEBIT; i++){
-		printf("%d ", recupereNiemeBit(concatHex, i));
-	}
 
 	// Response
 	affichageBinaire(concatHex, niemeBit, 1);
@@ -184,7 +179,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 	printf("\tOp code : ");
 	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
 
-	switch(concatBit){
+	switch (concatBit){
 		/* Query */
 		case QUERY:
 			printf("Standard query");
@@ -268,7 +263,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 		printf("\tReply code : ");
 		concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
 
-		switch(concatBit){
+		switch (concatBit){
 			/* No error */
 			case NOERR:
 				printf("No error");
@@ -335,30 +330,31 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 
 		while (nbrQuestions > 0){
 			nbrQuestions--;
-			printf("\n\tName : ");
 			u_int8_t hexa = *pointeurDns++;
 			int tailleNom = 0, nbrLabels = 1, i = 0, retourTaille = 0;
-			while(1){
+			while (tailleNom < TAILLENOMDOM){
 				hexa = *pointeurDns++;
+				int offset;
 
 				if (hexa == FIN)
 					break;
 				if (hexa == POINT1 || hexa == POINT2){
-					printf(".");
-					nbrLabels++;
-
-					retourTaille = snprintf(nomDomaine, sizeof(nomDomaine),
-						"%s.", nomDomaine);
+					offset = strlen(nomDomaine);
+					retourTaille = snprintf(nomDomaine + offset,
+						sizeof(nomDomaine) - offset, ".");
 					verifTaille(retourTaille, sizeof(nomDomaine));
+
+					nbrLabels++;
 				}
 				else{
-					printf("%c", hexa);
-					retourTaille = snprintf(nomDomaine, sizeof(nomDomaine),
-						"%s%c", nomDomaine, hexa);
+					offset = strlen(nomDomaine);
+					retourTaille = snprintf(nomDomaine + offset, 
+						sizeof(nomDomaine) - offset, "%c", hexa);
 					verifTaille(retourTaille, sizeof(nomDomaine));
 				}
 				tailleNom++;
 			}
+			printf("\n\tName : %s", nomDomaine);
 			printf("\n\t[Name length] : %d", tailleNom);
 			printf("\n\t[Label count] : %d", nbrLabels);
 
@@ -416,7 +412,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
 			printf("\n\tTime to live : %d ", concatHex);
-			affichageDuree(concatHex);
+			affichageDureeConvertie(concatHex);
 
 			// Data length
 			hexUn = *pointeurDns++;
@@ -435,22 +431,25 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 				int retourTaille = 0;
 				for (int i = 0; i < concatHex; i++){
 					hexa = *pointeurDns++;
+					int offset;
 
 					if (hexa == FIN)
 						break;
 					if (hexa == POINT1 || hexa == POINT2){
-						printf(".");
-						retourTaille = snprintf(nomDomaine, sizeof(nomDomaine),
-							"%s.", nomDomaine);
+						offset = strlen(nomDomaine);
+						retourTaille = snprintf(nomDomaine + offset,
+							sizeof(nomDomaine) - offset, ".");
+
 						verifTaille(retourTaille, sizeof(nomDomaine));
 					}
 					else{
-						printf("%c", hexa);
-						retourTaille = snprintf(nomDomaine, sizeof(nomDomaine),
-							"%s%c", nomDomaine, hexa);
+						offset = strlen(nomDomaine);
+						retourTaille = snprintf(nomDomaine + offset,
+							sizeof(nomDomaine) - offset, "%c", hexa);
 						verifTaille(retourTaille, sizeof(nomDomaine));
 					}
 				}
+				printf("%s", nomDomaine);
 			}
 			else{
 				affichageIP(pointeurDns, concatHex);

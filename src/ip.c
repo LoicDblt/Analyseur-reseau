@@ -19,7 +19,7 @@ void gestionIP(const u_char* paquet, const int size_ethernet){
 
 	printf("Protocol : ");
 	unsigned int proto = ip->ip_p;
-	switch(proto){
+	switch (proto){
 		/* TCP */
 		case TCP:
 			printf("TCP (%d)", proto);

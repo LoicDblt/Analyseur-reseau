@@ -3,7 +3,6 @@
 
 /************** INCLUDES **************/
 
-#include <arpa/inet.h>
 #include <netinet/tcp.h>
 
 #include "utile.h"

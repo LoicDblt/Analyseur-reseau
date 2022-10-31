@@ -11,13 +11,9 @@
 
 /************* CONSTANTES *************/
 
-#define MAC_ADDR_SIZE		6
 #define TAILLE_TIMESTAMP	48
 
 /************* FONCTIONS **************/
-
-// Fonction d'affichage des adresses Mac
-void affichageAdresseMAC(const u_char* adresse);
 
 // Fonction d'affichage du type ethernet
 void affichageEtherType(uint16_t type);

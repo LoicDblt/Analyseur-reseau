@@ -4,7 +4,6 @@ void gestionIP(const u_char* paquet, const int size_ethernet){
 	const struct ip* ip = (struct ip*)(paquet + size_ethernet);
 
 	titreViolet("IP");
-	printf(JAUNE);
 
 	printf("Src IP : %s\n", inet_ntoa(ip->ip_src));
 	printf("Dst IP : %s\n", inet_ntoa(ip->ip_dst));

@@ -1,25 +1,5 @@
 #include "../inc/ethernet.h"
 
-void affichageAdresseMAC(const u_char* adresse){
-	unsigned int addr;
-	int typeAddr = 0;
-
-	for (unsigned int i = 0; i < MAC_ADDR_SIZE; i++){
-		addr = (unsigned int) adresse[i];
-
-		// Permet de détecter les "ff"
-		if (addr == 255)
-			typeAddr++;
-
-		printf("%.2x", addr);
-		if (i < 5)
-			printf(":");
-	}
-
-	if (typeAddr == MAC_ADDR_SIZE)
-		printf(" (Broadcast)");
-}
-
 void affichageEtherType(uint16_t type){
 	switch (type){
 		/* PUP protocol */
@@ -96,7 +76,6 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	printf(VIDER_LIGNE); // Hack pour retirer les \n du titre (pour le style)
 	titreViolet("General");
 
-	printf(JAUNE);
 	printf("Arrival time : ");
 	affichageConvertiTimestamp(&pkthdr->ts);
 
@@ -106,7 +85,6 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 
 	// Affichage des adresses MAC
 	titreViolet("Ethernet");
-	printf(JAUNE);
 
 	printf("Src MAC : ");
 	affichageAdresseMAC(ethernet->ether_shost); // Adresse src

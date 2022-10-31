@@ -4,7 +4,6 @@ void gestionTCP(const u_char* paquet, const int size_ip){
 	const struct tcphdr* tcp = (struct tcphdr*)(paquet + size_ip);
 
 	titreViolet("TCP");
-	printf(JAUNE);
 
 	printf("Src port : %u\n", ntohs(tcp->th_sport));
 	printf("Dst port : %u\n", ntohs(tcp->th_dport));

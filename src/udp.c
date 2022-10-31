@@ -7,7 +7,6 @@ void gestionUDP(const u_char* paquet, const int size_ip){
 	ushort portDst = ntohs(udp->uh_dport);
 
 	titreViolet("UDP");
-	printf(JAUNE);
 
 	printf("Src port : %u\n", portSrc);
 	printf("Dst port : %u\n", portDst);

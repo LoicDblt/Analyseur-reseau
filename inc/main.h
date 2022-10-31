@@ -5,8 +5,8 @@
 
 #include <unistd.h>
 
-#include "../inc/utile.h"
-#include "../inc/ethernet.h"
+#include "utile.h"
+#include "ethernet.h"
 
 /************* CONSTANTES *************/
 

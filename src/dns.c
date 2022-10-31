@@ -140,7 +140,6 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 	char nomDomaine[TAILLE_NOM_DOM];
 
 	titreViolet("DNS");
-	printf(JAUNE);
 
 	hexUn = *pointeurDns++; 				// Récupère le premier hexa
 	hexDeux = *pointeurDns++;				// Récupère le second hexa
@@ -445,7 +444,7 @@ void gestionDNS(const u_char* paquet, const int size_udp){
 				printf("%s", nomDomaine);
 			}
 			else{
-				affichageIP(pointeurDns, concatHex);
+				affichageAdresseIP(pointeurDns, concatHex);
 				pointeurDns += concatHex;
 			}
 

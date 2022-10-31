@@ -1,22 +1,5 @@
 #include "../inc/bootpHeader.h"
 
-void affichageIP(const u_int8_t* pointeur, const u_int8_t longueur){
-	int nbrPoints = 0;
-	for (unsigned int i = 0; i < longueur; i++){
-		printf("%d", pointeur[i]);
-
-		if (nbrPoints/3){
-			nbrPoints = 0;
-			if (i+1 < longueur)
-				printf(" and ");
-		}
-		else{
-			printf(".");
-			nbrPoints++;
-		}
-	}
-}
-
 void affichageString(const u_int8_t* pointeur, const u_int8_t longueur){
 	for (unsigned int i = 0; i < longueur; i++){
 		printf("%c", *pointeur++);
@@ -105,7 +88,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 	const struct bootp* bootp = (struct bootp*)(paquet + size_udp);
 
 	titreViolet("BootP");
-	printf(JAUNE);
+
 	printf("Message type : ");
 	switch (bootp->bp_op){
 		/* Bootrequest */
@@ -180,7 +163,6 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 	if (memcmp(copieVend, magicCookie, sizeof(magicCookie)) == 0){
 		printf("DHCP");
 		titreViolet("DHCP");
-		printf(JAUNE);
 
 		// Principe du Type Len Value (TLV)
 		u_int8_t type, longueur;
@@ -198,7 +180,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 				/* Subnet mask */
 				case TAG_SUBNET_MASK:
 					printf("Subnet mask : ");
-					affichageIP(copieVend, longueur);
+					affichageAdresseIP(copieVend, longueur);
 					break;
 
 				/* Offset */
@@ -210,13 +192,13 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 				/* Router */
 				case TAG_GATEWAY:
 					printf("Gateway : ");
-					affichageIP(copieVend, longueur);
+					affichageAdresseIP(copieVend, longueur);
 					break;
 
 				/* DNS */
 				case TAG_DOMAIN_SERVER:
 					printf("DNS : ");
-					affichageIP(copieVend, longueur);
+					affichageAdresseIP(copieVend, longueur);
 					break;
 
 				/* Hostname */
@@ -234,13 +216,13 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 				/* Broadcast address */
 				case TAG_BROAD_ADDR:
 					printf("Broadcast address : ");
-					affichageIP(copieVend, longueur);
+					affichageAdresseIP(copieVend, longueur);
 					break;
 
 				/* Requested IP address */
 				case TAG_REQUESTED_IP:
 					printf("Requested IP : ");
-					affichageIP(copieVend, longueur);
+					affichageAdresseIP(copieVend, longueur);
 					break;
 
 				/* Lease time */
@@ -301,7 +283,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 				/* Server identifier */
 				case TAG_SERVER_ID:
 					printf("Server ID : ");
-					affichageIP(copieVend, longueur);
+					affichageAdresseIP(copieVend, longueur);
 					break;
 
 				/* Parameter request list */

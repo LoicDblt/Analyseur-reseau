@@ -4,7 +4,6 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 	const struct arphdr* arp = (struct arphdr*)(paquet + size_ethernet);
 
 	titreViolet("ARP");
-	printf(JAUNE);
 
 	printf("Hardware  type : ");
 	switch (ntohs(arp->ar_hrd)){
@@ -115,7 +114,7 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 	pointeurFinStruct += arp->ar_hln;
 
 	printf("\nSrc IP address : ");
-	affichageIP(pointeurFinStruct, arp->ar_pln);
+	affichageAdresseIP(pointeurFinStruct, arp->ar_pln);
 	pointeurFinStruct += arp->ar_pln;
 
 	printf("\nDst MAC address : ");
@@ -123,5 +122,5 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 	pointeurFinStruct += arp->ar_hln;
 
 	printf("\nDst IP address : ");
-	affichageIP(pointeurFinStruct, arp->ar_pln);
+	affichageAdresseIP(pointeurFinStruct, arp->ar_pln);
 }

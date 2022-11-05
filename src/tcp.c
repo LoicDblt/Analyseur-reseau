@@ -43,7 +43,7 @@ void gestionTCP(const u_char* paquet, const int offset){
 	printf("Options :\n");
 
 	while (pointeurTCP < pointeurTCPFinOptions){
-		// On avance (Type, puis Longueur et enfin Valeur)
+		// On avance ("Type", puis "Longueur" et enfin "Valeur")
 		printf("\t");
 		int type = *pointeurTCP++;
 		int longueur;
@@ -85,7 +85,7 @@ void gestionTCP(const u_char* paquet, const int offset){
 			/* Window scale */
 			case TCPOPT_WINDOW:
 				printf("Window scale (%d)", type);
-				printf("\n\t\tShift count : %x", *pointeurTCP);
+				printf("\n\t\tShift count : %x (Multiplier 128)", *pointeurTCP);
 				break;
 
 			/* Timestamp */
@@ -110,11 +110,11 @@ void gestionTCP(const u_char* paquet, const int offset){
 		}
 		printf("\n");
 
-		// On passe au Type suivant
+		// On passe au "Type" suivant
 		pointeurTCP += longueur;
 	}
 
-	// SMTP
+	// Ports SMTP
 	if (
 		portSrc == PORT_SMTP_1 || portDst == PORT_SMTP_1 ||
 		portSrc == PORT_SMTP_2 || portDst == PORT_SMTP_2
@@ -122,7 +122,6 @@ void gestionTCP(const u_char* paquet, const int offset){
 		printf("Protocol : SMTP");
 		gestionSMTP(paquet, offset + tailleHeader);
 	}
-
 	if (portSrc == PORT_SMTP_TLS || portDst == PORT_SMTP_TLS)
 		printf("Protocol : SMTP TLS (Unsupported)");
 }

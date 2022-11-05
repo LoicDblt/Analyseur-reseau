@@ -169,7 +169,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 		pointeurDCHP += 4;
 
 		while (1){
-			// On avance (Type, puis Longueur et enfin Valeur)
+			// On avance ("Type", puis "Longueur" et enfin "Valeur")
 			type = *pointeurDCHP++;
 			longueur = *pointeurDCHP++;
 
@@ -324,7 +324,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 			}
 			printf("\n");
 
-			// On passe au Type suivant
+			// On passe au "Type" suivant
 			pointeurDCHP += longueur;
 		}
 	}

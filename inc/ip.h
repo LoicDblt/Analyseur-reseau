@@ -17,6 +17,6 @@
 /************* FONCTIONS **************/
 
 // Fonction de gestion du protocole IP
-void gestionIP(const u_char* paquet, const int size_ethernet);
+void gestionIP(const u_char* paquet, const int offset);
 
 #endif

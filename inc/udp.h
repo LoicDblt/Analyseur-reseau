@@ -16,6 +16,6 @@
 /************* FONCTIONS **************/
 
 // Fonction de gestion du protocole UDP
-void gestionUDP(const u_char* paquet, const int size_ip);
+void gestionUDP(const u_char* paquet, const int offset);
 
 #endif

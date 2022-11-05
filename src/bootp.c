@@ -84,8 +84,8 @@ void affichageParam(const u_int8_t* pointeur){
 	}
 }
 
-void gestionBootP(const u_char* paquet, const int size_udp){
-	const struct bootp* bootp = (struct bootp*)(paquet + size_udp);
+void gestionBootP(const u_char* paquet, const int offset){
+	const struct bootp* bootp = (struct bootp*)(paquet + offset);
 
 	titreViolet("BootP");
 
@@ -157,21 +157,21 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 	// Vérification du magic cookie
 	printf("Magic cookie : ");
 
-	u_int8_t* copieVend = (u_int8_t*) bootp->bp_vend;
+	u_int8_t* pointeurDCHP = (u_int8_t*) bootp->bp_vend;
 	const u_int8_t magicCookie[4] = VM_RFC1048;
 
-	if (memcmp(copieVend, magicCookie, sizeof(magicCookie)) == 0){
+	if (memcmp(pointeurDCHP, magicCookie, sizeof(magicCookie)) == 0){
 		printf("DHCP");
 		titreViolet("DHCP");
 
 		// Principe du Type Len Value (TLV)
 		u_int8_t type, longueur;
-		copieVend += 4;
+		pointeurDCHP += 4;
 
 		while (1){
 			// On avance (Type, puis Longueur et enfin Valeur)
-			type = *copieVend++;
-			longueur = *copieVend++;
+			type = *pointeurDCHP++;
+			longueur = *pointeurDCHP++;
 
 			if (type != TAG_END)
 				printf("(%d) ", type);
@@ -180,62 +180,62 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 				/* Subnet mask */
 				case TAG_SUBNET_MASK:
 					printf("Subnet mask : ");
-					affichageAdresseIP(copieVend, longueur);
+					affichageAdresseIP(pointeurDCHP, longueur);
 					break;
 
 				/* Offset */
 				case TAG_TIME_OFFSET:
 					printf("Time offset : ");
-					affichageDuree(copieVend);
+					affichageDuree(pointeurDCHP);
 					break;
 
 				/* Router */
 				case TAG_GATEWAY:
 					printf("Gateway : ");
-					affichageAdresseIP(copieVend, longueur);
+					affichageAdresseIP(pointeurDCHP, longueur);
 					break;
 
 				/* DNS */
 				case TAG_DOMAIN_SERVER:
 					printf("DNS : ");
-					affichageAdresseIP(copieVend, longueur);
+					affichageAdresseIP(pointeurDCHP, longueur);
 					break;
 
 				/* Hostname */
 				case TAG_HOSTNAME:
 					printf("Hostname : ");
-					affichageString(copieVend, longueur);
+					affichageString(pointeurDCHP, longueur);
 					break;
 
 				/* Domain name */
 				case TAG_DOMAINNAME:
 					printf("Domain name : ");
-					affichageString(copieVend, longueur);
+					affichageString(pointeurDCHP, longueur);
 					break;
 
 				/* Broadcast address */
 				case TAG_BROAD_ADDR:
 					printf("Broadcast address : ");
-					affichageAdresseIP(copieVend, longueur);
+					affichageAdresseIP(pointeurDCHP, longueur);
 					break;
 
 				/* Requested IP address */
 				case TAG_REQUESTED_IP:
 					printf("Requested IP : ");
-					affichageAdresseIP(copieVend, longueur);
+					affichageAdresseIP(pointeurDCHP, longueur);
 					break;
 
 				/* Lease time */
 				case TAG_IP_LEASE:
 					printf("IP lease : ");
-					affichageDuree(copieVend);
+					affichageDuree(pointeurDCHP);
 					break;
 
 				/* DHCP message type */
 				case TAG_DHCP_MESSAGE: {
 					printf("DHCP message : ");
 
-					switch (*copieVend){
+					switch (*pointeurDCHP){
 						/* Discover */
 						case DHCPDISCOVER:
 							printf("Discover");
@@ -276,14 +276,14 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 							printf("Unsupported");
 							break;
 					}
-					printf(" (%d)", *copieVend);
+					printf(" (%d)", *pointeurDCHP);
 					break;
 				}
 
 				/* Server identifier */
 				case TAG_SERVER_ID:
 					printf("Server ID : ");
-					affichageAdresseIP(copieVend, longueur);
+					affichageAdresseIP(pointeurDCHP, longueur);
 					break;
 
 				/* Parameter request list */
@@ -291,26 +291,26 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 					printf("Parameters request :");
 					for (unsigned int i = 0; i < longueur; i++){
 						printf("\n\t");
-						affichageParam(&copieVend[i]);
+						affichageParam(&pointeurDCHP[i]);
 					}
 					break;
 
 				/* Renewal time */
 				case TAG_RENEWAL_TIME:
 					printf("Renewal time : ");
-					affichageDuree(copieVend);
+					affichageDuree(pointeurDCHP);
 					break;
 
 				/* Rebind time */
 				case TAG_REBIND_TIME:
 					printf("Rebind time : ");
-					affichageDuree(copieVend);
+					affichageDuree(pointeurDCHP);
 					break;
 
 				/* Client identifier */
 				case TAG_CLIENT_ID:
 					printf("Client ID : ");
-					affichageString(copieVend, longueur);
+					affichageString(pointeurDCHP, longueur);
 					break;
 
 				/* Fin des options */
@@ -325,7 +325,7 @@ void gestionBootP(const u_char* paquet, const int size_udp){
 			printf("\n");
 
 			// On passe au Type suivant
-			copieVend += longueur;
+			pointeurDCHP += longueur;
 		}
 	}
 

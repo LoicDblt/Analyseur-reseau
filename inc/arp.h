@@ -11,6 +11,6 @@
 /************* FONCTIONS **************/
 
 // Fonction de gestion du protocole ARP
-void gestionARP(const u_char* paquet, const int size_ethernet);
+void gestionARP(const u_char* paquet, const int offset);
 
 #endif

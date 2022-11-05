@@ -1,7 +1,7 @@
 #include "../inc/arp.h"
 
-void gestionARP(const u_char* paquet, const int size_ethernet){
-	const struct arphdr* arp = (struct arphdr*)(paquet + size_ethernet);
+void gestionARP(const u_char* paquet, const int offset){
+	const struct arphdr* arp = (struct arphdr*)(paquet + offset);
 
 	titreViolet("ARP");
 
@@ -106,7 +106,7 @@ void gestionARP(const u_char* paquet, const int size_ethernet){
 	}
 	printf(" (%u)", ntohs(arp->ar_op));
 
-	u_int8_t* pointeurFinStruct = (u_int8_t*) (paquet + size_ethernet +
+	u_int8_t* pointeurFinStruct = (u_int8_t*) (paquet + offset +
 		sizeof(struct arphdr*));
 
 	printf("\nSrc MAC address: ");

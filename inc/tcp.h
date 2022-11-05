@@ -5,11 +5,17 @@
 
 #include <netinet/tcp.h>
 
+#include "smtp.h"
 #include "utile.h"
+
+/************* CONSTANTES *************/
+#define PORT_SMTP_1		25
+#define PORT_SMTP_2		587
+#define PORT_SMTP_TLS	465
 
 /************* FONCTIONS **************/
 
 // Fonction de gestion du protocole TCP
-void gestionTCP(const u_char* paquet, const int size_ip);
+void gestionTCP(const u_char* paquet, const int offset);
 
 #endif

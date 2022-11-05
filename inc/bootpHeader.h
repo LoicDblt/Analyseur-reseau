@@ -23,6 +23,6 @@ void affichageString(const u_int8_t* pointeur, const  u_int8_t longueur);
 void affichageDuree(const u_int8_t* pointeur);
 
 // Fonction de gestion du protocole BootP
-void gestionBootP(const u_char* paquet, const int size_udp);
+void gestionBootP(const u_char* paquet, const int offset);
 
 #endif

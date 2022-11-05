@@ -1,7 +1,7 @@
 #include "../inc/udp.h"
 
-void gestionUDP(const u_char* paquet, const int size_ip){
-	const struct udphdr* udp = (struct udphdr*)(paquet + size_ip);
+void gestionUDP(const u_char* paquet, const int offset){
+	const struct udphdr* udp = (struct udphdr*)(paquet + offset);
 
 	ushort portSrc = ntohs(udp->uh_sport);
 	ushort portDst = ntohs(udp->uh_dport);
@@ -21,11 +21,11 @@ void gestionUDP(const u_char* paquet, const int size_ip){
 		portDst == IPPORT_BOOTPS || portDst == IPPORT_BOOTPC
 	){
 		printf("BootP");
-		gestionBootP(paquet, size_ip + sizeof(struct udphdr));
+		gestionBootP(paquet, offset + sizeof(struct udphdr));
 	}
 	else if (portSrc == PORT_DNS || portDst == PORT_DNS){
 		printf("DNS");
-		gestionDNS(paquet, size_ip + sizeof(struct udphdr));
+		gestionDNS(paquet, offset + sizeof(struct udphdr));
 	}
 	else{
 		printf("Unsupported");

@@ -77,6 +77,6 @@ void affichageBinaire(const unsigned int nombre,
 	const unsigned int nieme, const unsigned int nbrContigu);
 
 // Fonction de gestion du protocole DNS
-void gestionDNS(const u_char* paquet, const int size_udp);
+void gestionDNS(const u_char* paquet, const int offset);
 
 #endif

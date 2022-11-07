@@ -11,8 +11,8 @@
 
 /************* CONSTANTES *************/
 
-#define TCP	6
-#define UDP	17
+#define TCP	0x06
+#define UDP	0x11
 
 /************* FONCTIONS **************/
 

@@ -313,7 +313,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 					affichageString(pointeurDCHP, longueur);
 					break;
 
-				/* Fin des options */
+				/* End of options */
 				case TAG_END:
 					return;
 

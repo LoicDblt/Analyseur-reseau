@@ -420,8 +420,9 @@ void gestionDNS(const u_char* paquet, const int offset){
 				memset(nomDomaine, 0, sizeof(nomDomaine));
 
 				unsigned int hexa = *pointeurDNS++;
-
 				int retourTaille = 0;
+
+				// Boucle sur la taille de données récupérée précédemment
 				for (unsigned int i = 0; i < concatHex; i++){
 					hexa = *pointeurDNS++;
 					int offset;

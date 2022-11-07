@@ -31,7 +31,7 @@ void gestionIP(const u_char* paquet, const int offset){
 			gestionUDP(paquet, offset + sizeof(struct ip));
 			break;
 
-		/* Protocole non pris en charge */
+		/* Non pris en charge */
 		default:
 			printf("Unsupported (%d)", proto);
 			break;

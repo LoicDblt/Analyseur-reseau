@@ -96,14 +96,17 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 
 	// Protocoles pris en charge
 	switch (ntohs(ethernet->ether_type)){
+		/* IP */
 		case ETHERTYPE_IP:
 			gestionIP(paquet, sizeof(struct ether_header));
 			break;
 
+		/* ARP */
 		case ETHERTYPE_ARP:
 			gestionARP(paquet, sizeof(struct ether_header));
 			break;
 
+		/* Non pris en charge */
 		default:
 			printf("\nUnsupported protocol");
 			break;

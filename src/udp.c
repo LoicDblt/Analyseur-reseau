@@ -23,6 +23,7 @@ void gestionUDP(const u_char* paquet, const int offset){
 		printf("BootP");
 		gestionBootP(paquet, offset + sizeof(struct udphdr));
 	}
+	// Port DNS
 	else if (portSrc == PORT_DNS || portDst == PORT_DNS){
 		printf("DNS");
 		gestionDNS(paquet, offset + sizeof(struct udphdr));

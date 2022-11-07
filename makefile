@@ -8,9 +8,11 @@ OBJ		:= obj/
 SOURCES	:= $(wildcard $(SRC)*.c)
 OBJETS	:= $(patsubst $(SRC)%.c, $(OBJ)%.o, $(SOURCES))
 
-all: main
+all: dir main
 	$(info )
-	$(info *** Pour lancer le programme : [sudo] bin/main <commutateurs> ***)
+	$(info -------------------------------------------------------------)
+	$(info | Pour lancer le programme : [sudo] bin/main <commutateurs> |)
+	$(info -------------------------------------------------------------)
 	$(info )
 
 main: $(OBJETS)
@@ -19,6 +21,10 @@ main: $(OBJETS)
 $(OBJ)%.o: $(SRC)%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+dir:
+	mkdir -p $(BIN)
+	mkdir -p $(OBJ)
+
 clean:
-	rm $(OBJ)*.o
-	rm $(BIN)main
+	rm -rf $(BIN)
+	rm -rf $(OBJ)

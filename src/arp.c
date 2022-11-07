@@ -100,6 +100,7 @@ void gestionARP(const u_char* paquet, const int offset){
 			printf("Invreply");
 			break;
 
+		/* Inconnu */
 		default:
 			printf("Unknown");
 			break;

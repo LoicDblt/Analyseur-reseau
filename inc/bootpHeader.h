@@ -1,4 +1,4 @@
-#ifndef BOOTPHEADER_H 
+#ifndef BOOTPHEADER_H
 #define BOOTPHEADER_H
 
 /************** INCLUDES **************/

@@ -1,4 +1,4 @@
-#ifndef ARP_H 
+#ifndef ARP_H
 #define ARP_H
 
 /************** INCLUDES **************/

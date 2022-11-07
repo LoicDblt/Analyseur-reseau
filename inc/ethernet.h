@@ -1,4 +1,4 @@
-#ifndef ETHERNET_H 
+#ifndef ETHERNET_H
 #define ETHERNET_H
 
 /************** INCLUDES **************/

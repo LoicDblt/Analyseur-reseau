@@ -341,7 +341,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 				}
 				else{
 					offset = strlen(nomDomaine);
-					retourTaille = snprintf(nomDomaine + offset, 
+					retourTaille = snprintf(nomDomaine + offset,
 						sizeof(nomDomaine) - offset, "%c", hexa);
 					verifTaille(retourTaille, sizeof(nomDomaine));
 				}

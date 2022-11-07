@@ -1,4 +1,4 @@
-#ifndef SMTP_H 
+#ifndef SMTP_H
 #define SMTP_H
 
 /************** INCLUDES **************/

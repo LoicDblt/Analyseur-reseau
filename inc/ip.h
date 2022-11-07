@@ -1,4 +1,4 @@
-#ifndef IP_H 
+#ifndef IP_H
 #define IP_H
 
 /************** INCLUDES **************/

@@ -16,6 +16,6 @@
 /************* FONCTIONS **************/
 
 // Fonction de gestion du protocole TCP
-void gestionTCP(const u_char* paquet, const int offset);
+void gestionTCP(const u_char* paquet, const int offset, int tailleTotale);
 
 #endif

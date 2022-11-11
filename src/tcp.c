@@ -1,6 +1,6 @@
 #include "../inc/tcp.h"
 
-void gestionTCP(const u_char* paquet, const int offset){
+void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	const struct tcphdr* tcp = (struct tcphdr*)(paquet + offset);
 
 	titreViolet("TCP");
@@ -120,7 +120,9 @@ void gestionTCP(const u_char* paquet, const int offset){
 		portSrc == PORT_SMTP_2 || portDst == PORT_SMTP_2
 	){
 		printf("Protocol : SMTP");
-		gestionSMTP(paquet, offset + tailleHeader);
+		int tailleHeaderSMTP = tailleTotale - tailleHeader;
+		if (tailleHeaderSMTP > 0)
+			gestionSMTP(paquet, offset + tailleHeader, tailleHeaderSMTP);
 	}
 	if (portSrc == PORT_SMTP_TLS || portDst == PORT_SMTP_TLS)
 		printf("Protocol : SMTP TLS (Unsupported)");

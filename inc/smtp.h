@@ -8,6 +8,6 @@
 /************* FONCTIONS **************/
 
 // Fonction de gestion du protocole SMTP
-void gestionSMTP(const u_char* paquet, const int offset);
+void gestionSMTP(const u_char* paquet, const int offset, int tailleHeader);
 
 #endif

@@ -126,4 +126,10 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	}
 	if (portSrc == PORT_SMTP_TLS || portDst == PORT_SMTP_TLS)
 		printf("Protocol : SMTP TLS (Unsupported)");
+
+	// Port HTTP
+	if (portSrc == PORT_HTTP || portDst == PORT_HTTP){
+		printf("Protocol : HTTP");
+		gestionHTTP(paquet, offset + tailleHeader, tailleTotale - tailleHeader);
+	}
 }

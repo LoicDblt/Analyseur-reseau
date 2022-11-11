@@ -13,17 +13,19 @@ int main(int argc, char *argv[]){
 	bpf_u_int32 net = 0;			// Our IP
 
 	// Gestion des commutateurs
-	int iFlag = 0, oFlag = 0, fFlag = 0, vFlag = 0;
+	int iFlag = 0, oFlag = 0, fFlag = 0, vFlag = 0, pFlag = 0;
 	int opt, niveau;
+	int nbrPaquets = -1;
 	char* nomFichier;
 
-	while ((opt = getopt (argc, argv, "i:o:f:v:")) != -1){
-		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0)
+	while ((opt = getopt (argc, argv, "i:o:f:v:p:")) != -1){
+		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0 && pFlag == 0)
 			titreCian("Enabled options", -1);
 		printf(VERT);
 
 		switch (opt){
-			case 'i': // Interface
+			/* Interface */
+			case 'i':
 				iFlag = 1;
 				if (optarg[0] == '-'){
 					fprintf(stderr, "%s|Error| Specify the interface "
@@ -31,12 +33,12 @@ int main(int argc, char *argv[]){
 					return EXIT_FAILURE;
 				}
 				device = optarg;
-				printf("[-i] Interface : %s\n", optarg);
+				printf("[-i] Interface : %s\n", device);
 				break;
 
-			case 'o': // Fichier offline
+			/* Fichier offline */
+			case 'o':
 				oFlag = 1;
-				printf("[-o] Offline file : %s\n", optarg);
 				nomFichier = optarg;
 				if (access(nomFichier, F_OK) < 0){
 					fprintf(stderr, "%s|Error| File not found%s\n",
@@ -44,15 +46,18 @@ int main(int argc, char *argv[]){
 					return EXIT_FAILURE;
 				}
 				handle = pcap_open_offline(nomFichier, errbuf);
+				printf("[-o] Offline file : %s\n", nomFichier);
 				break;
 
-			case 'f': // Filtrage
+			/* Filtrage */
+			case 'f':
 				fFlag = 1;
 				printf("[-f] Filter : %s\n", optarg);
 				filter_exp = optarg;
 				break;
 
-			case 'v': // Verbosité
+			/* Verbosité */
+			case 'v':
 				vFlag = 1;
 				niveau = atoi(optarg);
 				char* verbosite;
@@ -75,15 +80,25 @@ int main(int argc, char *argv[]){
 							ROUGE, RESET);
 						return EXIT_FAILURE;
 				}
-				printf("[-v] Level of verbosity %s [%s]\n", optarg, verbosite);
+				printf("[-v] Level of verbosity : %s [%s]\n", optarg, verbosite);
 				break;
 
-			case '?':
+			/* Nombre de paquets à afficher */
+			case 'p': 
+				pFlag = 1;
+				nbrPaquets = atoi(optarg);
+				if (nbrPaquets < -1){
+					fprintf(stderr, "%s|Error| Number of packets to compute "
+						"must be over -1%s\n", ROUGE, RESET);
+					return EXIT_FAILURE;
+				}
+				printf("[-p] Number of packets to compute : %d\n", nbrPaquets);
+				break;
+
+			/* Inconnu */
+			default:
 				fprintf(stderr, "%s|Error| Unknow option \"-%c\" %s\n",
 					ROUGE, optopt, RESET);
-				return EXIT_FAILURE;
-
-			default:
 				return EXIT_FAILURE;
 		}
 		printf(RESET);
@@ -130,7 +145,7 @@ int main(int argc, char *argv[]){
 	}
 
 	// Récupère des paquets
-	if (pcap_loop(handle, NBRPAQUETS, gestionEthernet, NULL) < 0){
+	if (pcap_loop(handle, nbrPaquets, gestionEthernet, NULL) < 0){
 		fprintf(stderr, "|Error| Error while reading the package %s\n",
 			device);
 		return EXIT_FAILURE;

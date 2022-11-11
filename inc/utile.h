@@ -4,7 +4,13 @@
 /************** INCLUDES **************/
 
 #include <arpa/inet.h>
-#include <netinet/if_ether.h>
+
+#if __APPLE__
+	#include <netinet/if_ether.h>
+#else
+	#include <netinet/ether.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

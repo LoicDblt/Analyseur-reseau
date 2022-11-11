@@ -20,14 +20,20 @@ void verifTaille(const int retourTaille, const size_t tailleBuffer){
 }
 
 void affichageAdresseMAC(const u_int8_t* pointeur){
+	// Entre l'adresse dans la structure
 	struct ether_addr adresse;
-	for (unsigned int i = 0; i < ETHER_ADDR_LEN; i++)
-		adresse.octet[i] = *pointeur++;
-
+	for (unsigned int i = 0; i < ETHER_ADDR_LEN; i++){
+		#if __APPLE__
+			adresse.octet[i] = *pointeur++;
+		#else
+			adresse.ether_addr_octet[i] = *pointeur++;
+		#endif
+	}
 	printf("%s", ether_ntoa(&adresse));
 }
 
 void affichageAdresseIPv4(const u_int8_t* pointeur, const u_int8_t longueur){
+	// Entre l'adresse dans la structure
 	struct in_addr adresse;
 	for (unsigned int i = 0; i < longueur; i++)
 		adresse.s_addr += (*pointeur++ << 8*i);

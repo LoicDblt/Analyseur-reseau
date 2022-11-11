@@ -11,7 +11,9 @@ OBJETS	:= $(patsubst $(SRC)%.c, $(OBJ)%.o, $(SOURCES))
 all: dir main
 	$(info )
 	$(info -------------------------------------------------------------)
-	$(info | Pour lancer le programme : [sudo] bin/main <commutateurs> |)
+	$(info |                *** Lancer le programme ***                |)
+	$(info |                                                           |)
+	$(info |              [sudo] bin/main <commutateurs>               |)
 	$(info -------------------------------------------------------------)
 	$(info )
 

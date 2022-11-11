@@ -51,8 +51,7 @@
 #define POINT2	0x08
 
 // Autre
-#define AFFICHE_A		0xc00c
-#define AFFICHE_CNAME	0xc02f
+#define CODE_CONTROLE	0xc0
 #define TAILLE_NOM_DOM	255
 #define TAILLE_BIT		16
 #define SEC_DANS_MIN	60

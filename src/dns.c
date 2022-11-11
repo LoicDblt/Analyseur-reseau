@@ -70,7 +70,7 @@ void affichageType(const unsigned int type){
 
 			/* AAAA */
 			case AAAA:
-				printf("AAAA (host address IPv6)");
+				printf("AAAA (IPv6 address)");
 				break;
 
 			/* Inconnu */
@@ -337,7 +337,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 				if (hexa == FIN)
 					break;
-				if (hexa == POINT1 || hexa == POINT2){
+				if (hexa < 0x20){
 					offset = strlen(nomDomaine);
 					retourTaille = snprintf(nomDomaine + offset,
 						sizeof(nomDomaine) - offset, ".");
@@ -380,21 +380,18 @@ void gestionDNS(const u_char* paquet, const int offset){
 		while (nbrReponses > 0){
 			nbrReponses--;
 
-			unsigned int type;
+			printf("\n\tName : %s", nomDomaine);
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
-			printf("\n\tName : ");
-			if (concatHex == AFFICHE_A || concatHex == AFFICHE_CNAME)
-				printf("%s", nomDomaine);
-			else
-				printf("Unknown (0x%04x)", concatHex);
+			if ((concatHex & CODE_CONTROLE) > 0)
+				pointeurDNS += strlen(nomDomaine);
 
 			// Type
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
-			type = concatHex;
+			unsigned int type = concatHex;
 			affichageType(type);
 
 			// Classe
@@ -421,41 +418,56 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 			// Adress
 			printf("\n\tAddress : ");
-			if (type == CNAME){
-				// Vide le nom de domaine précédement enregistré
-				memset(nomDomaine, 0, sizeof(nomDomaine));
+			switch(type){
+				/* Nom de domaine canonique */
+				case CNAME:
+					// Vide le nom de domaine précédement enregistré
+					memset(nomDomaine, 0, sizeof(nomDomaine));
 
-				unsigned int hexa = *pointeurDNS++;
-				int retourTaille = 0;
+					unsigned int hexa = *pointeurDNS++;
+					int retourTaille = 0;
 
-				// Boucle sur la taille de données récupérée précédemment
-				for (unsigned int i = 0; i < concatHex; i++){
-					hexa = *pointeurDNS++;
-					int offset;
+					// Boucle sur la taille de données récupérée précédemment
+					for (unsigned int i = 0; i < concatHex; i++){
+						hexa = *pointeurDNS++;
+						int offset;
 
-					if (hexa == FIN)
-						break;
-					if (hexa == POINT1 || hexa == POINT2){
-						offset = strlen(nomDomaine);
-						retourTaille = snprintf(nomDomaine + offset,
-							sizeof(nomDomaine) - offset, ".");
+						if (hexa == FIN)
+							break;
+						if (hexa == POINT1 || hexa == POINT2){
+							offset = strlen(nomDomaine);
+							retourTaille = snprintf(nomDomaine + offset,
+								sizeof(nomDomaine) - offset, ".");
 
-						verifTaille(retourTaille, sizeof(nomDomaine));
+							verifTaille(retourTaille, sizeof(nomDomaine));
+						}
+						else{
+							offset = strlen(nomDomaine);
+							retourTaille = snprintf(nomDomaine + offset,
+								sizeof(nomDomaine) - offset, "%c", hexa);
+							verifTaille(retourTaille, sizeof(nomDomaine));
+						}
 					}
-					else{
-						offset = strlen(nomDomaine);
-						retourTaille = snprintf(nomDomaine + offset,
-							sizeof(nomDomaine) - offset, "%c", hexa);
-						verifTaille(retourTaille, sizeof(nomDomaine));
-					}
-				}
-				printf("%s", nomDomaine);
-			}
-			else{
-				affichageAdresseIP(pointeurDNS, concatHex);
-				pointeurDNS += concatHex;
-			}
+					printf("%s", nomDomaine);
+					break;
 
+				/* Adresse IPv4 */
+				case A:
+					affichageAdresseIPv4(pointeurDNS, concatHex);
+					pointeurDNS += concatHex;
+					break;
+
+				/* Adresse IPv6 */
+				case AAAA:
+					affichageAdresseIPv6(pointeurDNS, concatHex);
+					pointeurDNS += concatHex;
+					break;
+
+				/* Non pris en charge*/
+				default:
+					printf("Unsupported");
+					break;
+			}
 			printf("\n");
 		}
 	}

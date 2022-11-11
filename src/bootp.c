@@ -180,7 +180,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Subnet mask */
 				case TAG_SUBNET_MASK:
 					printf("Subnet mask : ");
-					affichageAdresseIP(pointeurDCHP, longueur);
+					affichageAdresseIPv4(pointeurDCHP, longueur);
 					break;
 
 				/* Offset */
@@ -192,13 +192,13 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Router */
 				case TAG_GATEWAY:
 					printf("Gateway : ");
-					affichageAdresseIP(pointeurDCHP, longueur);
+					affichageAdresseIPv4(pointeurDCHP, longueur);
 					break;
 
 				/* DNS */
 				case TAG_DOMAIN_SERVER:
 					printf("DNS : ");
-					affichageAdresseIP(pointeurDCHP, longueur);
+					affichageAdresseIPv4(pointeurDCHP, longueur);
 					break;
 
 				/* Hostname */
@@ -216,13 +216,13 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Broadcast address */
 				case TAG_BROAD_ADDR:
 					printf("Broadcast address : ");
-					affichageAdresseIP(pointeurDCHP, longueur);
+					affichageAdresseIPv4(pointeurDCHP, longueur);
 					break;
 
 				/* Requested IP address */
 				case TAG_REQUESTED_IP:
 					printf("Requested IP : ");
-					affichageAdresseIP(pointeurDCHP, longueur);
+					affichageAdresseIPv4(pointeurDCHP, longueur);
 					break;
 
 				/* Lease time */
@@ -283,7 +283,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Server identifier */
 				case TAG_SERVER_ID:
 					printf("Server ID : ");
-					affichageAdresseIP(pointeurDCHP, longueur);
+					affichageAdresseIPv4(pointeurDCHP, longueur);
 					break;
 
 				/* Parameter request list */

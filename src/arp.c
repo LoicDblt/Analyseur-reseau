@@ -115,7 +115,7 @@ void gestionARP(const u_char* paquet, const int offset){
 	pointeurFinStruct += arp->ar_hln;
 
 	printf("\nSrc IP address : ");
-	affichageAdresseIP(pointeurFinStruct, arp->ar_pln);
+	affichageAdresseIPv4(pointeurFinStruct, arp->ar_pln);
 	pointeurFinStruct += arp->ar_pln;
 
 	printf("\nDst MAC address : ");
@@ -123,5 +123,5 @@ void gestionARP(const u_char* paquet, const int offset){
 	pointeurFinStruct += arp->ar_hln;
 
 	printf("\nDst IP address : ");
-	affichageAdresseIP(pointeurFinStruct, arp->ar_pln);
+	affichageAdresseIPv4(pointeurFinStruct, arp->ar_pln);
 }

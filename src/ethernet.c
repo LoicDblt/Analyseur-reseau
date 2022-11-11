@@ -55,8 +55,13 @@ void affichageConvertiTimestamp(const struct timeval* tv){
 
 	if (retourTaille != 0){
 		offset = strlen(buffer);
-		retourTaille = snprintf(buffer + offset, sizeof(buffer) - offset,
-			".%06ld", tv->tv_usec);
+		#if __APPLE__
+			retourTaille = snprintf(buffer + offset, sizeof(buffer) - offset,
+				".%06d", tv->tv_usec);
+		#else
+			retourTaille = snprintf(buffer + offset, sizeof(buffer) - offset,
+				".%06ld", tv->tv_usec);
+		#endif
 		verifTaille(retourTaille, sizeof(buffer));
 	}
 	printf("%s", buffer);
@@ -98,6 +103,10 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	switch (ntohs(ethernet->ether_type)){
 		/* IP */
 		case ETHERTYPE_IP:
+			gestionIP(paquet, sizeof(struct ether_header));
+			break;
+
+		case ETHERTYPE_IPV6:
 			gestionIP(paquet, sizeof(struct ether_header));
 			break;
 

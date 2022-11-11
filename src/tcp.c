@@ -40,7 +40,10 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	u_int8_t* pointeurTCP = pointeurTCPDebutStruct + sizeof(struct tcphdr);
 	u_int8_t* pointeurTCPFinOptions = pointeurTCPDebutStruct + tailleHeader;
 	unsigned int hexUn, hexDeux, hexTrois, hexQuatre, concatHex;
-	printf("Options :\n");
+
+	// Options
+	if (pointeurTCP != pointeurTCPFinOptions)
+		printf("Options :\n");
 
 	while (pointeurTCP < pointeurTCPFinOptions){
 		// On avance ("Type", puis "Longueur" et enfin "Valeur")
@@ -124,11 +127,11 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		if (tailleHeaderSMTP > 0)
 			gestionSMTP(paquet, offset + tailleHeader, tailleHeaderSMTP);
 	}
-	if (portSrc == PORT_SMTP_TLS || portDst == PORT_SMTP_TLS)
+	else if (portSrc == PORT_SMTP_TLS || portDst == PORT_SMTP_TLS)
 		printf("Protocol : SMTP TLS (Unsupported)");
 
 	// Port HTTP
-	if (portSrc == PORT_HTTP || portDst == PORT_HTTP){
+	else if (portSrc == PORT_HTTP || portDst == PORT_HTTP){
 		printf("Protocol : HTTP");
 		gestionHTTP(paquet, offset + tailleHeader, tailleTotale - tailleHeader);
 	}

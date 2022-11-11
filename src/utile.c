@@ -19,39 +19,30 @@ void verifTaille(const int retourTaille, const size_t tailleBuffer){
 	}
 }
 
-void affichageAdresseMAC(const u_char* adresse){
-	unsigned int addr;
-	int typeAddr = 0;
+void affichageAdresseMAC(const u_int8_t* pointeur){
+	struct ether_addr adresse;
+	for (unsigned int i = 0; i < ETHER_ADDR_LEN; i++)
+		adresse.octet[i] = *pointeur++;
 
-	for (unsigned int i = 0; i < MAC_ADDR_SIZE; i++){
-		addr = (unsigned int) adresse[i];
-
-		// Permet de détecter les "ff"
-		if (addr == 255)
-			typeAddr++;
-
-		printf("%.2x", addr);
-		if (i < 5)
-			printf(":");
-	}
-
-	if (typeAddr == MAC_ADDR_SIZE)
-		printf(" (Broadcast)");
+	printf("%s", ether_ntoa(&adresse));
 }
 
-void affichageAdresseIP(const u_int8_t* pointeur, const u_int8_t longueur){
-	int nbrPoints = 0;
-	for (unsigned int i = 0; i < longueur; i++){
-		printf("%d", pointeur[i]);
+void affichageAdresseIPv4(const u_int8_t* pointeur, const u_int8_t longueur){
+	struct in_addr adresse;
+	for (unsigned int i = 0; i < longueur; i++)
+		adresse.s_addr += (*pointeur++ << 8*i);
 
-		if (nbrPoints/3){
-			nbrPoints = 0;
-			if (i+1 < longueur)
-				printf(" and ");
-		}
-		else{
-			printf(".");
-			nbrPoints++;
-		}
-	}
+	printf("%s", inet_ntoa(adresse));
+}
+
+void affichageAdresseIPv6(const u_int8_t* pointeur, const u_int8_t longueur){
+	// Copie l'adresse dans une structure IPv6
+	struct in6_addr adresse;
+	memcpy((void*)&adresse, pointeur, longueur);
+
+	// Converti en string l'adresse du réseau
+	char buff[INET6_ADDRSTRLEN];
+    inet_ntop(AF_INET6, &adresse, buff, INET6_ADDRSTRLEN);
+
+    printf("%s", buff);
 }

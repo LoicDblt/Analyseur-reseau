@@ -4,6 +4,7 @@
 /************** INCLUDES **************/
 
 #include <arpa/inet.h>
+#include <netinet/if_ether.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,8 +22,6 @@
 #define RESET			"\033[00m"
 #define VIDER_LIGNE		"\033[A\033[A"
 
-#define MAC_ADDR_SIZE	6
-
 /************* FONCTIONS **************/
 
 // Titre de premier niveau
@@ -35,9 +34,12 @@ void titreViolet(const char* message);
 void verifTaille(const int retourTaille, const size_t tailleBuffer);
 
 // Fonction d'affichage des adresses MAC
-void affichageAdresseMAC(const u_char* adresse);
+void affichageAdresseMAC(const u_int8_t* pointeur);
 
-// Fonction d'affichage d'IP depuis un pointeur
-void affichageAdresseIP(const u_int8_t* pointeur, const u_int8_t longueur);
+// Fonction d'affichage d'IPv4 depuis un pointeur
+void affichageAdresseIPv4(const u_int8_t* pointeur, const u_int8_t longueur);
+
+// Fonction d'affichage d'IPv6 depuis un pointeur
+void affichageAdresseIPv6(const u_int8_t* pointeur, const u_int8_t longueur);
 
 #endif

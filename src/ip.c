@@ -9,7 +9,7 @@ void gestionIP(const u_char* paquet, const int offset){
 	printf("Dst IP : %s\n", inet_ntoa(ip->ip_dst));
 
 	int tailleHeader = 4*ip->ip_hl;
-	printf("Header length : %d\n", tailleHeader);
+	printf("Header length : %d bytes (%d)\n", tailleHeader, ip->ip_hl);
 	printf("Type of service : %d\n", ntohs(ip->ip_tos));
 
 	int tailleTotale = ntohs(ip->ip_len);

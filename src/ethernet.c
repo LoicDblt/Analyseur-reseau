@@ -56,7 +56,7 @@ void affichageConvertiTimestamp(const struct timeval* tv){
 	if (retourTaille != 0){
 		offset = strlen(buffer);
 		retourTaille = snprintf(buffer + offset, sizeof(buffer) - offset,
-			".%06d", tv->tv_usec);
+			".%06ld", tv->tv_usec);
 		verifTaille(retourTaille, sizeof(buffer));
 	}
 	printf("%s", buffer);

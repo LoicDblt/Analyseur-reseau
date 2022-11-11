@@ -16,7 +16,7 @@ all: dir main
 	$(info )
 
 main: $(OBJETS)
-	$(CC) $(CFLAGS) -lpcap $^ -o $(BIN)main
+	$(CC) $(CFLAGS) $^ -o $(BIN)main -lpcap
 
 $(OBJ)%.o: $(SRC)%.c
 	$(CC) $(CFLAGS) -c $< -o $@

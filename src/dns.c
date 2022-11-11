@@ -20,7 +20,7 @@ void affichageType(const unsigned int type){
 		switch (type){
 			/* A */
 			case A:
-				printf("A (Host adress)");
+				printf("A (Host address)");
 				break;
 
 			/* NS */
@@ -66,6 +66,11 @@ void affichageType(const unsigned int type){
 			/* TXT */
 			case TXT:
 				printf("TXT (Text strings)");
+				break;
+
+			/* AAAA */
+			case AAAA:
+				printf("AAAA (host address IPv6)");
 				break;
 
 			/* Inconnu */
@@ -138,7 +143,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	unsigned int bitUn, bitDeux, bitTrois, bitQuatre, concatBit, retourBit;
 	unsigned int nbrQuestions, nbrReponses;
 
-	char nomDomaine[TAILLE_NOM_DOM];
+	char nomDomaine[TAILLE_NOM_DOM] = "";
 
 	titreViolet("DNS");
 
@@ -323,6 +328,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 		while (nbrQuestions > 0){
 			nbrQuestions--;
+
 			u_int8_t hexa = *pointeurDNS++;
 			int tailleNom = 0, nbrLabels = 1, retourTaille = 0;
 			while (tailleNom < TAILLE_NOM_DOM){

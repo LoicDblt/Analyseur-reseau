@@ -4,6 +4,7 @@
 /************** INCLUDES **************/
 
 #include <net/ethernet.h>
+#include <time.h>
 
 #include "arp.h"
 #include "ip.h"

@@ -24,6 +24,7 @@
 #define MINFO	14	// Mailbox or mail list information
 #define MX		15	// Mail exchange
 #define TXT		16	// Text strings
+#define AAAA	28	// A host address IPv6
 
 // Op code
 #define QUERY	0b0000

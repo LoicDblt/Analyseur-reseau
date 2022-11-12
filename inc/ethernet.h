@@ -7,7 +7,8 @@
 #include <time.h>
 
 #include "arp.h"
-#include "ip.h"
+#include "ipv4.h"
+#include "ipv6.h"
 #include "utile.h"
 
 /************* CONSTANTES *************/

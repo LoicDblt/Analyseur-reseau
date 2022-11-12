@@ -103,11 +103,12 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	switch (ntohs(ethernet->ether_type)){
 		/* IP */
 		case ETHERTYPE_IP:
-			gestionIP(paquet, sizeof(struct ether_header), ETHERTYPE_IP);
+			gestionIPv4(paquet, sizeof(struct ether_header));
 			break;
 
+		/* IPv6 */
 		case ETHERTYPE_IPV6:
-			gestionIP(paquet, sizeof(struct ether_header), ETHERTYPE_IPV6);
+			gestionIPv6(paquet, sizeof(struct ether_header));
 			break;
 
 		/* ARP */

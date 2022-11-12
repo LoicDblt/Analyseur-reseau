@@ -100,10 +100,18 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 				concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 					(hexQuatre);
 				printf("Timestamp (%d)", type);
-				printf("\n\t\tValue : %d", concatHex);
+				printf("\n\t\tValue : %u", concatHex);
+
+				hexUn = *pointeurTCP++;
+				hexDeux = *pointeurTCP++;
+				hexTrois = *pointeurTCP++;
+				hexQuatre = *pointeurTCP++;
+				concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
+					(hexQuatre);
+				printf("\n\t\tEcho reply : %u", concatHex);
 
 				// Pointeur déjà avancé
-				longueur = 4;
+				longueur = 0;
 				break;
 
 			/* Inconnu */

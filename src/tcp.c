@@ -128,24 +128,24 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		}
 	}
 
-	printf("Payload : %d\n", tailleTotale - tailleHeader);
+	printf("Payload : %d", tailleTotale - tailleHeader);
 
 	// Ports SMTP
 	if (
 		portSrc == PORT_SMTP_1 || portDst == PORT_SMTP_1 ||
 		portSrc == PORT_SMTP_2 || portDst == PORT_SMTP_2
 	){
-		printf("Protocol : SMTP");
+		printf("\nProtocol : SMTP");
 		int tailleHeaderSMTP = tailleTotale - tailleHeader;
 		if (tailleHeaderSMTP > 0)
 			gestionSMTP(paquet, offset + tailleHeader, tailleHeaderSMTP);
 	}
 	else if (portSrc == PORT_SMTP_TLS || portDst == PORT_SMTP_TLS)
-		printf("Protocol : SMTP TLS (Unsupported)");
+		printf("\nProtocol : SMTP TLS (Unsupported)");
 
 	// Port HTTP
 	else if (portSrc == PORT_HTTP || portDst == PORT_HTTP){
-		printf("Protocol : HTTP");
+		printf("\nProtocol : HTTP");
 		gestionHTTP(paquet, offset + tailleHeader, tailleTotale - tailleHeader);
 	}
 }

@@ -45,22 +45,17 @@
 // Type
 #define REPONSE	1
 
-// Affichage ASCII nom de domaine
-#define FIN		0x00
-#define POINT1	0x03
-#define POINT2	0x08
-
 // Autre
-#define CODE_CONTROLE	0xc0
 #define TAILLE_NOM_DOM	255
 #define TAILLE_BIT		16
 #define SEC_DANS_MIN	60
 #define SEC_DANS_HEURE	3600
+#define SEC_DANS_JOUR	86400
 
 /************* FONCTIONS **************/
 
 // Fonction de conversion et d'affichage de la durée (heures, minutes, secondes)
-void affichageDureeConvertie(const unsigned int dureeSecondes);
+void affichageDureeConvertie(unsigned int dureeSecondes);
 
 // Fonction d'affichage du type de requête depuis un pointeur
 void affichageType(const unsigned int type);

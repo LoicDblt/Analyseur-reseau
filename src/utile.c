@@ -33,12 +33,15 @@ void affichageAdresseMAC(const u_int8_t* pointeur){
 }
 
 void affichageAdresseIPv4(const u_int8_t* pointeur, const u_int8_t longueur){
-	// Entre l'adresse dans la structure
+	// Copie l'adresse dans une structure IPv4
 	struct in_addr adresse;
-	for (unsigned int i = 0; i < longueur; i++)
-		adresse.s_addr += (*pointeur++ << 8*i);
+	memcpy((void*)&adresse, pointeur, longueur);
 
-	printf("%s", inet_ntoa(adresse));
+	// Converti en string l'adresse du réseau
+	char buff[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &adresse, buff, INET_ADDRSTRLEN);
+
+    printf("%s", buff);
 }
 
 void affichageAdresseIPv6(const u_int8_t* pointeur, const u_int8_t longueur){
@@ -51,4 +54,42 @@ void affichageAdresseIPv6(const u_int8_t* pointeur, const u_int8_t longueur){
     inet_ntop(AF_INET6, &adresse, buff, INET6_ADDRSTRLEN);
 
     printf("%s", buff);
+}
+
+unsigned int affichageNomDomaine(const u_int8_t* pointeur,
+	const unsigned int longueur
+){
+	unsigned int hexa = *pointeur++, nbrIncrPtr = 0;
+	int retourTaille = 0;
+	char nomDomaine[255] = "";
+
+	// Boucle sur la taille de données récupérée précédemment
+	for (nbrIncrPtr = 0; nbrIncrPtr < longueur; nbrIncrPtr++){
+		hexa = *pointeur++;
+		int offset;
+
+		if (hexa == FIN)
+			break;
+
+		// Code ASCII spécial
+		if (hexa == CODE_ASCII){
+			nbrIncrPtr += 3;
+			break;
+		}
+		else if (hexa < CODE_CONTROLE && nbrIncrPtr > 0){
+			offset = strlen(nomDomaine);
+			retourTaille = snprintf(nomDomaine + offset,
+				sizeof(nomDomaine) - offset, ".");
+
+			verifTaille(retourTaille, sizeof(nomDomaine));
+		}
+		else{
+			offset = strlen(nomDomaine);
+			retourTaille = snprintf(nomDomaine + offset,
+				sizeof(nomDomaine) - offset, "%c", hexa);
+			verifTaille(retourTaille, sizeof(nomDomaine));
+		}
+	}
+	printf("%s", nomDomaine);
+	return nbrIncrPtr;
 }

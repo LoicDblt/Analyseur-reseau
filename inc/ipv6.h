@@ -7,10 +7,6 @@
 
 #include "ipv4.h"
 
-/************* CONSTANTES *************/
-
-#define MASQUE 0xffffff
-
 /************* FONCTIONS **************/
 
 // Fonction de gestion du protocole IPv6

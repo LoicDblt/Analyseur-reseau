@@ -5,8 +5,20 @@ void gestionIPv6(const u_char* paquet, const int offset){
 	const struct ip6_hdr* ip6 = (struct ip6_hdr*)(paquet + offset);
 	char buff[INET6_ADDRSTRLEN];
 
-	printf("Flow : 0x%06x\n",
-		(ntohl(ip6->ip6_ctlun.ip6_un1.ip6_un1_flow) & MASQUE));
+
+	printf("Flow info : 0x%06x\n",
+		ntohl(ip6->ip6_ctlun.ip6_un1.ip6_un1_flow & IPV6_FLOWINFO_MASK));
+
+	printf("Explicit congestion notification : ");
+	unsigned int ecn =
+		ntohl(ip6->ip6_ctlun.ip6_un1.ip6_un1_flow & IPV6_FLOW_ECN_MASK);
+	if (ecn == 0)
+		printf("Not ECN-capable transport (%d)\n", ecn);
+	else
+		printf("ECN-capable transport (%d)\n", ecn);
+
+	printf("Flow label : 0x%06x\n",
+		ntohl(ip6->ip6_ctlun.ip6_un1.ip6_un1_flow & IPV6_FLOWLABEL_MASK));
 	printf("Payload length : %d\n", ntohs(ip6->ip6_ctlun.ip6_un1.ip6_un1_plen));
 	printf("Hop limit : %d\n", ip6->ip6_ctlun.ip6_un1.ip6_un1_hlim);
 

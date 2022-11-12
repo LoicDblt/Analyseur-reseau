@@ -462,7 +462,6 @@ void gestionDNS(const u_char* paquet, const int offset){
 		}
 	}
 
-
 	// S'il y a des "authority"
 	if (nbrAutorite > 0){
 		printf("\nAuthoritative nameservers :");
@@ -514,7 +513,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			// Responsible authority's mailbox
 			printf("\n\tResponsible authority's mailbox : ");
 			nbrIncrPtr = affichageNomDomaine(++pointeurDNS, concatHex);
-			pointeurDNS += nbrIncrPtr;
+			pointeurDNS += nbrIncrPtr+1;
 
 			// Serial number
 			hexUn = *pointeurDNS++;

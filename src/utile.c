@@ -73,7 +73,7 @@ unsigned int affichageNomDomaine(const u_int8_t* pointeur,
 
 		// Code ASCII spécial
 		if (hexa == CODE_ASCII){
-			nbrIncrPtr += 3;
+			nbrIncrPtr += 2;
 			break;
 		}
 		else if (hexa < CODE_CONTROLE && nbrIncrPtr > 0){

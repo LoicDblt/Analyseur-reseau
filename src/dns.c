@@ -159,18 +159,23 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexUn = *pointeurDNS++; 				// Récupère le premier hexa
 	hexDeux = *pointeurDNS++;				// Récupère le second hexa
 	concatHex = (hexUn << 8) | (hexDeux);	// Concatène les deux
-	printf("Transaction ID : 0x%04x", concatHex);
+	if (niveauVerbo > CONCIS)
+		printf("Transaction ID : 0x%04x", concatHex);
 
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	printf("\nFlags : 0x%04x", concatHex);
+	if (niveauVerbo > CONCIS)
+		printf("\nFlags : 0x%04x", concatHex);
 	int niemeBit = 0;
 
 	// Response
-	affichageBinaire(concatHex, niemeBit, 1);
+	if (niveauVerbo > CONCIS)
+		affichageBinaire(concatHex, niemeBit, 1);
 	unsigned int typeReponse = recupereNiemeBit(concatHex, niemeBit);
-	printf("\tResponse : ");
+	if (niveauVerbo > CONCIS)
+		printf("\t");
+	printf("Response : ");
 	if (typeReponse == REPONSE)
 		printf("Message is a response");
 	else
@@ -178,162 +183,187 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	// Op code
 	bitUn = recupereNiemeBit(concatHex, ++niemeBit);
-	affichageBinaire(concatHex, niemeBit, 4);
+	if (niveauVerbo > CONCIS)
+		affichageBinaire(concatHex, niemeBit, 4);
 	bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
 	bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
 	bitQuatre = recupereNiemeBit(concatHex, ++niemeBit);
-	printf("\tOp code : ");
 	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
+	if (niveauVerbo > CONCIS)
+		printf("\tOp code : ");
 
 	switch (concatBit){
 		/* Query */
 		case QUERY:
-			printf("Standard query");
+			if (niveauVerbo > CONCIS)
+				printf("Standard query");
 			break;
 
 		/* Iquery */
 		case IQUERY:
-			printf("Inverse query");
+			if (niveauVerbo > CONCIS)
+				printf("Inverse query");
 			break;
 
 		/* Status */
 		case STATUS:
-			printf("Server status request");
+			if (niveauVerbo > CONCIS)
+				printf("Server status request");
 			break;
 
 		/* Inconnu */
 		default:
-			printf("Unknown");
+			if (niveauVerbo > CONCIS)
+				printf("Unknown");
 			break;
 	}
-	printf(" (%d)", concatBit);
+	if (niveauVerbo > CONCIS)
+		printf(" (%d)", concatBit);
 
 	// Authoritative
 	if (typeReponse == REPONSE){
 		retourBit = recupereNiemeBit(concatHex, ++niemeBit);
-		affichageBinaire(concatHex, niemeBit, 1);
-		printf("\tAuthoritative : ");
-		if (retourBit > 0)
-			printf("Server is an authority for domain");
-		else
-			printf("Server is not an authority for domain");
+
+		if (niveauVerbo > CONCIS){
+			affichageBinaire(concatHex, niemeBit, 1);
+			printf("\tAuthoritative : ");
+			if (retourBit > 0)
+				printf("Server is an authority for domain");
+			else
+				printf("Server is not an authority for domain");
+		}
 	}
 	else
 		++niemeBit;
 
 	// Truncated
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
-	affichageBinaire(concatHex, niemeBit, 1);
-	printf("\tTruncated : ");
-	if (retourBit > 0)
-		printf("Message is truncated");
-	else
-		printf("Message is not truncated");
+	if (niveauVerbo > CONCIS){
+		affichageBinaire(concatHex, niemeBit, 1);
+		printf("\tTruncated : ");
+		if (retourBit > 0)
+			printf("Message is truncated");
+		else
+			printf("Message is not truncated");
+	}
 
 	// Recursion desired
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
-	affichageBinaire(concatHex, niemeBit, 1);
-	printf("\tRecursion desired : ");
-	if (retourBit > 0)
-		printf("Do query recursively");
-	else
-		printf("Don't query recursively");
+	if (niveauVerbo > CONCIS){
+		affichageBinaire(concatHex, niemeBit, 1);
+		printf("\tRecursion desired : ");
+		if (retourBit > 0)
+			printf("Do query recursively");
+		else
+			printf("Don't query recursively");
+	}
 
 	// Recursion available
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
-	affichageBinaire(concatHex, niemeBit, 1);
-	printf("\tRecursion available : ");
-	if (retourBit > 0)
-		printf("Server can do recursive queries");
-	else
-		printf("Server can't do recursive queries");
+	if (niveauVerbo > CONCIS){
+		affichageBinaire(concatHex, niemeBit, 1);
+		printf("\tRecursion available : ");
+		if (retourBit > 0)
+			printf("Server can do recursive queries");
+		else
+			printf("Server can't do recursive queries");
+	}
 
 	// Z (Reserved)
 	bitUn = recupereNiemeBit(concatHex, ++niemeBit);
-	affichageBinaire(concatHex, niemeBit, 3);
+	if (niveauVerbo > CONCIS)
+		affichageBinaire(concatHex, niemeBit, 3);
 	bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
 	bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
-	printf("\tZ : ");
 	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
+	if (niveauVerbo > CONCIS)
+		printf("\tZ : ");
 
-	if (concatBit == ALLNULL)
+	if (concatBit == ALLNULL && niveauVerbo > CONCIS)
 		printf("Reserved (%d)", concatBit);
 
 	// Reply code
 	if (typeReponse == REPONSE){
 		bitUn = recupereNiemeBit(concatHex, ++niemeBit);
-		affichageBinaire(concatHex, niemeBit, 4);
+		if (niveauVerbo > CONCIS)
+			affichageBinaire(concatHex, niemeBit, 4);
 		bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
 		bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
 		bitQuatre = recupereNiemeBit(concatHex, ++niemeBit);
-		printf("\tReply code : ");
 		concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) |
 			(bitQuatre);
+		if (niveauVerbo > CONCIS){
+			printf("\tReply code : ");
 
-		switch (concatBit){
-			/* No error */
-			case NOERR:
-				printf("No error");
-				break;
+			switch (concatBit){
+				/* No error */
+				case NOERR:
+					printf("No error");
+					break;
 
-			/* Format error */
-			case FORMERR:
-				printf("Format error");
-				break;
+				/* Format error */
+				case FORMERR:
+					printf("Format error");
+					break;
 
-			/* Server failure */
-			case FAILERR:
-				printf("Server failure ");
-				break;
+				/* Server failure */
+				case FAILERR:
+					printf("Server failure ");
+					break;
 
-			/* Name error */
-			case NAMEERR:
-				printf("Name error");
-				break;
+				/* Name error */
+				case NAMEERR:
+					printf("Name error");
+					break;
 
-			/* Not implemented */
-			case NOTIMPL:
-				printf("Not implemented");
-				break;
+				/* Not implemented */
+				case NOTIMPL:
+					printf("Not implemented");
+					break;
 
-			/* Refused */
-			case REFUSED:
-				printf("Refused");
-				break;
+				/* Refused */
+				case REFUSED:
+					printf("Refused");
+					break;
 
-			/* Inconnu */
-			default:
-				printf("Unknown");
-				break;
+				/* Inconnu */
+				default:
+					printf("Unknown");
+					break;
+			}
+			printf(" (%d)", concatBit);
 		}
-		printf(" (%d)", concatBit);
 	}
 
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	printf("\nQuestions : %d", concatHex);
+	if (niveauVerbo > CONCIS)
+		printf("\nQuestions : %d", concatHex);
 	nbrQuestions = (int) concatHex;
 
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	printf("\nAnswer RRs : %d", concatHex);
+	if (niveauVerbo > CONCIS)
+		printf("\nAnswer RRs : %d", concatHex);
 	nbrReponses = concatHex;
 
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	printf("\nAuthority RRs : %d", concatHex);
+	if (niveauVerbo > CONCIS)
+		printf("\nAuthority RRs : %d", concatHex);
 	nbrAutorite = concatHex;
 
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	printf("\nAdditional RRs : %d", concatHex);
+	if (niveauVerbo > CONCIS)
+		printf("\nAdditional RRs : %d", concatHex);
 
 	// S'il y a des "queries"
-	if (nbrQuestions > 0){
+	if (nbrQuestions > 0 && niveauVerbo > CONCIS){
 		printf("\nQueries :");
 
 		while (nbrQuestions > 0){
@@ -384,7 +414,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	}
 
 	// S'il y a des "answers"
-	if (nbrReponses > 0){
+	if (nbrReponses > 0 && niveauVerbo > CONCIS){
 		printf("\nAnswers :");
 
 		while (nbrReponses > 0){
@@ -463,7 +493,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	}
 
 	// S'il y a des "authority"
-	if (nbrAutorite > 0){
+	if (nbrAutorite > 0 && niveauVerbo > CONCIS){
 		printf("\nAuthoritative nameservers :");
 
 		while (nbrAutorite > 0){

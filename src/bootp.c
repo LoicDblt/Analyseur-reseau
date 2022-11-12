@@ -89,70 +89,72 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 	titreViolet("BootP");
 
-	printf("Message type : ");
-	switch (bootp->bp_op){
-		/* Bootrequest */
-		case BOOTREQUEST:
-			printf("Request (%d)", BOOTREQUEST);
-			break;
+	if (niveauVerbo > CONCIS){
+		printf("Message type : ");
+		switch (bootp->bp_op){
+			/* Bootrequest */
+			case BOOTREQUEST:
+				printf("Request (%d)", BOOTREQUEST);
+				break;
 
-		/* Bootreply */
-		case BOOTREPLY:
-			printf("Reply (%d)", BOOTREPLY);
-			break;
+			/* Bootreply */
+			case BOOTREPLY:
+				printf("Reply (%d)", BOOTREPLY);
+				break;
 
-		/* Inconnu */
-		default:
-			printf("Unknown");
+			/* Inconnu */
+			default:
+				printf("Unknown");
+		}
+		printf("\nHardware type : ");
+		if (bootp->bp_htype == ETHERNET)
+			printf("Ethernet (0x%02x)\n", bootp->bp_htype);
+		else
+			printf("Unknown (0x%02x)\n", bootp->bp_htype);
+
+		printf("Hardware adress length : %d\n", bootp->bp_hlen);
+		printf("Hops : %d\n", bootp->bp_hops);
+		printf("Transaction ID : 0x%08x\n", ntohl(bootp->bp_xid));
+		printf("Seconds elapsed : %u\n", bootp->bp_secs);
+
+		printf("Flags : ");
+		switch (ntohs(bootp->bp_flags)){
+			/* Broadcast */
+			case BROADCAST:
+				printf("Broadcast");
+				break;
+
+			/* Unicast */
+			case UNICAST:
+				printf("Unicast");
+				break;
+
+			/* Non pris en charge */
+			default:
+				printf("Unknown");
+				break;
+		}
+		printf(" (0x%04x)\n", ntohs(bootp->bp_flags));
+
+		printf("Client IP address: %s\n", inet_ntoa(bootp->bp_ciaddr));
+		printf("\"Your\" IP address: %s\n", inet_ntoa(bootp->bp_yiaddr));
+		printf("Next server IP address : %s\n", inet_ntoa(bootp->bp_siaddr));
+		printf("Relay agent IP address : %s\n", inet_ntoa(bootp->bp_giaddr));
+		printf("Client MAC address : ");
+		affichageAdresseMAC(bootp->bp_chaddr);
+
+		printf("\nServer host name : ");
+		if (strlen((char*) bootp->bp_sname) == 0)
+			printf("Not given\n");
+		else
+			printf("%s\n", bootp->bp_sname);
+
+		printf("Boot file name : ");
+		if (strlen((char*) bootp->bp_file) == 0)
+			printf("Not given\n");
+		else
+			printf("%s\n", bootp->bp_file);
 	}
-	printf("\nHardware type : ");
-	if (bootp->bp_htype == ETHERNET)
-		printf("Ethernet (0x%02x)\n", bootp->bp_htype);
-	else
-		printf("Unknown (0x%02x)\n", bootp->bp_htype);
-
-	printf("Hardware adress length : %d\n", bootp->bp_hlen);
-	printf("Hops : %d\n", bootp->bp_hops);
-	printf("Transaction ID : 0x%08x\n", ntohl(bootp->bp_xid));
-	printf("Seconds elapsed : %u\n", bootp->bp_secs);
-
-	printf("Flags : ");
-	switch (ntohs(bootp->bp_flags)){
-		/* Broadcast */
-		case BROADCAST:
-			printf("Broadcast");
-			break;
-
-		/* Unicast */
-		case UNICAST:
-			printf("Unicast");
-			break;
-
-		/* Non pris en charge */
-		default:
-			printf("Unknown");
-			break;
-	}
-	printf(" (0x%04x)\n", ntohs(bootp->bp_flags));
-
-	printf("Client IP address: %s\n", inet_ntoa(bootp->bp_ciaddr));
-	printf("\"Your\" IP address: %s\n", inet_ntoa(bootp->bp_yiaddr));
-	printf("Next server IP address : %s\n", inet_ntoa(bootp->bp_siaddr));
-	printf("Relay agent IP address : %s\n", inet_ntoa(bootp->bp_giaddr));
-	printf("Client MAC address : ");
-	affichageAdresseMAC(bootp->bp_chaddr);
-
-	printf("\nServer host name : ");
-	if (strlen((char*) bootp->bp_sname) == 0)
-		printf("Not given\n");
-	else
-		printf("%s\n", bootp->bp_sname);
-
-	printf("Boot file name : ");
-	if (strlen((char*) bootp->bp_file) == 0)
-		printf("Not given\n");
-	else
-		printf("%s\n", bootp->bp_file);
 
 	// Vérification du magic cookie
 	printf("Magic cookie : ");
@@ -173,62 +175,80 @@ void gestionBootP(const u_char* paquet, const int offset){
 			type = *pointeurDCHP++;
 			longueur = *pointeurDCHP++;
 
-			if (type != TAG_END)
+			if (type != TAG_END && niveauVerbo > CONCIS)
 				printf("(%d) ", type);
 
 			switch (type){
 				/* Subnet mask */
 				case TAG_SUBNET_MASK:
-					printf("Subnet mask : ");
-					affichageAdresseIPv4(pointeurDCHP, longueur);
+					if (niveauVerbo > CONCIS){
+						printf("Subnet mask : ");
+						affichageAdresseIPv4(pointeurDCHP, longueur);
+					}
 					break;
 
 				/* Offset */
 				case TAG_TIME_OFFSET:
-					printf("Time offset : ");
-					affichageDuree(pointeurDCHP);
+					if (niveauVerbo > CONCIS){
+						printf("Time offset : ");
+						affichageDuree(pointeurDCHP);
+					}
 					break;
 
 				/* Router */
 				case TAG_GATEWAY:
-					printf("Gateway : ");
-					affichageAdresseIPv4(pointeurDCHP, longueur);
+					if (niveauVerbo > CONCIS){
+						printf("Gateway : ");
+						affichageAdresseIPv4(pointeurDCHP, longueur);
+					}
 					break;
 
 				/* DNS */
 				case TAG_DOMAIN_SERVER:
-					printf("DNS : ");
-					affichageAdresseIPv4(pointeurDCHP, longueur);
+					if (niveauVerbo > CONCIS){
+						printf("DNS : ");
+						affichageAdresseIPv4(pointeurDCHP, longueur);
+					}
 					break;
 
 				/* Hostname */
 				case TAG_HOSTNAME:
-					printf("Hostname : ");
-					affichageString(pointeurDCHP, longueur);
+					if (niveauVerbo > CONCIS){
+						printf("Hostname : ");
+						affichageString(pointeurDCHP, longueur);
+					}
 					break;
 
 				/* Domain name */
 				case TAG_DOMAINNAME:
-					printf("Domain name : ");
-					affichageString(pointeurDCHP, longueur);
+					if (niveauVerbo > CONCIS){
+						printf("Domain name : ");
+						affichageString(pointeurDCHP, longueur);
+					}
 					break;
 
 				/* Broadcast address */
 				case TAG_BROAD_ADDR:
-					printf("Broadcast address : ");
-					affichageAdresseIPv4(pointeurDCHP, longueur);
+					if (niveauVerbo > CONCIS){
+						printf("Broadcast address : ");
+						affichageAdresseIPv4(pointeurDCHP, longueur);
+					}
 					break;
 
 				/* Requested IP address */
 				case TAG_REQUESTED_IP:
-					printf("Requested IP : ");
-					affichageAdresseIPv4(pointeurDCHP, longueur);
+					if (niveauVerbo > CONCIS){
+						printf("Requested IP : ");
+						affichageAdresseIPv4(pointeurDCHP, longueur);
+					}
 					break;
 
 				/* Lease time */
 				case TAG_IP_LEASE:
-					printf("IP lease : ");
-					affichageDuree(pointeurDCHP);
+					if (niveauVerbo > CONCIS){
+						printf("IP lease : ");
+						affichageDuree(pointeurDCHP);
+					}
 					break;
 
 				/* DHCP message type */
@@ -276,41 +296,52 @@ void gestionBootP(const u_char* paquet, const int offset){
 							printf("Unsupported");
 							break;
 					}
-					printf(" (%d)", *pointeurDCHP);
+					if (niveauVerbo > CONCIS)
+						printf(" (%d)", *pointeurDCHP);
 					break;
 				}
 
 				/* Server identifier */
 				case TAG_SERVER_ID:
-					printf("Server ID : ");
-					affichageAdresseIPv4(pointeurDCHP, longueur);
+					if (niveauVerbo > CONCIS){
+						printf("Server ID : ");
+						affichageAdresseIPv4(pointeurDCHP, longueur);
+					}
 					break;
 
 				/* Parameter request list */
 				case TAG_PARM_REQUEST:
-					printf("Parameters request :");
-					for (unsigned int i = 0; i < longueur; i++){
-						printf("\n\t");
-						affichageParam(&pointeurDCHP[i]);
+					if (niveauVerbo > CONCIS){
+						printf("Parameters request :");
+						for (unsigned int i = 0; i < longueur; i++){
+							printf("\n\t");
+							affichageParam(&pointeurDCHP[i]);
+						}
 					}
 					break;
 
 				/* Renewal time */
 				case TAG_RENEWAL_TIME:
-					printf("Renewal time : ");
-					affichageDuree(pointeurDCHP);
+					if (niveauVerbo > CONCIS){
+						printf("Renewal time : ");
+						affichageDuree(pointeurDCHP);
+					}
 					break;
 
 				/* Rebind time */
 				case TAG_REBIND_TIME:
-					printf("Rebind time : ");
-					affichageDuree(pointeurDCHP);
+					if (niveauVerbo > CONCIS){
+						printf("Rebind time : ");
+						affichageDuree(pointeurDCHP);
+					}
 					break;
 
 				/* Client identifier */
 				case TAG_CLIENT_ID:
-					printf("Client ID : ");
-					affichageString(pointeurDCHP, longueur);
+					if (niveauVerbo > CONCIS){
+						printf("Client ID : ");
+						affichageString(pointeurDCHP, longueur);
+					}
 					break;
 
 				/* End of options */
@@ -319,10 +350,12 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Non pris en charge */
 				default:
-					printf("Unsupported option");
+					if (niveauVerbo > CONCIS)
+						printf("Unsupported option");
 					break;
 			}
-			printf("\n");
+			if (niveauVerbo > CONCIS)
+				printf("\n");
 
 			// On passe au "Type" suivant
 			pointeurDCHP += longueur;
@@ -330,6 +363,8 @@ void gestionBootP(const u_char* paquet, const int offset){
 	}
 
 	// Si le magic cookie n'est pas reconnu
-	else
-		printf("Unknown");
+	else{
+		if (niveauVerbo > CONCIS)
+			printf("Unknown");
+	}
 }

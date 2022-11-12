@@ -2,6 +2,7 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #include "../inc/main.h"
+int niveauVerbo = 1;
 
 int main(int argc, char *argv[]){
 	pcap_t* handle;					// Session handle
@@ -14,7 +15,7 @@ int main(int argc, char *argv[]){
 
 	// Gestion des commutateurs
 	int iFlag = 0, oFlag = 0, fFlag = 0, vFlag = 0, pFlag = 0;
-	int opt, niveau;
+	int opt;
 	int nbrPaquets = -1;
 	char* nomFichier;
 
@@ -59,18 +60,18 @@ int main(int argc, char *argv[]){
 			/* Verbosité */
 			case 'v':
 				vFlag = 1;
-				niveau = atoi(optarg);
+				niveauVerbo = atoi(optarg);
 				char* verbosite;
-				switch (niveau){
-					case 1:
+				switch (niveauVerbo){
+					case CONCIS:
 						verbosite = "very concise";
 						break;
 
-					case 2:
+					case SYNTHETIQUE:
 						verbosite = "synthetic";
 						break;
 
-					case 3:
+					case COMPLET:
 						verbosite = "complete";
 						break;
 

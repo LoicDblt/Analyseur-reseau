@@ -15,6 +15,11 @@ all: dir main
 	$(info |                                                           |)
 	$(info |              [sudo] bin/main <commutateurs>               |)
 	$(info -------------------------------------------------------------)
+	$(info |             *** Commutateurs disponibles ***              |)
+	$(info |                                                           |)
+	$(info |      -i [interface]  -o [fichier pcap]  -f [filtres]      |)
+	$(info |            -v [verbosité]  -p [nbr de paquets]            |)
+	$(info -------------------------------------------------------------)
 	$(info )
 
 main: $(OBJETS)

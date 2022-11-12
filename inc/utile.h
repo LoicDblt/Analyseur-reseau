@@ -16,6 +16,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "main.h"
+
 /************* CONSTANTES *************/
 
 // Couleurs pour l'affichage
@@ -32,6 +34,10 @@
 #define CODE_ASCII		0xc0
 #define CODE_CONTROLE	0x20
 #define FIN				0x00
+
+#define CONCIS		1
+#define SYNTHETIQUE	2
+#define COMPLET		3
 
 /************* FONCTIONS **************/
 

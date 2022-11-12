@@ -96,8 +96,10 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	printf("\nDst MAC : ");
 	affichageAdresseMAC(ethernet->ether_dhost); // Adresse dest
 
-	printf("\nEtherType : ");
-	affichageEtherType(ntohs(ethernet->ether_type));
+	if (niveauVerbo > CONCIS){
+		printf("\nEtherType : ");
+		affichageEtherType(ntohs(ethernet->ether_type));
+	}
 
 	// Protocoles pris en charge
 	switch (ntohs(ethernet->ether_type)){

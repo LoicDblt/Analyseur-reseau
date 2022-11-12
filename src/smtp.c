@@ -6,7 +6,9 @@ void gestionSMTP(const u_char* paquet, const int offset, int tailleHeader){
 
 	titreViolet("SMTP");
 
-	// Affichage du contenu du header SMTP
-	for (int i = 0; i < tailleHeader; i++)
-		printf("%c", *pointeurSMTP++);
+	if (niveauVerbo > CONCIS){
+		// Affichage du contenu du header SMTP
+		for (int i = 0; i < tailleHeader; i++)
+			printf("%c", *pointeurSMTP++);
+	}
 }

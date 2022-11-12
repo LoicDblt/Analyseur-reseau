@@ -4,9 +4,12 @@
 /************** INCLUDES **************/
 
 #include <unistd.h>
+#include <pcap.h>
 
-#include "utile.h"
 #include "ethernet.h"
+#include "utile.h"
+
+extern int niveauVerbo;
 
 /************* CONSTANTES *************/
 

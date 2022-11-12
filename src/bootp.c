@@ -105,6 +105,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 			/* Inconnu */
 			default:
 				printf("Unknown");
+				break;
 		}
 		printf("\nHardware type : ");
 		if (bootp->bp_htype == ETHERNET)
@@ -167,10 +168,10 @@ void gestionBootP(const u_char* paquet, const int offset){
 		titreViolet("DHCP");
 
 		// Principe du Type Len Value (TLV)
-		u_int8_t type, longueur;
+		u_int8_t type = 0, longueur;
 		pointeurDCHP += 4;
 
-		while (1){
+		while (type != TAG_END){
 			// On avance ("Type", puis "Longueur" et enfin "Valeur")
 			type = *pointeurDCHP++;
 			longueur = *pointeurDCHP++;
@@ -198,7 +199,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Router */
 				case TAG_GATEWAY:
 					if (niveauVerbo > CONCIS){
-						printf("Gateway : ");
+						printf("Router : ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
 					break;
@@ -207,7 +208,16 @@ void gestionBootP(const u_char* paquet, const int offset){
 				case TAG_DOMAIN_SERVER:
 					if (niveauVerbo > CONCIS){
 						printf("DNS : ");
-						affichageAdresseIPv4(pointeurDCHP, longueur);
+
+						// Pour gérer plusieurs DNS
+						unsigned int nbrDNS = longueur/TAILLE_IPv4;
+						for (unsigned int i = 0; i < nbrDNS; i++){
+							if (i > 0)
+								printf("\n\t  ");
+							affichageAdresseIPv4(pointeurDCHP, TAILLE_IPv4);
+							pointeurDCHP += TAILLE_IPv4;
+						}
+						longueur -= nbrDNS * TAILLE_IPv4;
 					}
 					break;
 

@@ -14,6 +14,8 @@
 #define BROADCAST	0x8000
 #define UNICAST		0x0000
 
+#define TAILLE_IPv4	4
+
 /************* FONCTIONS **************/
 
 // Fonction d'affichage des strings depuis un pointeur

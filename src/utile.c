@@ -38,10 +38,10 @@ void affichageAdresseIPv4(const u_int8_t* pointeur, const u_int8_t longueur){
 	memcpy((void*)&adresse, pointeur, longueur);
 
 	// Converti en string l'adresse du réseau
-	char buff[INET_ADDRSTRLEN];
-	inet_ntop(AF_INET, &adresse, buff, INET_ADDRSTRLEN);
+	char buffAddrIPv4[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, &adresse, buffAddrIPv4, INET_ADDRSTRLEN);
 
-	printf("%s", buff);
+	printf("%s", buffAddrIPv4);
 }
 
 void affichageAdresseIPv6(const u_int8_t* pointeur, const u_int8_t longueur){
@@ -50,10 +50,10 @@ void affichageAdresseIPv6(const u_int8_t* pointeur, const u_int8_t longueur){
 	memcpy((void*)&adresse, pointeur, longueur);
 
 	// Converti en string l'adresse du réseau
-	char buff[INET6_ADDRSTRLEN];
-	inet_ntop(AF_INET6, &adresse, buff, INET6_ADDRSTRLEN);
+	char buffAddrIPv6[INET6_ADDRSTRLEN] = "";
+	inet_ntop(AF_INET6, &adresse, buffAddrIPv6, INET6_ADDRSTRLEN);
 
-	printf("%s", buff);
+	printf("%s", buffAddrIPv6);
 }
 
 unsigned int affichageNomDomaine(const u_int8_t* pointeur,

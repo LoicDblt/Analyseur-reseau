@@ -347,7 +347,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 				if (hexa == FIN)
 					break;
-				if (hexa < CODE_CONTROLE){
+				else if (hexa < CODE_CONTROLE){
 					offset = strlen(nomDomaine);
 					retourTaille = snprintf(nomDomaine + offset,
 						sizeof(nomDomaine) - offset, ".");
@@ -513,7 +513,8 @@ void gestionDNS(const u_char* paquet, const int offset){
 			// Responsible authority's mailbox
 			printf("\n\tResponsible authority's mailbox : ");
 			nbrIncrPtr = affichageNomDomaine(++pointeurDNS, concatHex);
-			pointeurDNS += nbrIncrPtr+1;
+			pointeurDNS += nbrIncrPtr + 1;	// Besoin d'incrémenter le pointeur
+											// à la valeur suivante
 
 			// Serial number
 			hexUn = *pointeurDNS++;

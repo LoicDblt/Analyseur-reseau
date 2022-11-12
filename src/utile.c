@@ -80,7 +80,6 @@ unsigned int affichageNomDomaine(const u_int8_t* pointeur,
 			offset = strlen(nomDomaine);
 			retourTaille = snprintf(nomDomaine + offset,
 				sizeof(nomDomaine) - offset, ".");
-
 			verifTaille(retourTaille, sizeof(nomDomaine));
 		}
 		else{

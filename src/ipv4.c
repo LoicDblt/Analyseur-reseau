@@ -1,8 +1,9 @@
 #include "../inc/ipv4.h"
 
 void gestionIPv4(const u_char* paquet, const int offset){
-	titreViolet("IP");
 	const struct ip* ip = (struct ip*)(paquet + offset);
+
+	titreViolet("IP");
 
 	printf("Src IP : %s\n", inet_ntoa(ip->ip_src));
 	printf("Dst IP : %s\n", inet_ntoa(ip->ip_dst));

@@ -48,7 +48,7 @@ void affichageEtherType(uint16_t type){
 void affichageConvertiTimestamp(const struct timeval* tv){
 	int retourTaille = 0, offset = 0;
 	char buffer[TAILLE_TIMESTAMP];
-	struct tm *heureLocale = localtime(&tv->tv_sec);
+	struct tm* heureLocale = localtime(&tv->tv_sec);
 
 	retourTaille = strftime(buffer, TAILLE_TIMESTAMP, "%b %d, %Y %H:%M:%S",
 		heureLocale);

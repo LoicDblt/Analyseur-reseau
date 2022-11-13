@@ -3,22 +3,60 @@
 void affichageDureeConvertie(unsigned int dureeSecondes){
 	unsigned int j, h, m, s;
 
+	// Jours
 	j = dureeSecondes / SEC_DANS_JOUR;
 	dureeSecondes -= j * SEC_DANS_JOUR;
 
+	// Heures
 	h =  dureeSecondes / SEC_DANS_HEURE;
 	dureeSecondes -= h * SEC_DANS_HEURE;
 
+	// Minutes
 	m = dureeSecondes / SEC_DANS_MIN;
 	dureeSecondes -= m * SEC_DANS_MIN;
+
+	// Secondes
 	s = dureeSecondes;
 
-	if (j > 0)
-		printf("(%d days, %d hours, %d minutes, %d seconds)", j, h, m, s);
-	if (h > 0)
-		printf("(%d hours, %d minutes, %d seconds)", h, m, s);
-	else if (m > 0)
-		printf("(%d minutes, %d seconds)", m, s);
+	if (j > 0 || h > 0 || m > 0 || s > 0){
+		printf("(");
+
+		// Jours
+		if (j > 0){
+			printf("%d day", j);
+			if (j > 1)
+				printf("s");	// Ajoute un "s" si il y a plusieurs jours
+			if (h > 0 || m > 0 || s > 0)
+				printf(", ");
+		}
+
+		// Heures
+		if (h > 0){
+			printf("%d hour", h);
+			if (h > 1)
+				printf("s");
+			if (m > 0 || s > 0)
+				printf(", ");
+		}
+
+		// Minutes
+		if (m > 0){
+			printf("%d minute", m);
+			if (m > 1)
+				printf("s");
+			if (s > 0)
+				printf(", ");
+		}
+
+		// Secondes
+		if (s > 0){
+			printf("%d second", s);
+			if (s > 1)
+				printf("s");
+		}
+
+		printf(")");
+	}
 	else
 		printf("(%d seconds)", s);
 }
@@ -144,7 +182,7 @@ void affichageBinaire(const unsigned int nombre,
 }
 
 void gestionDNS(const u_char* paquet, const int offset){
-	// On se place après l'entête UDP
+	// On place un pointeur après l'entête UDP
 	u_int8_t* pointeurDNS =  (u_int8_t*) paquet + offset;
 
 	unsigned int hexUn, hexDeux, hexTrois, hexQuatre, concatHex;

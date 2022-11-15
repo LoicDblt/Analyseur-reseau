@@ -3,7 +3,7 @@
 void gestionARP(const u_char* paquet, const int offset){
 	const struct arphdr* arp = (struct arphdr*)(paquet + offset);
 
-	titreViolet("ARP");
+	titreProto("ARP", ROUGE);
 
 	if (niveauVerbo > SYNTHETIQUE){
 		// Hardware type

@@ -41,11 +41,11 @@
 
 /************* FONCTIONS **************/
 
-// Titre de premier niveau
-void titreCian(const char* message, const int compteur);
+// Titre des trames
+void titreTrame(const char* message, const int compteur);
 
-// Titre de second niveau
-void titreViolet(const char* message);
+// Titre des protocoles
+void titreProto(const char* message, char* couleur);
 
 // Passe à la ligne suivante si verbosité "COMPLET"
 void sautLigneComplet(void);

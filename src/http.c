@@ -15,7 +15,7 @@ void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 		memcmp(pointeurHTTP, OPTIONS, sizeofSansSenti(OPTIONS)) == 0 ||
 		memcmp(pointeurHTTP, TRACE, sizeofSansSenti(TRACE)) == 0
 	){
-		titreViolet("HTTP");
+		titreProto("HTTP", ROUGE);
 
 		if (niveauVerbo > SYNTHETIQUE){
 			for (int i = 0; i < tailleHeader; i++)

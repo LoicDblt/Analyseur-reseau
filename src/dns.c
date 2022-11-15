@@ -192,7 +192,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	char nomDomaine[TAILLE_NOM_DOM] = "";
 
-	titreViolet("DNS");
+	titreProto("DNS", ROUGE);
 
 	hexUn = *pointeurDNS++; 				// Récupère le premier hexa
 	hexDeux = *pointeurDNS++;				// Récupère le second hexa

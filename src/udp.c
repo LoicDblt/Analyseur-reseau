@@ -6,7 +6,7 @@ void gestionUDP(const u_char* paquet, const int offset){
 	ushort portSrc = ntohs(udp->uh_sport);
 	ushort portDst = ntohs(udp->uh_dport);
 
-	titreViolet("UDP");
+	titreProto("UDP", VERT);
 
 	// Ports
 	if (niveauVerbo > CONCIS){

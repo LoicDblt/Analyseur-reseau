@@ -4,7 +4,7 @@ void gestionIPv6(const u_char* paquet, const int offset){
 	const struct ip6_hdr* ip6 = (struct ip6_hdr*)(paquet + offset);
 	char buffAddrIPv6[INET6_ADDRSTRLEN];
 
-	titreViolet("IPv6");
+	titreProto("IPv6", BLEU);
 
 	if (niveauVerbo > SYNTHETIQUE){
 		printf("Flow info : 0x%06x\n",

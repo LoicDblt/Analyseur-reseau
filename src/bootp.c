@@ -87,7 +87,7 @@ void affichageParam(const u_int8_t* pointeur){
 void gestionBootP(const u_char* paquet, const int offset){
 	const struct bootp* bootp = (struct bootp*)(paquet + offset);
 
-	titreViolet("BootP");
+	titreProto("BootP", ROUGE);
 
 	if (niveauVerbo > SYNTHETIQUE){
 		printf("Message type : ");
@@ -171,7 +171,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 		if (niveauVerbo > CONCIS)
 			printf("DHCP");
 
-		titreViolet("DHCP");
+		titreProto("DHCP", ROUGE);
 
 		// Principe du Type Len Value (TLV)
 		u_int8_t type = 0, longueur;

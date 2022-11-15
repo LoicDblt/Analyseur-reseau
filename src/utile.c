@@ -1,6 +1,6 @@
 #include "../inc/utile.h"
 
-void titreCian(const char* message, const int compteur){
+void titreTrame(const char* message, const int compteur){
 	// Titre pour les "commutateurs" du main
 	if (compteur == -1)
 		printf("\t%s#### %s ####%s\n\n", CYAN, message, RESET);
@@ -12,13 +12,13 @@ void titreCian(const char* message, const int compteur){
 	}
 }
 
-void titreViolet(const char* message){
+void titreProto(const char* message, char* couleur){
 	if (niveauVerbo > CONCIS)
 		printf("\n\n");
 	else
 		printf("%s => ", JAUNE);
 
-	printf("%s*** %s ***%s", MAGENTA, message, JAUNE);
+	printf("%s*** %s ***", couleur, message);
 
 	if (niveauVerbo > CONCIS)
 		printf("\n");

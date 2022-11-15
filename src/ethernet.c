@@ -76,7 +76,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 
 	// Titre de second niveau, du paquet
 	static unsigned int compteurPaquets = 1;
-	titreCian("Frame", compteurPaquets);
+	titreTrame("Frame", compteurPaquets);
 
 	// Hack pour supprimer la ligne vide (esthétique)
 	if (niveauVerbo > CONCIS)
@@ -84,7 +84,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 
 	// Informations générales sur le paquet
 	if (niveauVerbo > SYNTHETIQUE){
-		titreViolet("General");
+		titreProto("General", MAGENTA);
 
 		printf("Arrival time : ");
 		affichageConvertiTimestamp(&pkthdr->ts);
@@ -95,7 +95,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	ethernet = (struct ether_header*)(paquet);
 
 	// Affichage des adresses MAC
-	titreViolet("Ethernet");
+	titreProto("Ethernet", MAGENTA);
 
 	if (niveauVerbo > CONCIS){
 		printf("Src : ");

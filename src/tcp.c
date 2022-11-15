@@ -3,7 +3,7 @@
 void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	const struct tcphdr* tcp = (struct tcphdr*)(paquet + offset);
 
-	titreViolet("TCP");
+	titreProto("TCP", VERT);
 
 	// Ports
 	int portSrc = ntohs(tcp->th_sport);

@@ -3,7 +3,7 @@
 void gestionIPv4(const u_char* paquet, const int offset){
 	const struct ip* ip = (struct ip*)(paquet + offset);
 
-	titreViolet("IPv4");
+	titreProto("IPv4", BLEU);
 
 	// Adresses IP
 	if (niveauVerbo > CONCIS){

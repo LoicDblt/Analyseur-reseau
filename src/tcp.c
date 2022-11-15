@@ -5,20 +5,43 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 
 	titreViolet("TCP");
 
+	// Ports
 	int portSrc = ntohs(tcp->th_sport);
 	int portDst = ntohs(tcp->th_dport);
-	printf("Src port : %u\n", portSrc);
-	printf("Dst port : %u\n", portDst);
 
-	printf("Sequence number : %u\n", ntohl(tcp->th_seq));
-	printf("Acknowledgement number : %u\n", ntohl(tcp->th_ack));
+	if (niveauVerbo > CONCIS){
+		printf("Src port : %u", portSrc);
+		sautLigneComplet();
+
+		printf("Dst port : %u", portDst);
+		sautLigneComplet();
+	}
+
+	if (niveauVerbo > CONCIS){
+		// Sequence number
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("Sequence number");
+		else
+			printf("Seq");
+
+		printf(" : %u", ntohl(tcp->th_seq));
+		sautLigneComplet();
+
+		// Acknowledgement number
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("Acknowledgement number");
+		else
+			printf("Ack");
+
+		printf(" : %u", ntohl(tcp->th_ack));
+	}
 
 	int tailleHeader = 4*tcp->th_off;
 
-	if (niveauVerbo > CONCIS){
+	if (niveauVerbo > SYNTHETIQUE){
 		printf("Header length : %d bytes (%d)\n", tailleHeader, tailleHeader/4);
 
-		// Impossible de faire un switch pour gérer de multiples flags
+		// Affiche les flags grâce aux masques
 		printf("Flags : ");
 		if ((tcp->th_flags & TH_FIN) > 0)
 			printf("FIN ");
@@ -126,26 +149,28 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 			// On passe au "Type" suivant
 			pointeurTCP += longueur;
 		}
-	}
 
 	printf("Payload : %d", tailleTotale - tailleHeader);
+	}
 
 	// Ports SMTP
 	if (
 		portSrc == PORT_SMTP_1 || portDst == PORT_SMTP_1 ||
 		portSrc == PORT_SMTP_2 || portDst == PORT_SMTP_2
 	){
-		printf("\nProtocol : SMTP");
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("\nProtocol : SMTP");
+
 		int tailleHeaderSMTP = tailleTotale - tailleHeader;
 		if (tailleHeaderSMTP > 0)
 			gestionSMTP(paquet, offset + tailleHeader, tailleHeaderSMTP);
 	}
-	else if (portSrc == PORT_SMTP_TLS || portDst == PORT_SMTP_TLS)
-		printf("\nProtocol : SMTP TLS (Unsupported)");
 
 	// Port HTTP
 	else if (portSrc == PORT_HTTP || portDst == PORT_HTTP){
-		printf("\nProtocol : HTTP");
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("\nProtocol : HTTP");
+
 		gestionHTTP(paquet, offset + tailleHeader, tailleTotale - tailleHeader);
 	}
 }

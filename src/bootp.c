@@ -89,7 +89,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 	titreViolet("BootP");
 
-	if (niveauVerbo > CONCIS){
+	if (niveauVerbo > SYNTHETIQUE){
 		printf("Message type : ");
 		switch (bootp->bp_op){
 			/* Bootrequest */
@@ -107,6 +107,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				printf("Unknown");
 				break;
 		}
+
 		printf("\nHardware type : ");
 		if (bootp->bp_htype == ETHERNET)
 			printf("Ethernet (0x%02x)\n", bootp->bp_htype);
@@ -157,32 +158,37 @@ void gestionBootP(const u_char* paquet, const int offset){
 			printf("%s\n", bootp->bp_file);
 	}
 
+
 	// Vérification du magic cookie
-	printf("Magic cookie : ");
+
+	if (niveauVerbo > CONCIS)
+		printf("Magic cookie : ");
 
 	u_int8_t* pointeurDCHP = (u_int8_t*) bootp->bp_vend;
 	const u_int8_t magicCookie[4] = VM_RFC1048;
 
 	if (memcmp(pointeurDCHP, magicCookie, sizeof(magicCookie)) == 0){
-		printf("DHCP");
+		if (niveauVerbo > CONCIS)
+			printf("DHCP");
+
 		titreViolet("DHCP");
 
 		// Principe du Type Len Value (TLV)
 		u_int8_t type = 0, longueur;
 		pointeurDCHP += 4;
 
-		while (type != TAG_END){
+		while (niveauVerbo > CONCIS && type != TAG_END){
 			// On avance ("Type", puis "Longueur" et enfin "Valeur")
 			type = *pointeurDCHP++;
 			longueur = *pointeurDCHP++;
 
-			if (type != TAG_END && niveauVerbo > CONCIS)
+			if (type != TAG_END && niveauVerbo > SYNTHETIQUE)
 				printf("(%d) ", type);
 
 			switch (type){
 				/* Subnet mask */
 				case TAG_SUBNET_MASK:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Subnet mask : ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -190,7 +196,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Offset */
 				case TAG_TIME_OFFSET:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Time offset : ");
 						affichageDuree(pointeurDCHP);
 					}
@@ -198,7 +204,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Router */
 				case TAG_GATEWAY:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Router : ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -206,7 +212,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* DNS */
 				case TAG_DOMAIN_SERVER:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("DNS : ");
 
 						// Pour gérer plusieurs DNS
@@ -223,7 +229,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Hostname */
 				case TAG_HOSTNAME:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Hostname : ");
 						affichageString(pointeurDCHP, longueur);
 					}
@@ -231,7 +237,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Domain name */
 				case TAG_DOMAINNAME:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Domain name : ");
 						affichageString(pointeurDCHP, longueur);
 					}
@@ -239,7 +245,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Broadcast address */
 				case TAG_BROAD_ADDR:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Broadcast address : ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -247,7 +253,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Requested IP address */
 				case TAG_REQUESTED_IP:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Requested IP : ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -255,7 +261,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Lease time */
 				case TAG_IP_LEASE:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("IP lease : ");
 						affichageDuree(pointeurDCHP);
 					}
@@ -306,14 +312,14 @@ void gestionBootP(const u_char* paquet, const int offset){
 							printf("Unsupported");
 							break;
 					}
-					if (niveauVerbo > CONCIS)
+					if (niveauVerbo > SYNTHETIQUE)
 						printf(" (%d)", *pointeurDCHP);
 					break;
 				}
 
 				/* Server identifier */
 				case TAG_SERVER_ID:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Server ID : ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -321,7 +327,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Parameter request list */
 				case TAG_PARM_REQUEST:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Parameters request :");
 						for (unsigned int i = 0; i < longueur; i++){
 							printf("\n\t");
@@ -332,7 +338,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Renewal time */
 				case TAG_RENEWAL_TIME:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Renewal time : ");
 						affichageDuree(pointeurDCHP);
 					}
@@ -340,7 +346,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Rebind time */
 				case TAG_REBIND_TIME:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Rebind time : ");
 						affichageDuree(pointeurDCHP);
 					}
@@ -348,7 +354,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Client identifier */
 				case TAG_CLIENT_ID:
-					if (niveauVerbo > CONCIS){
+					if (niveauVerbo > SYNTHETIQUE){
 						printf("Client ID : ");
 						affichageString(pointeurDCHP, longueur);
 					}
@@ -360,11 +366,11 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Non pris en charge */
 				default:
-					if (niveauVerbo > CONCIS)
+					if (niveauVerbo > SYNTHETIQUE)
 						printf("Unsupported option");
 					break;
 			}
-			if (niveauVerbo > CONCIS)
+			if (niveauVerbo > SYNTHETIQUE)
 				printf("\n");
 
 			// On passe au "Type" suivant
@@ -374,7 +380,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 	// Si le magic cookie n'est pas reconnu
 	else{
-		if (niveauVerbo > CONCIS)
+		if (niveauVerbo > SYNTHETIQUE)
 			printf("Unknown");
 	}
 }

@@ -5,7 +5,8 @@ void gestionARP(const u_char* paquet, const int offset){
 
 	titreViolet("ARP");
 
-	if (niveauVerbo > CONCIS){
+	if (niveauVerbo > SYNTHETIQUE){
+		// Hardware type
 		printf("Hardware  type : ");
 		switch (ntohs(arp->ar_hrd)){
 			/* Ethernet hardware format */
@@ -50,66 +51,70 @@ void gestionARP(const u_char* paquet, const int offset){
 
 		printf("\nProtocol type : ");
 		affichageEtherType(ntohs(arp->ar_pro));
+
 		printf("\nMAC address length : %d\n", arp->ar_hln);
 		printf("Protocol address length : %d\n", arp->ar_pln);
 	}
 
-	printf("Opcode : ");
-	switch (ntohs(arp->ar_op)){
-		/* Request */
-		case ARPOP_REQUEST:
-			printf("Request");
-			break;
-
-		/* Reply */
-		case ARPOP_REPLY:
-			printf("Reply");
-			break;
-
-		/* Revrequest */
-		#if __APPLE__
-			case ARPOP_REVREQUEST:
-		#else
-			case ARPOP_RREQUEST:
-		#endif
-			printf("Revrequest");
-			break;
-
-		/* Revreply */
-		#if __APPLE__
-			case ARPOP_REVREPLY:
-		#else
-			case ARPOP_RREPLY:
-		#endif
-			printf("Revreply");
-			break;
-
-		/* Invrequest */
-		#if __APPLE__
-			case ARPOP_INVREQUEST:
-		#else
-			case ARPOP_InREQUEST:
-		#endif
-			printf("Invrequest");
-			break;
-
-		/* Invreply */
-		#if __APPLE__
-			case ARPOP_INVREPLY:
-		#else
-			case ARPOP_InREPLY:
-		#endif
-			printf("Invreply");
-			break;
-
-		/* Inconnu */
-		default:
-			printf("Unknown");
-			break;
-	}
-	printf(" (%u)", ntohs(arp->ar_op));
-
 	if (niveauVerbo > CONCIS){
+		// Opccode
+		printf("Opcode : ");
+		switch (ntohs(arp->ar_op)){
+			/* Request */
+			case ARPOP_REQUEST:
+				printf("Request");
+				break;
+
+			/* Reply */
+			case ARPOP_REPLY:
+				printf("Reply");
+				break;
+
+			/* Revrequest */
+			#if __APPLE__
+				case ARPOP_REVREQUEST:
+			#else
+				case ARPOP_RREQUEST:
+			#endif
+				printf("Revrequest");
+				break;
+
+			/* Revreply */
+			#if __APPLE__
+				case ARPOP_REVREPLY:
+			#else
+				case ARPOP_RREPLY:
+			#endif
+				printf("Revreply");
+				break;
+
+			/* Invrequest */
+			#if __APPLE__
+				case ARPOP_INVREQUEST:
+			#else
+				case ARPOP_InREQUEST:
+			#endif
+				printf("Invrequest");
+				break;
+
+			/* Invreply */
+			#if __APPLE__
+				case ARPOP_INVREPLY:
+			#else
+				case ARPOP_InREPLY:
+			#endif
+				printf("Invreply");
+				break;
+
+			/* Inconnu */
+			default:
+				printf("Unknown");
+				break;
+		}
+		printf(" (%u)", ntohs(arp->ar_op));
+	}
+
+	if (niveauVerbo > SYNTHETIQUE){
 		u_int8_t* pointeurFinStruct = (u_int8_t*) (paquet + offset +
 			sizeof(struct arphdr*));
 

@@ -6,9 +6,11 @@ void gestionSMTP(const u_char* paquet, const int offset, int tailleHeader){
 
 	titreViolet("SMTP");
 
-	if (niveauVerbo > CONCIS){
+	if (niveauVerbo > SYNTHETIQUE){
 		// Affichage du contenu du header SMTP
 		for (int i = 0; i < tailleHeader; i++)
 			printf("%c", *pointeurSMTP++);
 	}
+	else if (niveauVerbo > CONCIS)
+		printf("Simple Mail Transfer Protocol");
 }

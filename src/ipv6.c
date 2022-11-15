@@ -6,9 +6,7 @@ void gestionIPv6(const u_char* paquet, const int offset){
 
 	titreViolet("IPv6");
 
-	printf("Version : 6\n");
-
-	if (niveauVerbo > CONCIS){
+	if (niveauVerbo > SYNTHETIQUE){
 		printf("Flow info : 0x%06x\n",
 			ntohl(ip6->ip6_flow & IPV6_FLOWINFO_MASK));
 
@@ -27,18 +25,23 @@ void gestionIPv6(const u_char* paquet, const int offset){
 		printf("Hop limit : %d\n", ip6->ip6_hlim);
 	}
 
-	inet_ntop(AF_INET6, &ip6->ip6_src, buffAddrIPv6, INET6_ADDRSTRLEN);
-	printf("Src IP : %s\n", buffAddrIPv6);
-	inet_ntop(AF_INET6, &ip6->ip6_dst, buffAddrIPv6, INET6_ADDRSTRLEN);
-	printf("Dest IP : %s", buffAddrIPv6);
+	if (niveauVerbo > CONCIS){
+		inet_ntop(AF_INET6, &ip6->ip6_src, buffAddrIPv6, INET6_ADDRSTRLEN);
+		printf("Src : %s", buffAddrIPv6);
+		sautLigneComplet();
 
-	if (niveauVerbo > CONCIS)
+		inet_ntop(AF_INET6, &ip6->ip6_dst, buffAddrIPv6, INET6_ADDRSTRLEN);
+		printf("Dst : %s", buffAddrIPv6);
+	}
+
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("\nNext header : ");
 	unsigned int proto = ip6->ip6_nxt;
+
 	switch (proto){
 		/* TCP */
 		case TCP:
-			if (niveauVerbo > CONCIS)
+			if (niveauVerbo > SYNTHETIQUE)
 				printf("TCP (%d)", proto);
 
 			gestionTCP(paquet, offset + sizeof(struct ip6_hdr),
@@ -47,7 +50,7 @@ void gestionIPv6(const u_char* paquet, const int offset){
 
 		/* UDP */
 		case UDP:
-			if (niveauVerbo > CONCIS)
+			if (niveauVerbo > SYNTHETIQUE)
 				printf("UDP (%d)", proto);
 
 			gestionUDP(paquet, offset + sizeof(struct ip6_hdr));
@@ -55,7 +58,7 @@ void gestionIPv6(const u_char* paquet, const int offset){
 
 		/* Non pris en charge */
 		default:
-			if (niveauVerbo > CONCIS)
+			if (niveauVerbo > SYNTHETIQUE)
 				printf("Unsupported (%d)", proto);
 			break;
 	}

@@ -7,7 +7,7 @@
 
 #include "ipv4.h"
 
-// Source : <netinet/ip6.h> de MacOS (Ventura)
+// Source : <netinet/ip6.h> de MacOS
 #if BYTE_ORDER == BIG_ENDIAN
 	#define IPV6_FLOWINFO_MASK	0x0fffffff /* flow info (28 bits) */
 	#define IPV6_FLOWLABEL_MASK	0x000fffff /* flow label (20 bits) */

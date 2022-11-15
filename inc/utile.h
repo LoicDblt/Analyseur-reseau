@@ -28,7 +28,7 @@
 #define MAGENTA 	"\033[35m"
 #define CYAN		"\033[36m"
 #define RESET		"\033[00m"
-#define VIDER_LIGNE	"\033[A\033[A"
+#define VIDER_LIGNE	"\033[A\033[2K"
 
 // Codes ASCII pour les noms de domaine
 #define CODE_ASCII		0xc0
@@ -46,6 +46,9 @@ void titreCian(const char* message, const int compteur);
 
 // Titre de second niveau
 void titreViolet(const char* message);
+
+// Passe à la ligne suivante si verbosité "COMPLET"
+void sautLigneComplet(void);
 
 // Fonction de vérification du retour de snprintf
 void verifTaille(const int retourTaille, const size_t tailleBuffer);

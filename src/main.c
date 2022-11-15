@@ -22,6 +22,7 @@ int main(int argc, char *argv[]){
 	while ((opt = getopt (argc, argv, "i:o:f:v:p:")) != -1){
 		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0 && pFlag == 0)
 			titreCian("Enabled options", -1);
+
 		printf(VERT);
 
 		switch (opt){

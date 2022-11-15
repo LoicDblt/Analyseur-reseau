@@ -1,14 +1,34 @@
 #include "../inc/utile.h"
 
 void titreCian(const char* message, const int compteur){
+	// Titre pour les "commutateurs" du main
 	if (compteur == -1)
-		printf("\t%s#### %s ####%s\n", CYAN, message, RESET);
-	else
-		printf("\t%s#### %s %d ####%s\n", CYAN, message, compteur, RESET);
+		printf("\t%s#### %s ####%s\n\n", CYAN, message, RESET);
+
+	else{
+		if (niveauVerbo > CONCIS)
+			printf("\t");
+		printf("%s#### %s %d ####%s", CYAN, message, compteur, RESET);
+	}
 }
 
 void titreViolet(const char* message){
-	printf("\n\n%s*** %s ***%s\n", MAGENTA, message, JAUNE);
+	if (niveauVerbo > CONCIS)
+		printf("\n\n");
+	else
+		printf("%s => ", JAUNE);
+
+	printf("%s*** %s ***%s", MAGENTA, message, JAUNE);
+
+	if (niveauVerbo > CONCIS)
+		printf("\n");
+}
+
+void sautLigneComplet(void){
+	if (niveauVerbo > SYNTHETIQUE)
+		printf("\n");
+	else
+		printf(", ");
 }
 
 void verifTaille(const int retourTaille, const size_t tailleBuffer){
@@ -22,6 +42,7 @@ void verifTaille(const int retourTaille, const size_t tailleBuffer){
 void affichageAdresseMAC(const u_int8_t* pointeur){
 	// Entre l'adresse dans la structure
 	struct ether_addr adresse;
+
 	for (unsigned int i = 0; i < ETHER_ADDR_LEN; i++){
 		#if __APPLE__
 			adresse.octet[i] = *pointeur++;
@@ -29,6 +50,7 @@ void affichageAdresseMAC(const u_int8_t* pointeur){
 			adresse.ether_addr_octet[i] = *pointeur++;
 		#endif
 	}
+
 	printf("%s", ether_ntoa(&adresse));
 }
 
@@ -89,6 +111,7 @@ unsigned int affichageNomDomaine(const u_int8_t* pointeur,
 			verifTaille(retourTaille, sizeof(nomDomaine));
 		}
 	}
+
 	printf("%s", nomDomaine);
 	return nbrIncrPtr;
 }

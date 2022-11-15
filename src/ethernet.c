@@ -47,6 +47,7 @@ void affichageEtherType(uint16_t type){
 
 void affichageConvertiTimestamp(const struct timeval* tv){
 	int retourTaille = 0, offset = 0;
+
 	char buffer[TAILLE_TIMESTAMP];
 	struct tm* heureLocale = localtime(&tv->tv_sec);
 
@@ -77,12 +78,17 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	static unsigned int compteurPaquets = 1;
 	titreCian("Frame", compteurPaquets);
 
-	// Informations générales sur le paquet
-	printf(VIDER_LIGNE); // Hack pour retirer les \n du titre (pour le style)
-	titreViolet("General");
+	// Hack pour supprimer la ligne vide (esthétique)
+	if (niveauVerbo > CONCIS)
+		printf(VIDER_LIGNE);
 
-	printf("Arrival time : ");
-	affichageConvertiTimestamp(&pkthdr->ts);
+	// Informations générales sur le paquet
+	if (niveauVerbo > SYNTHETIQUE){
+		titreViolet("General");
+
+		printf("Arrival time : ");
+		affichageConvertiTimestamp(&pkthdr->ts);
+	}
 
 	// Structures pour le paquet
 	const struct ether_header* ethernet;
@@ -91,12 +97,16 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	// Affichage des adresses MAC
 	titreViolet("Ethernet");
 
-	printf("Src MAC : ");
-	affichageAdresseMAC(ethernet->ether_shost); // Adresse src
-	printf("\nDst MAC : ");
-	affichageAdresseMAC(ethernet->ether_dhost); // Adresse dest
-
 	if (niveauVerbo > CONCIS){
+		printf("Src : ");
+		affichageAdresseMAC(ethernet->ether_shost); // Adresse src
+		sautLigneComplet();
+
+		printf("Dst : ");
+		affichageAdresseMAC(ethernet->ether_dhost); // Adresse dest
+	}
+
+	if (niveauVerbo > SYNTHETIQUE){
 		printf("\nEtherType : ");
 		affichageEtherType(ntohs(ethernet->ether_type));
 	}
@@ -120,7 +130,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 
 		/* Non pris en charge */
 		default:
-			printf("\nUnsupported protocol");
+			printf("Unsupported protocol");
 			break;
 	}
 

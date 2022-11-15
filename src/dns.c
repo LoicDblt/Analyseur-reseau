@@ -197,72 +197,76 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexUn = *pointeurDNS++; 				// Récupère le premier hexa
 	hexDeux = *pointeurDNS++;				// Récupère le second hexa
 	concatHex = (hexUn << 8) | (hexDeux);	// Concatène les deux
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("Transaction ID : 0x%04x", concatHex);
 
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("\nFlags : 0x%04x", concatHex);
 	int niemeBit = 0;
 
 	// Response
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		affichageBinaire(concatHex, niemeBit, 1);
+
 	unsigned int typeReponse = recupereNiemeBit(concatHex, niemeBit);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("\t");
+
+	if (niveauVerbo > CONCIS){
 	printf("Response : ");
-	if (typeReponse == REPONSE)
-		printf("Message is a response");
-	else
-		printf("Message is a query");
+		if (typeReponse == REPONSE)
+			printf("Message is a response");
+		else
+			printf("Message is a query");
+	}
 
 	// Op code
 	bitUn = recupereNiemeBit(concatHex, ++niemeBit);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		affichageBinaire(concatHex, niemeBit, 4);
 	bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
 	bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
 	bitQuatre = recupereNiemeBit(concatHex, ++niemeBit);
 	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("\tOp code : ");
 
 	switch (concatBit){
 		/* Query */
 		case QUERY:
-			if (niveauVerbo > CONCIS)
+			if (niveauVerbo > SYNTHETIQUE)
 				printf("Standard query");
 			break;
 
 		/* Iquery */
 		case IQUERY:
-			if (niveauVerbo > CONCIS)
+			if (niveauVerbo > SYNTHETIQUE)
 				printf("Inverse query");
 			break;
 
 		/* Status */
 		case STATUS:
-			if (niveauVerbo > CONCIS)
+			if (niveauVerbo > SYNTHETIQUE)
 				printf("Server status request");
 			break;
 
 		/* Inconnu */
 		default:
-			if (niveauVerbo > CONCIS)
+			if (niveauVerbo > SYNTHETIQUE)
 				printf("Unknown");
 			break;
 	}
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf(" (%d)", concatBit);
 
 	// Authoritative
 	if (typeReponse == REPONSE){
 		retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 
-		if (niveauVerbo > CONCIS){
+		if (niveauVerbo > SYNTHETIQUE){
 			affichageBinaire(concatHex, niemeBit, 1);
 			printf("\tAuthoritative : ");
 			if (retourBit > 0)
@@ -276,7 +280,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	// Truncated
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
-	if (niveauVerbo > CONCIS){
+	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
 		printf("\tTruncated : ");
 		if (retourBit > 0)
@@ -287,7 +291,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	// Recursion desired
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
-	if (niveauVerbo > CONCIS){
+	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
 		printf("\tRecursion desired : ");
 		if (retourBit > 0)
@@ -298,7 +302,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	// Recursion available
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
-	if (niveauVerbo > CONCIS){
+	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
 		printf("\tRecursion available : ");
 		if (retourBit > 0)
@@ -309,28 +313,28 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	// Z (Reserved)
 	bitUn = recupereNiemeBit(concatHex, ++niemeBit);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		affichageBinaire(concatHex, niemeBit, 3);
 	bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
 	bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
 	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("\tZ : ");
 
-	if (concatBit == ALLNULL && niveauVerbo > CONCIS)
+	if (concatBit == ALLNULL && niveauVerbo > SYNTHETIQUE)
 		printf("Reserved (%d)", concatBit);
 
 	// Reply code
 	if (typeReponse == REPONSE){
 		bitUn = recupereNiemeBit(concatHex, ++niemeBit);
-		if (niveauVerbo > CONCIS)
+		if (niveauVerbo > SYNTHETIQUE)
 			affichageBinaire(concatHex, niemeBit, 4);
 		bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
 		bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
 		bitQuatre = recupereNiemeBit(concatHex, ++niemeBit);
 		concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) |
 			(bitQuatre);
-		if (niveauVerbo > CONCIS){
+		if (niveauVerbo > SYNTHETIQUE){
 			printf("\tReply code : ");
 
 			switch (concatBit){
@@ -349,9 +353,9 @@ void gestionDNS(const u_char* paquet, const int offset){
 					printf("Server failure ");
 					break;
 
-				/* Name error */
+				/* No such name */
 				case NAMEERR:
-					printf("Name error");
+					printf("No such name");
 					break;
 
 				/* Not implemented */
@@ -373,35 +377,39 @@ void gestionDNS(const u_char* paquet, const int offset){
 		}
 	}
 
+	// Questions
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("\nQuestions : %d", concatHex);
 	nbrQuestions = (int) concatHex;
 
+	// Answer RRs
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("\nAnswer RRs : %d", concatHex);
 	nbrReponses = concatHex;
 
+	// Authority RRs
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("\nAuthority RRs : %d", concatHex);
 	nbrAutorite = concatHex;
 
+	// Additional RRs
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
-	if (niveauVerbo > CONCIS)
+	if (niveauVerbo > SYNTHETIQUE)
 		printf("\nAdditional RRs : %d", concatHex);
 
 	// S'il y a des "queries"
-	if (nbrQuestions > 0 && niveauVerbo > CONCIS){
+	if (nbrQuestions > 0 && niveauVerbo > SYNTHETIQUE){
 		printf("\nQueries :");
 
 		while (nbrQuestions > 0){
@@ -446,18 +454,17 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
 			affichageClasse(concatHex);
-
-			printf("\n");
 		}
 	}
 
 	// S'il y a des "answers"
-	if (nbrReponses > 0 && niveauVerbo > CONCIS){
-		printf("\nAnswers :");
+	if (nbrReponses > 0 && niveauVerbo > SYNTHETIQUE){
+		printf("\n\nAnswers :");
 
 		while (nbrReponses > 0){
 			nbrReponses--;
 
+			// Name
 			printf("\n\tName : %s", nomDomaine);
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
@@ -531,12 +538,13 @@ void gestionDNS(const u_char* paquet, const int offset){
 	}
 
 	// S'il y a des "authority"
-	if (nbrAutorite > 0 && niveauVerbo > CONCIS){
-		printf("\nAuthoritative nameservers :");
+	if (nbrAutorite > 0 && niveauVerbo > SYNTHETIQUE){
+		printf("\n\nAuthoritative nameservers :");
 
 		while (nbrAutorite > 0){
 			nbrAutorite--;
 
+			// Name
 			printf("\n\tName : %s", nomDomaine);
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;

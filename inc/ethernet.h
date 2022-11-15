@@ -13,6 +13,7 @@
 
 /************* CONSTANTES *************/
 
+#define MAX_BUFF_FRAME		48 // Bien assez grand dans tous les cas
 #define TAILLE_TIMESTAMP	48
 
 /************* FONCTIONS **************/

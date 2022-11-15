@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
 		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0 && pFlag == 0){
 			// Force l'affichage du titre encadré 
 			niveauVerbo = 3;
-			titreTrame("Enabled options");
+			titreFrame("Enabled options");
 			printf("\n\n");
 
 			// Replace la verbosité sur le niveau par défaut

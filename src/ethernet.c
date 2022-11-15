@@ -74,15 +74,16 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	// Argument inutilisé
 	(void) args;
 
-	// Titre de second niveau, du paquet
+	// Titre de la frame
 	static unsigned int compteurPaquets = 1;
-	char buff[32];
-	sprintf(buff, "Frame %d", compteurPaquets);
-	titreTrame(buff);
 
-	// Hack pour supprimer la ligne vide (esthétique)
-	// if (niveauVerbo > CONCIS)
-	// 	printf(VIDER_LIGNE);
+	char messageFrame[MAX_BUFF_FRAME];
+	if (sprintf(messageFrame, "Frame %u", compteurPaquets) == EOF){
+		fprintf(stderr, "%s|Error| sprintf%s\n", ROUGE, RESET);
+		exit(EXIT_FAILURE);
+	}
+
+	titreFrame(messageFrame);
 
 	// Informations générales sur le paquet
 	if (niveauVerbo > SYNTHETIQUE){
@@ -96,9 +97,9 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	const struct ether_header* ethernet;
 	ethernet = (struct ether_header*)(paquet);
 
-	// Affichage des adresses MAC
 	titreProto("Ethernet", MAGENTA);
 
+	// Affichage des adresses MAC
 	if (niveauVerbo > CONCIS){
 		printf("Src : ");
 		affichageAdresseMAC(ethernet->ether_shost); // Adresse src

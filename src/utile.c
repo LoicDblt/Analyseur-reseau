@@ -1,15 +1,27 @@
 #include "../inc/utile.h"
 
-void titreTrame(const char* message, const int compteur){
-	// Titre pour les "commutateurs" du main
-	if (compteur == -1)
-		printf("\t%s#### %s ####%s\n\n", CYAN, message, RESET);
+void titreTrame(const char* message){
+	// Titre encadré
+	if (niveauVerbo > CONCIS){
+		printf("\n%s", CYAN);
 
-	else{
-		if (niveauVerbo > CONCIS)
-			printf("\t");
-		printf("%s#### %s %d ####%s", CYAN, message, compteur, RESET);
+		// 8 espaces de chaque côté du message + 2 "#"
+		for (unsigned long i = 0; i < strlen(message) + 18; i++)
+			printf("#");
+
+		printf("\n#        %s        #\n", message);
+
+		for (unsigned long i = 0; i < strlen(message) + 18; i++)
+			printf("#");
+
+		printf("%s", RESET);
 	}
+
+	// Titre simple
+	else{
+		printf("%s#### %s ####%s", CYAN, message, RESET);
+	}
+
 }
 
 void titreProto(const char* message, char* couleur){
@@ -18,7 +30,27 @@ void titreProto(const char* message, char* couleur){
 	else
 		printf("%s => ", JAUNE);
 
-	printf("%s*** %s ***", couleur, message);
+	printf("%s", couleur);
+
+	// Titre encadré
+	if (niveauVerbo > SYNTHETIQUE){
+		printf("\n");
+
+		// 1 espaces de chaque côté du message + 2 "*"
+		for (unsigned long i = 0; i < strlen(message) + 4; i++)
+			printf("*");
+
+		printf("\n* %s *\n", message);
+
+		for (unsigned long i = 0; i < strlen(message) + 4; i++)
+			printf("*");
+
+		printf("\n");
+	}
+
+	// Titre simple
+	else
+		printf("*** %s ***", message);
 
 	if (niveauVerbo > CONCIS)
 		printf("\n");

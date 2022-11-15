@@ -2,7 +2,7 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #include "../inc/main.h"
-int niveauVerbo = 1;
+int niveauVerbo = VERBOSITE_DEFAUT;
 
 int main(int argc, char *argv[]){
 	pcap_t* handle;					// Session handle
@@ -20,8 +20,15 @@ int main(int argc, char *argv[]){
 	char* nomFichier;
 
 	while ((opt = getopt (argc, argv, "i:o:f:v:p:")) != -1){
-		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0 && pFlag == 0)
-			titreTrame("Enabled options", -1);
+		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0 && pFlag == 0){
+			// Force l'affichage du titre encadré 
+			niveauVerbo = 3;
+			titreTrame("Enabled options");
+			printf("\n\n");
+
+			// Replace la verbosité sur le niveau par défaut
+			niveauVerbo = VERBOSITE_DEFAUT;
+		}
 
 		printf(VERT);
 
@@ -156,5 +163,10 @@ int main(int argc, char *argv[]){
 	// Ferme la session
 	fprintf(stderr, RESET);
 	pcap_close(handle);
+
+	// Pour la finition
+	if (niveauVerbo == CONCIS)
+		printf("\n");
+
 	return EXIT_SUCCESS;
 }

@@ -76,15 +76,17 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 
 	// Titre de second niveau, du paquet
 	static unsigned int compteurPaquets = 1;
-	titreTrame("Frame", compteurPaquets);
+	char buff[32];
+	sprintf(buff, "Frame %d", compteurPaquets);
+	titreTrame(buff);
 
 	// Hack pour supprimer la ligne vide (esthétique)
-	if (niveauVerbo > CONCIS)
-		printf(VIDER_LIGNE);
+	// if (niveauVerbo > CONCIS)
+	// 	printf(VIDER_LIGNE);
 
 	// Informations générales sur le paquet
 	if (niveauVerbo > SYNTHETIQUE){
-		titreProto("General", MAGENTA);
+		titreProto("General", CYAN);
 
 		printf("Arrival time : ");
 		affichageConvertiTimestamp(&pkthdr->ts);
@@ -134,6 +136,9 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 			break;
 	}
 
-	printf("%s\n\n", RESET);
+	printf("%s\n", RESET);
+	if (niveauVerbo > CONCIS)
+		printf("\n");
+
 	compteurPaquets++;
 }

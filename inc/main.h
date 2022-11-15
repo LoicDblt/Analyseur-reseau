@@ -9,6 +9,12 @@
 #include "ethernet.h"
 #include "utile.h"
 
+/************* CONSTANTES *************/
+
+#define VERBOSITE_DEFAUT	1
+
+/*************** GLOBAL ***************/
+
 extern int niveauVerbo;
 
 /************* CONSTANTES *************/

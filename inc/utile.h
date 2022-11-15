@@ -42,7 +42,7 @@
 /************* FONCTIONS **************/
 
 // Titre des trames
-void titreTrame(const char* message, const int compteur);
+void titreTrame(const char* message);
 
 // Titre des protocoles
 void titreProto(const char* message, char* couleur);

@@ -60,6 +60,10 @@ void affichageDureeConvertie(unsigned int dureeSecondes);
 // Fonction d'affichage du type de requête depuis un pointeur
 void affichageType(const unsigned int type);
 
+// Fonction d'affichage d'adresse en fonction du type depuis un pointeur
+void affichageAdresse(const unsigned int type, const u_int8_t* pointeurDNS,
+	const unsigned int taille);
+
 // Fonction d'affichage de la classe de requête depuis un pointeur
 void affichageClasse(const unsigned int classe);
 

@@ -130,6 +130,38 @@ void affichageType(const unsigned int type){
 		printf(" (0x%04x)", type);
 }
 
+void affichageAdresse(const unsigned int type, const u_int8_t* pointeurDNS,
+	const unsigned int taille
+){
+	printf("\n\tAddress : ");
+	switch(type){
+		/* A */
+		case A:
+			affichageAdresseIPv4(pointeurDNS, taille);
+			break;
+
+		/* CNAME */
+		case CNAME:
+			affichageNomDomaine(pointeurDNS, taille);
+			break;
+
+		/* PTR */
+		case PTR:
+			affichageNomDomaine(pointeurDNS, taille);
+			break;
+
+		/* AAAA */
+		case AAAA:
+			affichageAdresseIPv6(pointeurDNS, taille);
+			break;
+
+		/* Non pris en charge */
+		default:
+			printf("Unsupported (%d)", type);
+			break;
+	}
+}
+
 void affichageClasse(const unsigned int classe){
 	printf("\n\tClass : ");
 		switch (classe){
@@ -186,11 +218,11 @@ void affichageBinaire(const unsigned int nombre,
 
 void gestionDNS(const u_char* paquet, const int offset){
 	// On place un pointeur après l'entête UDP
-	u_int8_t* pointeurDNS =  (u_int8_t*) paquet + offset;
+	u_int8_t* pointeurDNS = (u_int8_t*) paquet + offset;
 
 	unsigned int hexUn, hexDeux, hexTrois, hexQuatre, concatHex;
 	unsigned int bitUn, bitDeux, bitTrois, bitQuatre, concatBit, retourBit;
-	unsigned int nbrQuestions, nbrReponses, nbrAutorite;
+	unsigned int nbrQuestions, nbrReponses, nbrAutorite, nbrSupplementaire;
 	unsigned int nbrIncrPtr;
 
 	char nomDomaine[TAILLE_NOM_DOM] = "";
@@ -411,6 +443,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
 		printf("\nAdditional RRs : %d", concatHex);
+	nbrSupplementaire = concatHex;
 
 	// S'il y a des "queries"
 	if (nbrQuestions > 0 && niveauVerbo > SYNTHETIQUE){
@@ -506,38 +539,9 @@ void gestionDNS(const u_char* paquet, const int offset){
 			printf("\n\tData length : %d", concatHex);
 
 			// Adress
-			printf("\n\tAddress : ");
-			switch(type){
-				/* A */
-				case A:
-					affichageAdresseIPv4(pointeurDNS, concatHex);
-					pointeurDNS += concatHex;
-					break;
+			affichageAdresse(type, pointeurDNS, concatHex);
+			pointeurDNS += concatHex;
 
-				/* CNAME */
-				case CNAME:
-					affichageNomDomaine(pointeurDNS, concatHex);
-					pointeurDNS += concatHex;
-					break;
-
-				/* PTR */
-				case PTR:
-					affichageNomDomaine(pointeurDNS, concatHex);
-					pointeurDNS += concatHex;
-					break;
-
-				/* AAAA */
-				case AAAA:
-					affichageAdresseIPv6(pointeurDNS, concatHex);
-					pointeurDNS += concatHex;
-					break;
-
-				/* Non pris en charge */
-				default:
-					printf("Unsupported (%d)", type);
-					pointeurDNS += (concatHex);
-					break;
-			}
 			printf("\n");
 		}
 	}
@@ -645,6 +649,84 @@ void gestionDNS(const u_char* paquet, const int offset){
 				(hexQuatre);
 			printf("\n\tMinimum TTL : %d ", concatHex);
 			affichageDureeConvertie(concatHex);
+		}
+	}
+
+	// S'il y a des "Additional"
+	if (nbrSupplementaire > 0 && niveauVerbo > SYNTHETIQUE){
+		printf("\nAdditional records :");
+
+		// Réinitialise le buffer
+		memset(nomDomaine, 0, sizeof(nomDomaine));
+
+		while (nbrSupplementaire > 0){
+			nbrSupplementaire--;
+
+			unsigned int hexa = *pointeurDNS++;
+
+			int tailleNom = 0, retourTaille = 0;
+			while (tailleNom < TAILLE_NOM_DOM){
+				// On incrémente pour le cractère qui suit dans ce cas
+				if (hexa == CODE_ASCII){
+					pointeurDNS++;
+					break;
+				}
+
+				hexa = *pointeurDNS++;
+				int offset;
+
+				if (hexa == FIN)
+					break;
+				else if (hexa < CODE_CONTROLE){
+					offset = strlen(nomDomaine);
+					retourTaille = snprintf(nomDomaine + offset,
+						sizeof(nomDomaine) - offset, ".");
+					verifTaille(retourTaille, sizeof(nomDomaine));
+				}
+				else{
+					offset = strlen(nomDomaine);
+					retourTaille = snprintf(nomDomaine + offset,
+						sizeof(nomDomaine) - offset, "%c", hexa);
+					verifTaille(retourTaille, sizeof(nomDomaine));
+				}
+				tailleNom++;
+			}
+			printf("\n\tName : %s", nomDomaine);
+
+			// Type
+			hexUn = *pointeurDNS++;
+			hexDeux = *pointeurDNS++;
+			concatHex = (hexUn << 8) | (hexDeux);
+			unsigned int type = concatHex;
+			affichageType(concatHex);
+
+			// Classe
+			hexUn = *pointeurDNS++;
+			hexDeux = *pointeurDNS++;
+			concatHex = (hexUn << 8) | (hexDeux);
+			affichageClasse(concatHex);
+
+			// Time to live
+			hexUn = *pointeurDNS++;
+			hexDeux = *pointeurDNS++;
+			hexTrois = *pointeurDNS++;
+			hexQuatre = *pointeurDNS++;
+			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
+				(hexQuatre);
+			printf("\n\tTime to live : %d ", concatHex);
+			affichageDureeConvertie(concatHex);
+
+			// Data length
+			hexUn = *pointeurDNS++;
+			hexDeux = *pointeurDNS++;
+			concatHex = (hexUn << 8) | (hexDeux);
+			printf("\n\tData length : %d", concatHex);
+
+			// Adress
+			affichageAdresse(type, pointeurDNS, concatHex);
+			pointeurDNS += concatHex;
+
+			printf("\n");
 		}
 	}
 }

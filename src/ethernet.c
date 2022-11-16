@@ -74,16 +74,16 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	// Argument inutilisé
 	(void) args;
 
-	// Titre de la frame
+	// Titre de la trame
 	static unsigned int compteurPaquets = 1;
 
-	char messageFrame[MAX_BUFF_FRAME];
-	if (sprintf(messageFrame, "Frame %u", compteurPaquets) == EOF){
+	char messageTrame[MAX_BUFF_TRAME];
+	if (sprintf(messageTrame, "Frame %u", compteurPaquets) == EOF){
 		fprintf(stderr, "%s|Error| sprintf%s\n", ROUGE, RESET);
 		exit(EXIT_FAILURE);
 	}
 
-	titreFrame(messageFrame);
+	titreTrame(messageTrame);
 
 	// Informations générales sur le paquet
 	if (niveauVerbo > SYNTHETIQUE){

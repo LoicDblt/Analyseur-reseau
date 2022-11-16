@@ -1,6 +1,6 @@
 #include "../inc/utile.h"
 
-void titreFrame(const char* message){
+void titreTrame(const char* message){
 	// Titre encadré
 	if (niveauVerbo > CONCIS){
 		printf("\n%s", CYAN);
@@ -18,10 +18,8 @@ void titreFrame(const char* message){
 	}
 
 	// Titre simple
-	else{
+	else
 		printf("%s#### %s ####%s", CYAN, message, RESET);
-	}
-
 }
 
 void titreProto(const char* message, char* couleur){

@@ -24,8 +24,11 @@ void affichageDureeConvertie(unsigned int dureeSecondes){
 		// Jours
 		if (j > 0){
 			printf("%d day", j);
+
+			// Ajoute un "s" si il y a plusieurs jours
 			if (j > 1)
-				printf("s");	// Ajoute un "s" si il y a plusieurs jours
+				printf("s");
+
 			if (h > 0 || m > 0 || s > 0)
 				printf(", ");
 		}
@@ -200,6 +203,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	if (niveauVerbo > SYNTHETIQUE)
 		printf("Transaction ID : 0x%04x", concatHex);
 
+	// Flags
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
@@ -207,7 +211,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 		printf("\nFlags : 0x%04x", concatHex);
 	int niemeBit = 0;
 
-	// Response
+		// Response
 	if (niveauVerbo > SYNTHETIQUE)
 		affichageBinaire(concatHex, niemeBit, 1);
 
@@ -223,7 +227,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			printf("Message is a query");
 	}
 
-	// Op code
+		// Op code
 	bitUn = recupereNiemeBit(concatHex, ++niemeBit);
 	if (niveauVerbo > SYNTHETIQUE)
 		affichageBinaire(concatHex, niemeBit, 4);
@@ -278,7 +282,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	else
 		++niemeBit;
 
-	// Truncated
+		// Truncated
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
@@ -289,7 +293,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			printf("Message is not truncated");
 	}
 
-	// Recursion desired
+		// Recursion desired
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
@@ -300,7 +304,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			printf("Don't query recursively");
 	}
 
-	// Recursion available
+		// Recursion available
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
@@ -311,7 +315,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			printf("Server can't do recursive queries");
 	}
 
-	// Z (Reserved)
+		// Z (Reserved)
 	bitUn = recupereNiemeBit(concatHex, ++niemeBit);
 	if (niveauVerbo > SYNTHETIQUE)
 		affichageBinaire(concatHex, niemeBit, 3);
@@ -324,7 +328,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	if (concatBit == ALLNULL && niveauVerbo > SYNTHETIQUE)
 		printf("Reserved (%d)", concatBit);
 
-	// Reply code
+		// Reply code
 	if (typeReponse == REPONSE){
 		bitUn = recupereNiemeBit(concatHex, ++niemeBit);
 		if (niveauVerbo > SYNTHETIQUE)
@@ -531,6 +535,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 				/* Non pris en charge */
 				default:
 					printf("Unsupported (%d)", type);
+					pointeurDNS += (concatHex);
 					break;
 			}
 			printf("\n");

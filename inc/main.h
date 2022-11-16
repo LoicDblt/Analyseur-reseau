@@ -17,6 +17,4 @@
 
 extern int niveauVerbo;
 
-/************* CONSTANTES *************/
-
 #endif

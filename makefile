@@ -12,6 +12,7 @@ SOURCES	:= $(wildcard $(SRC)*.c)
 OBJETS	:= $(patsubst $(SRC)%.c, $(OBJ)%.o, $(SOURCES))
 
 # Couleurs pour les messages d'informations
+# Reset, Rouge, Vert, Jaune, Bleu
 RST	:= $(shell tput sgr0)
 R	:= $(RST) $(shell tput setaf 1)
 V	:= $(shell tput setaf 2)

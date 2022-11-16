@@ -41,8 +41,8 @@
 
 /************* FONCTIONS **************/
 
-// Titre des frames
-void titreFrame(const char* message);
+// Titre des trames
+void titreTrame(const char* message);
 
 // Titre des protocoles
 void titreProto(const char* message, char* couleur);

@@ -19,7 +19,12 @@ void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 
 		if (niveauVerbo > SYNTHETIQUE){
 			for (int i = 0; i < tailleHeader; i++)
-				printf("%c", *pointeurHTTP++);
+				// Evite d'afficher un retour à la ligne en fin de contenu
+				if (!(
+					i == tailleHeader - 1 &&
+					(char) *pointeurHTTP == '\n'
+				))
+					printf("%c", *pointeurHTTP++);
 		}
 		else if (niveauVerbo > CONCIS)
 			printf("Hypertext Transfer Protocol");

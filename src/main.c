@@ -21,12 +21,13 @@ int main(int argc, char *argv[]){
 
 	while ((opt = getopt (argc, argv, "i:o:f:v:p:")) != -1){
 		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0 && pFlag == 0){
-			// Force l'affichage du titre encadré 
+			// Force l'affichage du titre encadré
 			niveauVerbo = 3;
-			titreFrame("Enabled options");
+
+			titreTrame("Enabled options");
 			printf("\n\n");
 
-			// Replace la verbosité sur le niveau par défaut
+			// Remets la verbosité sur le niveau par défaut
 			niveauVerbo = VERBOSITE_DEFAUT;
 		}
 

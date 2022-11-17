@@ -21,6 +21,8 @@ void gestionIMAP(const u_char* paquet, const int offset, int tailleHeader){
 				printf("%s", CAPAB);
 				break;
 			}
+			if (memcmp(pointeurIMAP, FIN_LGN, sizeofSansSenti(FIN_LGN)) == 0)
+				break;
 			else
 				printf("%c", *pointeurIMAP++);
 		}

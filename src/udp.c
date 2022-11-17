@@ -9,15 +9,15 @@ void gestionUDP(const u_char* paquet, const int offset){
 	titreProto("UDP", VERT);
 
 	// Ports
-	printf("Src : %u", portSrc);
+	printf("Src: %u", portSrc);
 	sautLigneComplet();
 
-	printf("Dst : %u", portDst);
+	printf("Dst: %u", portDst);
 
 	// Longueur et checksum
 	if (niveauVerbo > SYNTHETIQUE){
-		printf("\nLength : %u\n", ntohs(udp->uh_ulen));
-		printf("Checksum : 0x%04x (Unverified)\n", ntohs(udp->uh_sum));
+		printf("\nLength: %u\n", ntohs(udp->uh_ulen));
+		printf("Checksum: 0x%04x (Unverified)\n", ntohs(udp->uh_sum));
 	}
 
 	// Ports BootP
@@ -26,7 +26,7 @@ void gestionUDP(const u_char* paquet, const int offset){
 		portDst == IPPORT_BOOTPS || portDst == IPPORT_BOOTPC
 	){
 		if (niveauVerbo > SYNTHETIQUE)
-			printf("Service : BootP");
+			printf("Service: BootP");
 
 		gestionBootP(paquet, offset + sizeof(struct udphdr));
 	}
@@ -34,7 +34,7 @@ void gestionUDP(const u_char* paquet, const int offset){
 	// Port DNS
 	else if (portSrc == PORT_DNS || portDst == PORT_DNS){
 		if (niveauVerbo > SYNTHETIQUE)
-			printf("Service : DNS");
+			printf("Service: DNS");
 
 		gestionDNS(paquet, offset + sizeof(struct udphdr));
 	}

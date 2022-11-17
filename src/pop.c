@@ -36,6 +36,7 @@ void gestionPOP(const u_char* paquet, const int offset, int tailleHeader){
 		type = OK;
 
 	if (niveauVerbo > SYNTHETIQUE){
+		// N'affiche pas le "\r\n" à la fin (d'où le "- 2")
 		for (int i = 0; i < tailleHeader - 2; i++)
 			printf("%c", *pointeurPOP++);
 	}

@@ -95,7 +95,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	if (niveauVerbo > SYNTHETIQUE){
 		titreProto("General", CYAN);
 
-		printf("Arrival time : ");
+		printf("Arrival time: ");
 		affichageConvertiTimestamp(&pkthdr->ts);
 	}
 
@@ -109,15 +109,15 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 		titreProto("Eth", MAGENTA);
 
 	// Affichage des adresses MAC
-	printf("Src : ");
+	printf("Src: ");
 	affichageAdresseMAC(ethernet->ether_shost);
 	sautLigneComplet();
 
-	printf("Dst : ");
+	printf("Dst: ");
 	affichageAdresseMAC(ethernet->ether_dhost);
 
 	if (niveauVerbo > SYNTHETIQUE){
-		printf("\nEtherType : ");
+		printf("\nEtherType: ");
 		affichageEtherType(ntohs(ethernet->ether_type));
 	}
 

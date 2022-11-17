@@ -1,7 +1,7 @@
 #include "../inc/utile.h"
 
 void titreTrame(const char* message){
-	// Titre encadré
+	// Titre "synthétique" et "complet"
 	if (niveauVerbo > CONCIS){
 		printf("\n%s", CYAN);
 
@@ -17,7 +17,7 @@ void titreTrame(const char* message){
 		printf("%s", RESET);
 	}
 
-	// Titre simple
+	// Titre "concis"
 	else
 		printf("%s[%s]%s", CYAN, message, RESET);
 }
@@ -30,7 +30,7 @@ void titreProto(const char* message, char* couleur){
 
 	printf("%s", couleur);
 
-	// Titre encadré
+	// Titre "complet"
 	if (niveauVerbo > SYNTHETIQUE){
 		printf("\n");
 
@@ -46,10 +46,11 @@ void titreProto(const char* message, char* couleur){
 		printf("\n");
 	}
 
-	// Titre simple
+	// Titre "synthétique"
 	else if (niveauVerbo == SYNTHETIQUE)
 		printf("*** %s ***", message);
 
+	// Titre "concis"
 	else
 		printf("[%s] ", message);
 

@@ -65,7 +65,7 @@ void affichageDureeConvertie(unsigned int dureeSecondes){
 }
 
 void affichageType(const unsigned int type){
-	printf("\n\tType : ");
+	printf("\n\tType: ");
 		switch (type){
 			/* A */
 			case A:
@@ -133,7 +133,7 @@ void affichageType(const unsigned int type){
 void affichageAdresse(const unsigned int type, const u_int8_t* pointeurDNS,
 	const unsigned int taille
 ){
-	printf("\n\tAddress : ");
+	printf("\n\tAddress: ");
 	switch(type){
 		/* A */
 		case A:
@@ -163,7 +163,7 @@ void affichageAdresse(const unsigned int type, const u_int8_t* pointeurDNS,
 }
 
 void affichageClasse(const unsigned int classe){
-	printf("\n\tClass : ");
+	printf("\n\tClass: ");
 		switch (classe){
 			/* IN */
 			case IN:
@@ -233,14 +233,14 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexDeux = *pointeurDNS++;				// Récupère le second hexa
 	concatHex = (hexUn << 8) | (hexDeux);	// Concatène les deux
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("Transaction ID : 0x%04x", concatHex);
+		printf("Transaction ID: 0x%04x", concatHex);
 
 	// Flags
 	hexUn = *pointeurDNS++;
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nFlags : 0x%04x", concatHex);
+		printf("\nFlags: 0x%04x", concatHex);
 	int niemeBit = 0;
 
 		// Response
@@ -252,7 +252,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 		printf("\t");
 
 	if (niveauVerbo > CONCIS){
-	printf("Response : ");
+	printf("Response: ");
 		if (typeReponse == REPONSE)
 			printf("Message is a response");
 		else
@@ -274,7 +274,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	bitQuatre = recupereNiemeBit(concatHex, ++niemeBit);
 	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\tOp code : ");
+		printf("\tOp code: ");
 
 	switch (concatBit){
 		/* Query */
@@ -310,7 +310,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 		if (niveauVerbo > SYNTHETIQUE){
 			affichageBinaire(concatHex, niemeBit, 1);
-			printf("\tAuthoritative : ");
+			printf("\tAuthoritative: ");
 			if (retourBit > 0)
 				printf("Server is an authority for domain");
 			else
@@ -324,7 +324,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
-		printf("\tTruncated : ");
+		printf("\tTruncated: ");
 		if (retourBit > 0)
 			printf("Message is truncated");
 		else
@@ -335,7 +335,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
-		printf("\tRecursion desired : ");
+		printf("\tRecursion desired: ");
 		if (retourBit > 0)
 			printf("Do query recursively");
 		else
@@ -346,7 +346,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
-		printf("\tRecursion available : ");
+		printf("\tRecursion available: ");
 		if (retourBit > 0)
 			printf("Server can do recursive queries");
 		else
@@ -361,7 +361,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
 	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\tZ : ");
+		printf("\tZ: ");
 
 	if (concatBit == ALLNULL && niveauVerbo > SYNTHETIQUE)
 		printf("Reserved (%d)", concatBit);
@@ -377,7 +377,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 		concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) |
 			(bitQuatre);
 		if (niveauVerbo > SYNTHETIQUE){
-			printf("\tReply code : ");
+			printf("\tReply code: ");
 
 			switch (concatBit){
 				/* No error */
@@ -424,7 +424,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nQuestions : %d", concatHex);
+		printf("\nQuestions: %d", concatHex);
 	nbrQuestions = (int) concatHex;
 
 	// Answer RRs
@@ -432,7 +432,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nAnswer RRs : %d", concatHex);
+		printf("\nAnswer RRs: %d", concatHex);
 	nbrReponses = concatHex;
 
 	// Authority RRs
@@ -440,7 +440,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nAuthority RRs : %d", concatHex);
+		printf("\nAuthority RRs: %d", concatHex);
 	nbrAutorite = concatHex;
 
 	// Additional RRs
@@ -448,12 +448,12 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nAdditional RRs : %d", concatHex);
+		printf("\nAdditional RRs: %d", concatHex);
 	nbrSupplementaire = concatHex;
 
 	// S'il y a des "queries"
 	if (nbrQuestions > 0 && niveauVerbo > SYNTHETIQUE){
-		printf("\nQueries :");
+		printf("\nQueries:");
 
 		while (nbrQuestions > 0){
 			nbrQuestions--;
@@ -482,9 +482,9 @@ void gestionDNS(const u_char* paquet, const int offset){
 				}
 				tailleNom++;
 			}
-			printf("\n\tName : %s", nomDomaine);
-			printf("\n\t[Name length] : %d", tailleNom);
-			printf("\n\t[Label count] : %d", nbrLabels);
+			printf("\n\tName: %s", nomDomaine);
+			printf("\n\t[Name length]: %d", tailleNom);
+			printf("\n\t[Label count]: %d", nbrLabels);
 
 			// Type
 			hexUn = *pointeurDNS++;
@@ -502,13 +502,13 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	// S'il y a des "answers"
 	if (nbrReponses > 0 && niveauVerbo > SYNTHETIQUE){
-		printf("\n\nAnswers :");
+		printf("\n\nAnswers:");
 
 		while (nbrReponses > 0){
 			nbrReponses--;
 
 			// Name
-			printf("\n\tName : %s", nomDomaine);
+			printf("\n\tName: %s", nomDomaine);
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
@@ -535,14 +535,14 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tTime to live : %d ", concatHex);
+			printf("\n\tTime to live: %d ", concatHex);
 			affichageDureeConvertie(concatHex);
 
 			// Data length
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
-			printf("\n\tData length : %d", concatHex);
+			printf("\n\tData length: %d", concatHex);
 
 			// Address
 			affichageAdresse(type, pointeurDNS, concatHex);
@@ -554,13 +554,13 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	// S'il y a des "authority"
 	if (nbrAutorite > 0 && niveauVerbo > SYNTHETIQUE){
-		printf("\n\nAuthoritative nameservers :");
+		printf("\n\nAuthoritative nameservers:");
 
 		while (nbrAutorite > 0){
 			nbrAutorite--;
 
 			// Name
-			printf("\n\tName : %s", nomDomaine);
+			printf("\n\tName: %s", nomDomaine);
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
@@ -587,22 +587,22 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tTime to live : %d ", concatHex);
+			printf("\n\tTime to live: %d ", concatHex);
 			affichageDureeConvertie(concatHex);
 
 			// Data length
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
-			printf("\n\tData length : %d", concatHex);
+			printf("\n\tData length: %d", concatHex);
 
 			// Primary name server
-			printf("\n\tPrimary name server : ");
+			printf("\n\tPrimary name server: ");
 			nbrIncrPtr = affichageNomDomaine(pointeurDNS, concatHex);
 			pointeurDNS += nbrIncrPtr;
 
 			// Responsible authority's mailbox
-			printf("\n\tResponsible authority's mailbox : ");
+			printf("\n\tResponsible authority's mailbox: ");
 			nbrIncrPtr = affichageNomDomaine(++pointeurDNS, concatHex);
 			pointeurDNS += nbrIncrPtr + 1;	// Besoin d'incrémenter le pointeur
 											// à la valeur suivante
@@ -614,7 +614,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tSerial number : %u", concatHex);
+			printf("\n\tSerial number: %u", concatHex);
 
 			// Refresh interval
 			hexUn = *pointeurDNS++;
@@ -623,7 +623,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tRefresh interval : %d ", concatHex);
+			printf("\n\tRefresh interval: %d ", concatHex);
 			affichageDureeConvertie(concatHex);
 
 			// Retry interval
@@ -633,7 +633,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tRetry interval : %d ", concatHex);
+			printf("\n\tRetry interval: %d ", concatHex);
 			affichageDureeConvertie(concatHex);
 
 			// Expire limit
@@ -643,7 +643,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tExpire limit : %d ", concatHex);
+			printf("\n\tExpire limit: %d ", concatHex);
 			affichageDureeConvertie(concatHex);
 
 			// Minimum TTL
@@ -653,14 +653,14 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tMinimum TTL : %d ", concatHex);
+			printf("\n\tMinimum TTL: %d ", concatHex);
 			affichageDureeConvertie(concatHex);
 		}
 	}
 
 	// S'il y a des "Additional"
 	if (nbrSupplementaire > 0 && niveauVerbo > SYNTHETIQUE){
-		printf("\nAdditional records :");
+		printf("\nAdditional records:");
 
 		// Réinitialise le buffer
 		memset(nomDomaine, 0, sizeof(nomDomaine));
@@ -697,7 +697,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 				}
 				tailleNom++;
 			}
-			printf("\n\tName : %s", nomDomaine);
+			printf("\n\tName: %s", nomDomaine);
 
 			// Type
 			hexUn = *pointeurDNS++;
@@ -719,14 +719,14 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tTime to live : %d ", concatHex);
+			printf("\n\tTime to live: %d ", concatHex);
 			affichageDureeConvertie(concatHex);
 
 			// Data length
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
-			printf("\n\tData length : %d", concatHex);
+			printf("\n\tData length: %d", concatHex);
 
 			// Address
 			affichageAdresse(type, pointeurDNS, concatHex);

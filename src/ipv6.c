@@ -7,10 +7,10 @@ void gestionIPv6(const u_char* paquet, const int offset){
 	titreProto("IPv6", BLEU);
 
 	if (niveauVerbo > SYNTHETIQUE){
-		printf("Flow info : 0x%06x\n",
+		printf("Flow info: 0x%06x\n",
 			ntohl(ip6->ip6_flow & IPV6_FLOWINFO_MASK));
 
-		printf("Explicit congestion notification : ");
+		printf("Explicit congestion notification: ");
 		unsigned int ecn = ntohl(ip6->ip6_flow & IPV6_FLOW_ECN_MASK);
 		if (ecn == 0)
 			printf("Not ECN-capable transport");
@@ -18,22 +18,22 @@ void gestionIPv6(const u_char* paquet, const int offset){
 			printf("ECN-capable transport");
 		printf(" (%d)\n", ecn);
 
-		printf("Flow label : 0x%06x\n",
+		printf("Flow label: 0x%06x\n",
 			ntohl(ip6->ip6_flow & IPV6_FLOWLABEL_MASK));
 
-		printf("Payload length : %d\n", ntohs(ip6->ip6_plen));
-		printf("Hop limit : %d\n", ip6->ip6_hlim);
+		printf("Payload length: %d\n", ntohs(ip6->ip6_plen));
+		printf("Hop limit: %d\n", ip6->ip6_hlim);
 	}
 
 	inet_ntop(AF_INET6, &ip6->ip6_src, buffAddrIPv6, INET6_ADDRSTRLEN);
-	printf("Src : %s", buffAddrIPv6);
+	printf("Src: %s", buffAddrIPv6);
 	sautLigneComplet();
 
 	inet_ntop(AF_INET6, &ip6->ip6_dst, buffAddrIPv6, INET6_ADDRSTRLEN);
-	printf("Dst : %s", buffAddrIPv6);
+	printf("Dst: %s", buffAddrIPv6);
 
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nNext header : ");
+		printf("\nNext header: ");
 	unsigned int proto = ip6->ip6_nxt;
 
 	switch (proto){

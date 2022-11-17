@@ -6,27 +6,27 @@ void gestionIPv4(const u_char* paquet, const int offset){
 	titreProto("IPv4", BLEU);
 
 	// Adresses IP
-	printf("Src : %s", inet_ntoa(ip->ip_src));
+	printf("Src: %s", inet_ntoa(ip->ip_src));
 	sautLigneComplet();
 
-	printf("Dst : %s", inet_ntoa(ip->ip_dst));
+	printf("Dst: %s", inet_ntoa(ip->ip_dst));
 
 	int tailleHeader = 4*ip->ip_hl;
 	if (niveauVerbo > SYNTHETIQUE){
-		printf("\nHeader length : %d bytes (%d)\n", tailleHeader, ip->ip_hl);
-		printf("Type of service : %d\n", ntohs(ip->ip_tos));
+		printf("\nHeader length: %d bytes (%d)\n", tailleHeader, ip->ip_hl);
+		printf("Type of service: %d\n", ntohs(ip->ip_tos));
 	}
 
 	int tailleTotale = ntohs(ip->ip_len);
 	if (niveauVerbo > SYNTHETIQUE){
-		printf("Total length : %d\n", tailleTotale);
+		printf("Total length: %d\n", tailleTotale);
 
 		printf("Identification: 0x%04x (%d)\n", ntohs(ip->ip_id),
 			ntohs(ip->ip_id));
-		printf("Fragment offset : %u\n", ip->ip_off);
-		printf("Time to live : %d\n", ip->ip_ttl);
-		printf("Checksum : 0x%04x (Unverified)\n", ntohs(ip->ip_sum));
-		printf("Protocol : ");
+		printf("Fragment offset: %u\n", ip->ip_off);
+		printf("Time to live: %d\n", ip->ip_ttl);
+		printf("Checksum: 0x%04x (Unverified)\n", ntohs(ip->ip_sum));
+		printf("Protocol: ");
 	}
 
 	unsigned int proto = ip->ip_p;

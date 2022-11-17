@@ -7,7 +7,7 @@ void gestionARP(const u_char* paquet, const int offset){
 
 	if (niveauVerbo > SYNTHETIQUE){
 		// Hardware type
-		printf("Hardware type : ");
+		printf("Hardware type: ");
 		switch (ntohs(arp->ar_hrd)){
 			/* Ethernet hardware format */
 			case ARPHRD_ETHER:
@@ -49,16 +49,16 @@ void gestionARP(const u_char* paquet, const int offset){
 		}
 		printf(" (%u)", ntohs(arp->ar_hrd));
 
-		printf("\nProtocol type : ");
+		printf("\nProtocol type: ");
 		affichageEtherType(ntohs(arp->ar_pro));
 
-		printf("\nMAC address length : %d\n", arp->ar_hln);
-		printf("Protocol address length : %d\n", arp->ar_pln);
+		printf("\nMAC address length: %d\n", arp->ar_hln);
+		printf("Protocol address length: %d\n", arp->ar_pln);
 	}
 
 	// Opccode
 	if (niveauVerbo > CONCIS)
-		printf("Opcode : ");
+		printf("Opcode: ");
 	switch (ntohs(arp->ar_op)){
 		/* Request */
 		case ARPOP_REQUEST:
@@ -122,15 +122,15 @@ void gestionARP(const u_char* paquet, const int offset){
 		affichageAdresseMAC(pointeurFinStruct);
 		pointeurFinStruct += arp->ar_hln;
 
-		printf("\nSrc IP address : ");
+		printf("\nSrc IP address: ");
 		affichageAdresseIPv4(pointeurFinStruct, arp->ar_pln);
 		pointeurFinStruct += arp->ar_pln;
 
-		printf("\nDst MAC address : ");
+		printf("\nDst MAC address: ");
 		affichageAdresseMAC(pointeurFinStruct);
 		pointeurFinStruct += arp->ar_hln;
 
-		printf("\nDst IP address : ");
+		printf("\nDst IP address: ");
 		affichageAdresseIPv4(pointeurFinStruct, arp->ar_pln);
 	}
 }

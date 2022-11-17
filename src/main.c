@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
 					return EXIT_FAILURE;
 				}
 				device = optarg;
-				printf("[-i] Interface : %s\n", device);
+				printf("[-i] Interface: %s\n", device);
 				break;
 
 			/* Fichier offline */
@@ -54,12 +54,12 @@ int main(int argc, char *argv[]){
 					return EXIT_FAILURE;
 				}
 				handle = pcap_open_offline(nomFichier, errbuf);
-				printf("[-o] Offline file : %s\n", nomFichier);
+				printf("[-o] Offline file: %s\n", nomFichier);
 				break;
 
 			/* Filtrage */
 			case 'f':
-				printf("[-f] Filter : %s\n", optarg);
+				printf("[-f] Filter: %s\n", optarg);
 				filter_exp = optarg;
 				break;
 
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 							ROUGE, RESET);
 						return EXIT_FAILURE;
 				}
-				printf("[-v] Level of verbosity : %s [%s]\n", optarg, verbosite);
+				printf("[-v] Level of verbosity: %s [%s]\n", optarg, verbosite);
 				break;
 
 			/* Nombre de paquets à afficher */
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]){
 						"must be over -1%s\n", ROUGE, RESET);
 					return EXIT_FAILURE;
 				}
-				printf("[-p] Number of packets to compute : %d\n", nbrPaquets);
+				printf("[-p] Number of packets to compute: %d\n", nbrPaquets);
 				break;
 
 			/* Inconnu */
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]){
 			device = pcap_lookupdev(errbuf);
 
 		if (device == NULL){
-			fprintf(stderr, "|Error| Couldn't find default device : %s\n",
+			fprintf(stderr, "|Error| Couldn't find default device: %s\n",
 				errbuf);
 			return EXIT_FAILURE;
 		}
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]){
 		// Ouvre la session en mode "promiscuous"
 		handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
 		if (handle == NULL){
-			fprintf(stderr, "|Error| Couldn't open device %s :\n%s\n",
+			fprintf(stderr, "|Error| Couldn't open device %s:\n%s\n",
 				device, errbuf);
 			return EXIT_FAILURE;
 		}
@@ -140,12 +140,12 @@ int main(int argc, char *argv[]){
 
 	// Compile et applique le filtre
 	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1){
-		fprintf(stderr, "|Error| Couldn't parse filter %s :\n%s\n",
+		fprintf(stderr, "|Error| Couldn't parse filter %s:\n%s\n",
 			filter_exp, pcap_geterr(handle));
 		return EXIT_FAILURE;
 	}
 	if (pcap_setfilter(handle, &fp) == -1){
-		fprintf(stderr, "|Error| Couldn't install filter %s :\n%s\n",
+		fprintf(stderr, "|Error| Couldn't install filter %s:\n%s\n",
 			filter_exp, pcap_geterr(handle));
 		return EXIT_FAILURE;
 	}

@@ -90,7 +90,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 	titreProto("BootP", ROUGE);
 
 	if (niveauVerbo > SYNTHETIQUE){
-		printf("Message type : ");
+		printf("Message type: ");
 		switch (bootp->bp_op){
 			/* Bootrequest */
 			case BOOTREQUEST:
@@ -108,18 +108,18 @@ void gestionBootP(const u_char* paquet, const int offset){
 				break;
 		}
 
-		printf("\nHardware type : ");
+		printf("\nHardware type: ");
 		if (bootp->bp_htype == ETHERNET)
 			printf("Ethernet (0x%02x)\n", bootp->bp_htype);
 		else
 			printf("Unknown (0x%02x)\n", bootp->bp_htype);
 
-		printf("Hardware adress length : %d\n", bootp->bp_hlen);
-		printf("Hops : %d\n", bootp->bp_hops);
-		printf("Transaction ID : 0x%08x\n", ntohl(bootp->bp_xid));
-		printf("Seconds elapsed : %u\n", bootp->bp_secs);
+		printf("Hardware adress length: %d\n", bootp->bp_hlen);
+		printf("Hops: %d\n", bootp->bp_hops);
+		printf("Transaction ID: 0x%08x\n", ntohl(bootp->bp_xid));
+		printf("Seconds elapsed: %u\n", bootp->bp_secs);
 
-		printf("Flags : ");
+		printf("Flags: ");
 		switch (ntohs(bootp->bp_flags)){
 			/* Broadcast */
 			case BROADCAST:
@@ -140,18 +140,18 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 		printf("Client IP address: %s\n", inet_ntoa(bootp->bp_ciaddr));
 		printf("\"Your\" IP address: %s\n", inet_ntoa(bootp->bp_yiaddr));
-		printf("Next server IP address : %s\n", inet_ntoa(bootp->bp_siaddr));
-		printf("Relay agent IP address : %s\n", inet_ntoa(bootp->bp_giaddr));
-		printf("Client MAC address : ");
+		printf("Next server IP address: %s\n", inet_ntoa(bootp->bp_siaddr));
+		printf("Relay agent IP address: %s\n", inet_ntoa(bootp->bp_giaddr));
+		printf("Client MAC address: ");
 		affichageAdresseMAC(bootp->bp_chaddr);
 
-		printf("\nServer host name : ");
+		printf("\nServer host name: ");
 		if (strlen((char*) bootp->bp_sname) == 0)
 			printf("Not given\n");
 		else
 			printf("%s\n", bootp->bp_sname);
 
-		printf("Boot file name : ");
+		printf("Boot file name: ");
 		if (strlen((char*) bootp->bp_file) == 0)
 			printf("Not given\n");
 		else
@@ -162,7 +162,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 	// Vérification du magic cookie
 
 	if (niveauVerbo > CONCIS)
-		printf("Magic cookie : ");
+		printf("Magic cookie: ");
 
 	u_int8_t* pointeurDCHP = (u_int8_t*) bootp->bp_vend;
 	const u_int8_t magicCookie[4] = VM_RFC1048;
@@ -191,7 +191,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Subnet mask */
 				case TAG_SUBNET_MASK:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Subnet mask : ");
+						printf("Subnet mask: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
 					break;
@@ -199,7 +199,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Offset */
 				case TAG_TIME_OFFSET:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Time offset : ");
+						printf("Time offset: ");
 						affichageDuree(pointeurDCHP);
 					}
 					break;
@@ -207,7 +207,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Router */
 				case TAG_GATEWAY:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Router : ");
+						printf("Router: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
 					break;
@@ -215,13 +215,13 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* DNS */
 				case TAG_DOMAIN_SERVER:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("DNS : ");
+						printf("DNS: ");
 
 						// Pour gérer plusieurs DNS
 						unsigned int nbrDNS = longueur/TAILLE_IPv4;
 						for (unsigned int i = 0; i < nbrDNS; i++){
 							if (i > 0)
-								printf("\n\t  ");
+								printf("\n\t ");
 							affichageAdresseIPv4(pointeurDCHP, TAILLE_IPv4);
 							pointeurDCHP += TAILLE_IPv4;
 						}
@@ -232,7 +232,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Hostname */
 				case TAG_HOSTNAME:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Hostname : ");
+						printf("Hostname: ");
 						affichageString(pointeurDCHP, longueur);
 					}
 					break;
@@ -240,7 +240,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Domain name */
 				case TAG_DOMAINNAME:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Domain name : ");
+						printf("Domain name: ");
 						affichageString(pointeurDCHP, longueur);
 					}
 					break;
@@ -248,7 +248,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Broadcast address */
 				case TAG_BROAD_ADDR:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Broadcast address : ");
+						printf("Broadcast address: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
 					break;
@@ -256,7 +256,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Requested IP address */
 				case TAG_REQUESTED_IP:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Requested IP : ");
+						printf("Requested IP: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
 					break;
@@ -264,7 +264,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Lease time */
 				case TAG_IP_LEASE:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("IP lease : ");
+						printf("IP lease: ");
 						affichageDuree(pointeurDCHP);
 					}
 					break;
@@ -272,7 +272,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* DHCP message type */
 				case TAG_DHCP_MESSAGE: {
 					if (niveauVerbo > CONCIS)
-						printf("DHCP message : ");
+						printf("DHCP message: ");
 
 					switch (*pointeurDCHP){
 						/* Discover */
@@ -323,7 +323,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Server identifier */
 				case TAG_SERVER_ID:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Server ID : ");
+						printf("Server ID: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
 					break;
@@ -331,7 +331,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Parameter request list */
 				case TAG_PARM_REQUEST:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Parameters request :");
+						printf("Parameters request:");
 						for (unsigned int i = 0; i < longueur; i++){
 							printf("\n\t");
 							affichageParam(&pointeurDCHP[i]);
@@ -342,7 +342,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Renewal time */
 				case TAG_RENEWAL_TIME:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Renewal time : ");
+						printf("Renewal time: ");
 						affichageDuree(pointeurDCHP);
 					}
 					break;
@@ -350,7 +350,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Rebind time */
 				case TAG_REBIND_TIME:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Rebind time : ");
+						printf("Rebind time: ");
 						affichageDuree(pointeurDCHP);
 					}
 					break;
@@ -358,7 +358,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Client identifier */
 				case TAG_CLIENT_ID:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Client ID : ");
+						printf("Client ID: ");
 						affichageString(pointeurDCHP, longueur);
 					}
 					break;

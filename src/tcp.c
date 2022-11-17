@@ -9,10 +9,10 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	int portSrc = ntohs(tcp->th_sport);
 	int portDst = ntohs(tcp->th_dport);
 
-	printf("Src : %u", portSrc);
+	printf("Src: %u", portSrc);
 	sautLigneComplet();
 
-	printf("Dst : %u", portDst);
+	printf("Dst: %u", portDst);
 
 	if (niveauVerbo > CONCIS){
 		sautLigneComplet();
@@ -23,7 +23,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		else
 			printf("Seq");
 
-		printf(" : %u", ntohl(tcp->th_seq));
+		printf(": %u", ntohl(tcp->th_seq));
 		sautLigneComplet();
 
 		// Acknowledgement number
@@ -32,16 +32,16 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		else
 			printf("Ack");
 
-		printf(" : %u", ntohl(tcp->th_ack));
+		printf(": %u", ntohl(tcp->th_ack));
 	}
 
 	int tailleHeader = 4*tcp->th_off;
 
 	if (niveauVerbo > SYNTHETIQUE){
-		printf("\nHeader length : %d bytes (%d)\n", tailleHeader, tailleHeader/4);
+		printf("\nHeader length: %d bytes (%d)\n", tailleHeader, tailleHeader/4);
 
 		// Affiche les flags grâce aux masques
-		printf("Flags : ");
+		printf("Flags: ");
 		if ((tcp->th_flags & TH_FIN) > 0)
 			printf("FIN ");
 		if ((tcp->th_flags & TH_SYN) > 0)
@@ -56,9 +56,9 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 			printf("URG ");
 		printf("(0x%03x)", tcp->th_flags);
 
-		printf("\nWindow : %u\n", ntohs(tcp->th_win));
-		printf("Checksum : 0x%04x (Unverified)\n", ntohs(tcp->th_sum));
-		printf("Urgent pointer : %u\n", ntohs(tcp->th_urp));
+		printf("\nWindow: %u\n", ntohs(tcp->th_win));
+		printf("Checksum: 0x%04x (Unverified)\n", ntohs(tcp->th_sum));
+		printf("Urgent pointer: %u\n", ntohs(tcp->th_urp));
 
 		u_int8_t* pointeurTCPDebutStruct = (u_int8_t*) paquet + offset;
 		u_int8_t* pointeurTCP = pointeurTCPDebutStruct + sizeof(struct tcphdr);
@@ -67,7 +67,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 
 		// Options
 		if (pointeurTCP != pointeurTCPFinOptions)
-			printf("Options :\n");
+			printf("Options:\n");
 
 		while (pointeurTCP < pointeurTCPFinOptions){
 			// On avance ("Type", puis "Longueur" et enfin "Valeur")
@@ -98,7 +98,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 					hexDeux = *pointeurTCP++;
 					concatHex = (hexUn << 8) | (hexDeux);
 					printf("Maximum segment size (%d)", type);
-					printf("\n\t\tValue : %d", concatHex);
+					printf("\n\t\tValue: %d", concatHex);
 
 					// Pointeur déjà avancé
 					longueur = 0;
@@ -112,7 +112,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 				/* Window scale */
 				case TCPOPT_WINDOW:
 					printf("Window scale (%d)", type);
-					printf("\n\t\tShift count : %x (Multiplier 128)", *pointeurTCP);
+					printf("\n\t\tShift count: %x (Multiplier 128)", *pointeurTCP);
 					break;
 
 				/* Timestamp */
@@ -124,7 +124,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 					concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 						(hexQuatre);
 					printf("Timestamp (%d)", type);
-					printf("\n\t\tValue : %u", concatHex);
+					printf("\n\t\tValue: %u", concatHex);
 
 					hexUn = *pointeurTCP++;
 					hexDeux = *pointeurTCP++;
@@ -132,7 +132,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 					hexQuatre = *pointeurTCP++;
 					concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 						(hexQuatre);
-					printf("\n\t\tEcho reply : %u", concatHex);
+					printf("\n\t\tEcho reply: %u", concatHex);
 
 					// Pointeur déjà avancé
 					longueur = 0;
@@ -149,7 +149,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 			pointeurTCP += longueur;
 		}
 
-	printf("Payload : %d", tailleTotale - tailleHeader);
+	printf("Payload: %d", tailleTotale - tailleHeader);
 	}
 
 	// Ports SMTP
@@ -158,17 +158,47 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		portSrc == PORT_SMTP_2 || portDst == PORT_SMTP_2
 	){
 		if (niveauVerbo > SYNTHETIQUE)
-			printf("\nProtocol : SMTP");
+			printf("\nProtocol: SMTP");
 
 		int tailleHeaderSMTP = tailleTotale - tailleHeader;
 		if (tailleHeaderSMTP > 0)
 			gestionSMTP(paquet, offset + tailleHeader, tailleHeaderSMTP);
 	}
 
+	// Port POP
+	else if (portSrc == PORT_POP || portDst == PORT_POP){
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("\nProtocol: POP");
+
+		int tailleHeaderPOP = tailleTotale - tailleHeader;
+		if (tailleHeaderPOP > 0)
+			gestionPOP(paquet, offset + tailleHeader, tailleHeaderPOP);
+	}
+
+	// Port IMAP
+	else if (portSrc == PORT_IMAP || portDst == PORT_IMAP){
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("\nProtocol: IMAP");
+
+		int tailleHeaderIMAP = tailleTotale - tailleHeader;
+		if (tailleHeaderIMAP > 0)
+			gestionIMAP(paquet, offset + tailleHeader, tailleHeaderIMAP);
+	}
+
+	// Port FTP
+	else if (portSrc == PORT_FTP || portDst == PORT_FTP){
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("\nProtocol: FTP");
+
+		int tailleHeaderFTP = tailleTotale - tailleHeader;
+		if (tailleHeaderFTP > 0)
+			gestionFTP(paquet, offset + tailleHeader, tailleHeaderFTP);
+	}
+
 	// Port HTTP
 	else if (portSrc == PORT_HTTP || portDst == PORT_HTTP){
 		if (niveauVerbo > SYNTHETIQUE)
-			printf("\nProtocol : HTTP");
+			printf("\nProtocol: HTTP");
 
 		gestionHTTP(paquet, offset + tailleHeader, tailleTotale - tailleHeader);
 	}

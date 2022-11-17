@@ -5,15 +5,21 @@
 
 #include <netinet/tcp.h>
 
+#include "ftp.h"
 #include "http.h"
+#include "imap.h"
+#include "pop.h"
 #include "smtp.h"
 #include "utile.h"
 
 /************* CONSTANTES *************/
 
+#define PORT_FTP		21
+#define PORT_HTTP		80
+#define PORT_IMAP		143
+#define PORT_POP		110
 #define PORT_SMTP_1		25
 #define PORT_SMTP_2		587
-#define PORT_HTTP		80
 
 /************* FONCTIONS **************/
 

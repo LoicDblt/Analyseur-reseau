@@ -7,7 +7,7 @@ void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 
 	titreProto("HTTP", ROUGE);
 
-	// Si on trouve une méthode d'HTTP (RFC 7231), on affiche le contenu
+	// Si on trouve une méthode d'HTTP (RFC 7231)
 	if (memcmp(pointeurHTTP, GET, sizeofSansSenti(GET)) == 0)
 		type = GET;
 	else if	(memcmp(pointeurHTTP, HEAD, sizeofSansSenti(HEAD)) == 0)
@@ -26,20 +26,16 @@ void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 		type = TRACE;
 
 	if (niveauVerbo > SYNTHETIQUE){
+		// Si on a trouvé une méthode précédemment
 		if (strlen(type) > 0){
-			for (int i = 0; i < tailleHeader; i++)
-				// Evite d'afficher un retour à la ligne en fin de contenu
-				if (!(
-					i == tailleHeader - 1 &&
-					(char) *pointeurHTTP == '\n'
-				))
-					printf("%c", *pointeurHTTP++);
+			// N'affiche pas le "\r\n" à la fin (d'où le "- 2")
+			for (int i = 0; i < tailleHeader - 2; i++)
+				printf("%c", *pointeurHTTP++);
 		}
 
 		// Sinon ce sont des données
-		else{
+		else
 			printf("%s (%d bytes)", DATA, tailleHeader);
-		}
 	}
 	else{
 		if (strlen(type) > 0)

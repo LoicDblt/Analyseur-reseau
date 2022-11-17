@@ -6,14 +6,15 @@ void gestionSMTP(const u_char* paquet, const int offset, int tailleHeader){
 
 	titreProto("SMTP", ROUGE);
 
+	// Affiche le contenu complet du header SMTP
 	if (niveauVerbo > SYNTHETIQUE){
-		// Affichage du contenu complet du header SMTP
-		for (int i = 0; i < tailleHeader; i++)
+		// N'affiche pas le "\r\n" à la fin (d'où le "- 2")
+		for (int i = 0; i < tailleHeader - 2; i++)
 			printf("%c", *pointeurSMTP++);
 	}
 
+	// Affiche uniquement le code dans le header SMTP
 	else{
-		// Récupère uniquement le code dans le header SMTP
 		for (int i = 0; i < tailleHeader; i++){
 			if (
 				*pointeurSMTP == ' ' ||

@@ -94,7 +94,7 @@ int main(int argc, char *argv[]){
 				break;
 
 			/* Nombre de paquets à afficher */
-			case 'p': 
+			case 'p':
 				pFlag = 1;
 				nbrPaquets = atoi(optarg);
 				if (nbrPaquets < -1){

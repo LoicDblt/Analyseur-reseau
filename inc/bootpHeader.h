@@ -19,7 +19,7 @@
 /************* FONCTIONS **************/
 
 // Fonction d'affichage des strings depuis un pointeur
-void affichageString(const u_int8_t* pointeur, const  u_int8_t longueur);
+void affichageString(const u_int8_t* pointeur, const u_int8_t longueur);
 
 // Fonction d'affichage des durées depuis un pointeur
 void affichageDuree(const u_int8_t* pointeur);

@@ -102,11 +102,11 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	// Affichage des adresses MAC
 	if (niveauVerbo > CONCIS){
 		printf("Src : ");
-		affichageAdresseMAC(ethernet->ether_shost); // Adresse src
+		affichageAdresseMAC(ethernet->ether_shost);
 		sautLigneComplet();
 
 		printf("Dst : ");
-		affichageAdresseMAC(ethernet->ether_dhost); // Adresse dest
+		affichageAdresseMAC(ethernet->ether_dhost);
 	}
 
 	if (niveauVerbo > SYNTHETIQUE){

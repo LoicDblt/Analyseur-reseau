@@ -8,7 +8,7 @@ void affichageDureeConvertie(unsigned int dureeSecondes){
 	dureeSecondes -= j * SEC_DANS_JOUR;
 
 	// Heures
-	h =  dureeSecondes / SEC_DANS_HEURE;
+	h = dureeSecondes / SEC_DANS_HEURE;
 	dureeSecondes -= h * SEC_DANS_HEURE;
 
 	// Minutes

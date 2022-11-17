@@ -7,7 +7,7 @@ void gestionARP(const u_char* paquet, const int offset){
 
 	if (niveauVerbo > SYNTHETIQUE){
 		// Hardware type
-		printf("Hardware  type : ");
+		printf("Hardware type : ");
 		switch (ntohs(arp->ar_hrd)){
 			/* Ethernet hardware format */
 			case ARPHRD_ETHER:

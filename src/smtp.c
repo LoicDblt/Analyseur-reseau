@@ -2,7 +2,7 @@
 
 void gestionSMTP(const u_char* paquet, const int offset, int tailleHeader){
 	// On se place après l'entête TCP
-	u_int8_t* pointeurSMTP =  (u_int8_t*) paquet + offset;
+	u_int8_t* pointeurSMTP = (u_int8_t*) paquet + offset;
 
 	titreProto("SMTP", ROUGE);
 

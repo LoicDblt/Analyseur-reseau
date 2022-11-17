@@ -538,7 +538,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			concatHex = (hexUn << 8) | (hexDeux);
 			printf("\n\tData length : %d", concatHex);
 
-			// Adress
+			// Address
 			affichageAdresse(type, pointeurDNS, concatHex);
 			pointeurDNS += concatHex;
 
@@ -722,7 +722,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			concatHex = (hexUn << 8) | (hexDeux);
 			printf("\n\tData length : %d", concatHex);
 
-			// Adress
+			// Address
 			affichageAdresse(type, pointeurDNS, concatHex);
 			pointeurDNS += concatHex;
 

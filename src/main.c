@@ -73,7 +73,7 @@ int main(int argc, char *argv[]){
 				char* verbosite;
 				switch (niveauVerbo){
 					case CONCIS:
-						verbosite = "very concise";
+						verbosite = "concise";
 						break;
 
 					case SYNTHETIQUE:

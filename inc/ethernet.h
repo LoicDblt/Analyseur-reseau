@@ -3,7 +3,12 @@
 
 /************** INCLUDES **************/
 
-#include <net/ethernet.h>
+#if __APPLE__
+	#include <net/ethernet.h>
+#else
+	#include <netinet/ether.h>
+#endif
+
 #include <time.h>
 
 #include "arp.h"

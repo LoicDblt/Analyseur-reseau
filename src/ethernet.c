@@ -116,7 +116,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 
 	// Protocoles pris en charge
 	switch (ntohs(ethernet->ether_type)){
-		/* IP */
+		/* IPv4 */
 		case ETHERTYPE_IP:
 			gestionIPv4(paquet, sizeof(struct ether_header));
 			break;

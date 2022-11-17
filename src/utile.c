@@ -58,7 +58,7 @@ void sautLigneComplet(void){
 	if (niveauVerbo > SYNTHETIQUE)
 		printf("\n");
 	else
-		printf(", ");
+		printf(" | ");
 }
 
 void verifTaille(const int retourTaille, const size_t tailleBuffer){

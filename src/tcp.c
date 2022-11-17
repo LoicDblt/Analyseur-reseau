@@ -39,7 +39,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	int tailleHeader = 4*tcp->th_off;
 
 	if (niveauVerbo > SYNTHETIQUE){
-		printf("Header length : %d bytes (%d)\n", tailleHeader, tailleHeader/4);
+		printf("\nHeader length : %d bytes (%d)\n", tailleHeader, tailleHeader/4);
 
 		// Affiche les flags grâce aux masques
 		printf("Flags : ");

@@ -2,7 +2,7 @@
 
 void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 	// On se place après l'entête TCP
-	u_int8_t* pointeurHTTP =  (u_int8_t*) paquet + offset;
+	u_int8_t* pointeurHTTP = (u_int8_t*) paquet + offset;
 
 	// Si on trouve une méthode d'HTTP (RFC 7231), on affiche le contenu
 	if (

@@ -9,15 +9,14 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	int portSrc = ntohs(tcp->th_sport);
 	int portDst = ntohs(tcp->th_dport);
 
-	if (niveauVerbo > CONCIS){
-		printf("Src port : %u", portSrc);
-		sautLigneComplet();
+	printf("Src : %u", portSrc);
+	sautLigneComplet();
 
-		printf("Dst port : %u", portDst);
-		sautLigneComplet();
-	}
+	printf("Dst : %u", portDst);
 
 	if (niveauVerbo > CONCIS){
+		sautLigneComplet();
+
 		// Sequence number
 		if (niveauVerbo > SYNTHETIQUE)
 			printf("Sequence number");

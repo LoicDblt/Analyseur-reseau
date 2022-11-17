@@ -76,9 +76,15 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 
 	// Titre de la trame
 	static unsigned int compteurPaquets = 1;
+	char* titre;
 
 	char messageTrame[MAX_BUFF_TRAME];
-	if (sprintf(messageTrame, "Frame %u", compteurPaquets) == EOF){
+	if (niveauVerbo > CONCIS)
+		titre = "Frame";
+	else
+		titre = "F";
+
+	if (sprintf(messageTrame, "%s %u", titre, compteurPaquets) == EOF){
 		fprintf(stderr, "%s|Error| sprintf%s\n", ROUGE, RESET);
 		exit(EXIT_FAILURE);
 	}
@@ -97,17 +103,18 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	const struct ether_header* ethernet;
 	ethernet = (struct ether_header*)(paquet);
 
-	titreProto("Ethernet", MAGENTA);
+	if (niveauVerbo > CONCIS)
+		titreProto("Ethernet", MAGENTA);
+	else
+		titreProto("Eth", MAGENTA);
 
 	// Affichage des adresses MAC
-	if (niveauVerbo > CONCIS){
-		printf("Src : ");
-		affichageAdresseMAC(ethernet->ether_shost);
-		sautLigneComplet();
+	printf("Src : ");
+	affichageAdresseMAC(ethernet->ether_shost);
+	sautLigneComplet();
 
-		printf("Dst : ");
-		affichageAdresseMAC(ethernet->ether_dhost);
-	}
+	printf("Dst : ");
+	affichageAdresseMAC(ethernet->ether_dhost);
 
 	if (niveauVerbo > SYNTHETIQUE){
 		printf("\nEtherType : ");

@@ -258,6 +258,12 @@ void gestionDNS(const u_char* paquet, const int offset){
 		else
 			printf("Message is a query");
 	}
+	else if (niveauVerbo == CONCIS){
+		if (typeReponse == REPONSE)
+			printf("Response");
+		else
+			printf("Query");
+	}
 
 		// Op code
 	bitUn = recupereNiemeBit(concatHex, ++niemeBit);

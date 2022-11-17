@@ -6,12 +6,10 @@ void gestionIPv4(const u_char* paquet, const int offset){
 	titreProto("IPv4", BLEU);
 
 	// Adresses IP
-	if (niveauVerbo > CONCIS){
-		printf("Src : %s", inet_ntoa(ip->ip_src));
-		sautLigneComplet();
+	printf("Src : %s", inet_ntoa(ip->ip_src));
+	sautLigneComplet();
 
-		printf("Dst : %s", inet_ntoa(ip->ip_dst));
-	}
+	printf("Dst : %s", inet_ntoa(ip->ip_dst));
 
 	int tailleHeader = 4*ip->ip_hl;
 	if (niveauVerbo > SYNTHETIQUE){

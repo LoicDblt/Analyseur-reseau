@@ -170,6 +170,8 @@ void gestionBootP(const u_char* paquet, const int offset){
 	if (memcmp(pointeurDCHP, magicCookie, sizeof(magicCookie)) == 0){
 		if (niveauVerbo > CONCIS)
 			printf("DHCP");
+		else
+			printf("=>");
 
 		titreProto("DHCP", ROUGE);
 
@@ -177,7 +179,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 		u_int8_t type = 0, longueur;
 		pointeurDCHP += 4;
 
-		while (niveauVerbo > CONCIS && type != TAG_END){
+		while (type != TAG_END){
 			// On avance ("Type", puis "Longueur" et enfin "Valeur")
 			type = *pointeurDCHP++;
 			longueur = *pointeurDCHP++;
@@ -269,7 +271,8 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* DHCP message type */
 				case TAG_DHCP_MESSAGE: {
-					printf("DHCP message : ");
+					if (niveauVerbo > CONCIS)
+						printf("DHCP message : ");
 
 					switch (*pointeurDCHP){
 						/* Discover */

@@ -19,14 +19,14 @@ void titreTrame(const char* message){
 
 	// Titre simple
 	else
-		printf("%s#### %s ####%s", CYAN, message, RESET);
+		printf("%s[%s]%s", CYAN, message, RESET);
 }
 
 void titreProto(const char* message, char* couleur){
 	if (niveauVerbo > CONCIS)
 		printf("\n\n");
 	else
-		printf("%s => ", JAUNE);
+		printf("%s ", JAUNE);
 
 	printf("%s", couleur);
 
@@ -47,8 +47,11 @@ void titreProto(const char* message, char* couleur){
 	}
 
 	// Titre simple
-	else
+	else if (niveauVerbo == SYNTHETIQUE)
 		printf("*** %s ***", message);
+
+	else
+		printf("[%s] ", message);
 
 	if (niveauVerbo > CONCIS)
 		printf("\n");

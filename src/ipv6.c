@@ -25,14 +25,12 @@ void gestionIPv6(const u_char* paquet, const int offset){
 		printf("Hop limit : %d\n", ip6->ip6_hlim);
 	}
 
-	if (niveauVerbo > CONCIS){
-		inet_ntop(AF_INET6, &ip6->ip6_src, buffAddrIPv6, INET6_ADDRSTRLEN);
-		printf("Src : %s", buffAddrIPv6);
-		sautLigneComplet();
+	inet_ntop(AF_INET6, &ip6->ip6_src, buffAddrIPv6, INET6_ADDRSTRLEN);
+	printf("Src : %s", buffAddrIPv6);
+	sautLigneComplet();
 
-		inet_ntop(AF_INET6, &ip6->ip6_dst, buffAddrIPv6, INET6_ADDRSTRLEN);
-		printf("Dst : %s", buffAddrIPv6);
-	}
+	inet_ntop(AF_INET6, &ip6->ip6_dst, buffAddrIPv6, INET6_ADDRSTRLEN);
+	printf("Dst : %s", buffAddrIPv6);
 
 	if (niveauVerbo > SYNTHETIQUE)
 		printf("\nNext header : ");

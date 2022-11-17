@@ -29,7 +29,7 @@ all: dir main
 	$(info -------------------------------------------------------------)
 	$(info |             $(B)*** Commutateurs disponibles ***$(R)             |)
 	$(info |                                                           |)
-	$(info |      $(V)-i [interface]  -o [fichier pcap]  -f [filtres]$(R)     |)
+	$(info |      $(V)-i [interface]  -o [fichier pcap]  -f [filtre]$(R)      |)
 	$(info |            $(V)-v [verbosité]  -p [nbr de paquets]$(R)           |)
 	$(info -------------------------------------------------------------)
 	$(info $(RST))

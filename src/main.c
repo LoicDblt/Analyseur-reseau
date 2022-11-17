@@ -14,13 +14,11 @@ int main(int argc, char *argv[]){
 	bpf_u_int32 net = 0;			// Our IP
 
 	// Gestion des commutateurs
-	int iFlag = 0, oFlag = 0, fFlag = 0, vFlag = 0, pFlag = 0;
-	int opt;
-	int nbrPaquets = -1;
-	char* nomFichier;
+	int opt, nbrPaquets = -1;
+	char* nomFichier = "";
 
-	while ((opt = getopt (argc, argv, "i:o:f:v:p:")) != -1){
-		if (iFlag == 0 && oFlag == 0 && fFlag == 0 && vFlag == 0 && pFlag == 0){
+	// Signifie qu'il y a des commutateurs
+	if (argc > 1){
 			// Force l'affichage du titre encadré
 			niveauVerbo = 3;
 
@@ -29,14 +27,15 @@ int main(int argc, char *argv[]){
 
 			// Remets la verbosité sur le niveau par défaut
 			niveauVerbo = VERBOSITE_DEFAUT;
-		}
+	}
 
+	// Récupère les valeurs des commutateurs
+	while ((opt = getopt (argc, argv, "i:o:f:v:p:")) != -1){
 		printf(VERT);
 
 		switch (opt){
 			/* Interface */
 			case 'i':
-				iFlag = 1;
 				if (optarg[0] == '-'){
 					fprintf(stderr, "%s|Error| Specify the interface "
 						"(-i)%s\n", ROUGE, RESET);
@@ -48,7 +47,6 @@ int main(int argc, char *argv[]){
 
 			/* Fichier offline */
 			case 'o':
-				oFlag = 1;
 				nomFichier = optarg;
 				if (access(nomFichier, F_OK) < 0){
 					fprintf(stderr, "%s|Error| File not found%s\n",
@@ -61,14 +59,12 @@ int main(int argc, char *argv[]){
 
 			/* Filtrage */
 			case 'f':
-				fFlag = 1;
 				printf("[-f] Filter : %s\n", optarg);
 				filter_exp = optarg;
 				break;
 
 			/* Verbosité */
 			case 'v':
-				vFlag = 1;
 				niveauVerbo = atoi(optarg);
 				char* verbosite;
 				switch (niveauVerbo){
@@ -95,7 +91,6 @@ int main(int argc, char *argv[]){
 
 			/* Nombre de paquets à afficher */
 			case 'p':
-				pFlag = 1;
 				nbrPaquets = atoi(optarg);
 				if (nbrPaquets < -1){
 					fprintf(stderr, "%s|Error| Number of packets to compute "
@@ -115,11 +110,12 @@ int main(int argc, char *argv[]){
 	}
 	fprintf(stderr, "%s\n", ROUGE);
 
-	// Si on est pas en mode offline
-	if (oFlag == 0){
+	// Si on n'est pas en mode offline
+	if (strlen(nomFichier) == 0){
 		// Défini l'interface si elle ne l'a pas été avec un flag
 		if (device == NULL || device[0] == '\0')
 			device = pcap_lookupdev(errbuf);
+
 		if (device == NULL){
 			fprintf(stderr, "|Error| Couldn't find default device : %s\n",
 				errbuf);

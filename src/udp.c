@@ -9,12 +9,10 @@ void gestionUDP(const u_char* paquet, const int offset){
 	titreProto("UDP", VERT);
 
 	// Ports
-	if (niveauVerbo > CONCIS){
-		printf("Src : %u", portSrc);
-		sautLigneComplet();
+	printf("Src : %u", portSrc);
+	sautLigneComplet();
 
-		printf("Dst : %u", portDst);
-	}
+	printf("Dst : %u", portDst);
 
 	// Longueur et checksum
 	if (niveauVerbo > SYNTHETIQUE){

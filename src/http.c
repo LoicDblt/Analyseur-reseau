@@ -3,21 +3,30 @@
 void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 	// On se place après l'entête TCP
 	u_int8_t* pointeurHTTP = (u_int8_t*) paquet + offset;
+	char* type = "";
 
 	titreProto("HTTP", ROUGE);
 
 	// Si on trouve une méthode d'HTTP (RFC 7231), on affiche le contenu
+	if (memcmp(pointeurHTTP, GET, sizeofSansSenti(GET)) == 0)
+		type = GET;
+	else if	(memcmp(pointeurHTTP, HEAD, sizeofSansSenti(HEAD)) == 0)
+		type = HEAD;
+	else if (memcmp(pointeurHTTP, POST, sizeofSansSenti(POST)) == 0)
+		type = POST;
+	else if (memcmp(pointeurHTTP, PUT, sizeofSansSenti(PUT)) == 0)
+		type = PUT;
+	else if (memcmp(pointeurHTTP, DELETE, sizeofSansSenti(DELETE)) == 0)
+		type = DELETE;
+	else if (memcmp(pointeurHTTP, CONNECT, sizeofSansSenti(CONNECT)) == 0)
+		type = CONNECT;
+	else if (memcmp(pointeurHTTP, OPTIONS, sizeofSansSenti(OPTIONS)) == 0)
+		type = OPTIONS;
+	else if (memcmp(pointeurHTTP, TRACE, sizeofSansSenti(TRACE)) == 0)
+		type = TRACE;
+
 	if (niveauVerbo > SYNTHETIQUE){
-		if (
-			memcmp(pointeurHTTP, GET, sizeofSansSenti(GET)) == 0 ||
-			memcmp(pointeurHTTP, HEAD, sizeofSansSenti(HEAD)) == 0 ||
-			memcmp(pointeurHTTP, POST, sizeofSansSenti(POST)) == 0 ||
-			memcmp(pointeurHTTP, PUT, sizeofSansSenti(PUT)) == 0 ||
-			memcmp(pointeurHTTP, DELETE, sizeofSansSenti(DELETE)) == 0 ||
-			memcmp(pointeurHTTP, CONNECT, sizeofSansSenti(CONNECT)) == 0 ||
-			memcmp(pointeurHTTP, OPTIONS, sizeofSansSenti(OPTIONS)) == 0 ||
-			memcmp(pointeurHTTP, TRACE, sizeofSansSenti(TRACE)) == 0
-		){
+		if (strlen(type) > 0){
 			for (int i = 0; i < tailleHeader; i++)
 				// Evite d'afficher un retour à la ligne en fin de contenu
 				if (!(
@@ -29,9 +38,13 @@ void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 
 		// Sinon ce sont des données
 		else{
-			printf("Data (%d bytes)", tailleHeader);
+			printf("%s (%d bytes)", DATA, tailleHeader);
 		}
 	}
-	else if (niveauVerbo > CONCIS)
-		printf("Hypertext Transfer Protocol");
+	else{
+		if (strlen(type) > 0)
+			printf("%s", type);
+		else
+			printf("%s", DATA);
+	}
 }

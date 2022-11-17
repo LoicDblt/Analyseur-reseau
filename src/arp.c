@@ -56,63 +56,63 @@ void gestionARP(const u_char* paquet, const int offset){
 		printf("Protocol address length : %d\n", arp->ar_pln);
 	}
 
-	if (niveauVerbo > CONCIS){
-		// Opccode
+	// Opccode
+	if (niveauVerbo > CONCIS)
 		printf("Opcode : ");
-		switch (ntohs(arp->ar_op)){
-			/* Request */
-			case ARPOP_REQUEST:
-				printf("Request");
-				break;
+	switch (ntohs(arp->ar_op)){
+		/* Request */
+		case ARPOP_REQUEST:
+			printf("Request");
+			break;
 
-			/* Reply */
-			case ARPOP_REPLY:
-				printf("Reply");
-				break;
+		/* Reply */
+		case ARPOP_REPLY:
+			printf("Reply");
+			break;
 
-			/* Revrequest */
-			#if __APPLE__
-				case ARPOP_REVREQUEST:
-			#else
-				case ARPOP_RREQUEST:
-			#endif
-				printf("Revrequest");
-				break;
+		/* Revrequest */
+		#if __APPLE__
+			case ARPOP_REVREQUEST:
+		#else
+			case ARPOP_RREQUEST:
+		#endif
+			printf("Revrequest");
+			break;
 
-			/* Revreply */
-			#if __APPLE__
-				case ARPOP_REVREPLY:
-			#else
-				case ARPOP_RREPLY:
-			#endif
-				printf("Revreply");
-				break;
+		/* Revreply */
+		#if __APPLE__
+			case ARPOP_REVREPLY:
+		#else
+			case ARPOP_RREPLY:
+		#endif
+			printf("Revreply");
+			break;
 
-			/* Invrequest */
-			#if __APPLE__
-				case ARPOP_INVREQUEST:
-			#else
-				case ARPOP_InREQUEST:
-			#endif
-				printf("Invrequest");
-				break;
+		/* Invrequest */
+		#if __APPLE__
+			case ARPOP_INVREQUEST:
+		#else
+			case ARPOP_InREQUEST:
+		#endif
+			printf("Invrequest");
+			break;
 
-			/* Invreply */
-			#if __APPLE__
-				case ARPOP_INVREPLY:
-			#else
-				case ARPOP_InREPLY:
-			#endif
-				printf("Invreply");
-				break;
+		/* Invreply */
+		#if __APPLE__
+			case ARPOP_INVREPLY:
+		#else
+			case ARPOP_InREPLY:
+		#endif
+			printf("Invreply");
+			break;
 
-			/* Inconnu */
-			default:
-				printf("Unknown");
-				break;
-		}
-		printf(" (%u)", ntohs(arp->ar_op));
+		/* Inconnu */
+		default:
+			printf("Unknown");
+			break;
 	}
+	if (niveauVerbo > CONCIS)
+		printf(" (%u)", ntohs(arp->ar_op));
 
 	if (niveauVerbo > SYNTHETIQUE){
 		u_int8_t* pointeurFinStruct = (u_int8_t*) (paquet + offset +

@@ -315,6 +315,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 							printf("Unsupported");
 							break;
 					}
+
 					if (niveauVerbo > SYNTHETIQUE)
 						printf(" (%d)", *pointeurDCHP);
 					break;

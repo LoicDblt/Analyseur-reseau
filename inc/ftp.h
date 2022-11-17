@@ -5,10 +5,6 @@
 
 #include "utile.h"
 
-/************* CONSTANTES *************/
-
-#define FIN_LIGNE	"\r\n"
-
 /************* FONCTIONS **************/
 
 // Fonction de gestion du protocole FTP

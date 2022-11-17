@@ -7,19 +7,22 @@
 
 /************* CONSTANTES *************/
 
-#define USER	"USER"
-#define PASS	"PASS"
-#define STAT	"STAT"
-#define LIST	"LIST"
-#define UIDL	"UIDL"
-#define RETR	"RETR"
+#define AUTH	"AUTH"
+#define CAPA	"CAPA"
 #define DELE	"DELE"
-#define TOP		"TOP"
+#define ERR		"-ERR"
 #define LAST	"LAST"
-#define RSET	"RSET"
+#define LIST	"LIST"
 #define NOOP	"NOOP"
-#define QUIT	"QUIT"
 #define OK		"+OK"
+#define PASS	"PASS"
+#define QUIT	"QUIT"
+#define RETR	"RETR"
+#define RSET	"RSET"
+#define TOP		"TOP"
+#define UIDL	"UIDL"
+#define USER	"USER"
+#define STAT	"STAT"
 
 /************* FONCTIONS **************/
 

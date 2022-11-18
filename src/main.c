@@ -14,43 +14,45 @@ int main(int argc, char *argv[]){
 	bpf_u_int32 net = 0;			// Our IP
 
 	// Gestion des commutateurs
-	int opt, nbrPaquets = -1;
+	int opt;
+	long int nbrPaquets = -1;
 	char* nomFichier = "";
 
 	// Signifie qu'il y a des commutateurs
 	if (argc > 1){
-			// Force l'affichage du titre encadré
-			niveauVerbo = 3;
+		// Force l'affichage du titre encadré
+		niveauVerbo = 3;
 
-			titreTrame("Enabled options");
-			printf("\n\n");
+		titreTrame("Enabled options");
+		printf("\n\n");
 
-			// Remets la verbosité sur le niveau par défaut
-			niveauVerbo = VERBOSITE_DEFAUT;
+		// Remets la verbosité sur le niveau par défaut
+		niveauVerbo = VERBOSITE_DEFAUT;
 	}
 
 	// Récupère les valeurs des commutateurs
 	while ((opt = getopt (argc, argv, "i:o:f:v:p:")) != -1){
 		printf(VERT);
+		fprintf(stderr, ROUGE);
 
 		switch (opt){
 			/* Interface */
 			case 'i':
 				if (optarg[0] == '-'){
-					fprintf(stderr, "%s|Error| Specify the interface "
-						"(-i)%s\n", ROUGE, RESET);
+					fprintf(stderr, "[Error] Specify the interface "
+						"(-i)%s\n", RESET);
 					return EXIT_FAILURE;
 				}
 				device = optarg;
 				printf("[-i] Interface: %s\n", device);
 				break;
 
-			/* Fichier offline */
+			/* Trace hors-connexion */
 			case 'o':
 				nomFichier = optarg;
 				if (access(nomFichier, F_OK) < 0){
-					fprintf(stderr, "%s|Error| File not found%s\n",
-						ROUGE, RESET);
+					fprintf(stderr, "[Error] File not found (%s)%s\n",
+						nomFichier, RESET);
 					return EXIT_FAILURE;
 				}
 				handle = pcap_open_offline(nomFichier, errbuf);
@@ -81,79 +83,86 @@ int main(int argc, char *argv[]){
 						break;
 
 					default:
-						fprintf(stderr, "%s|Error| Unknow level of verbosity "
+						fprintf(stderr, "[Error] Unknow level of verbosity "
 							"(1 [very concise] to 3 [complete])%s\n",
-							ROUGE, RESET);
+							RESET);
 						return EXIT_FAILURE;
 				}
-				printf("[-v] Level of verbosity: %s [%s]\n", optarg, verbosite);
+				printf("[-v] Level of verbosity: %s [%s]\n", optarg,
+					verbosite);
 				break;
 
 			/* Nombre de paquets à afficher */
 			case 'p':
 				nbrPaquets = atoi(optarg);
 				if (nbrPaquets < -1){
-					fprintf(stderr, "%s|Error| Number of packets to compute "
-						"must be over -1%s\n", ROUGE, RESET);
+					fprintf(stderr, "[Error] Number of packets to compute "
+						"must be over -1%s\n", RESET);
 					return EXIT_FAILURE;
 				}
-				printf("[-p] Number of packets to compute: %d\n", nbrPaquets);
+				printf("[-p] Number of packets to compute: %ld\n",
+					nbrPaquets);
 				break;
 
 			/* Inconnu */
 			default:
-				fprintf(stderr, "%s|Error| Unknow option \"-%c\" %s\n",
-					ROUGE, optopt, RESET);
+				fprintf(stderr, "[Error] Unknow option \"-%c\" %s\n",
+					optopt, RESET);
 				return EXIT_FAILURE;
 		}
 		printf(RESET);
 	}
-	fprintf(stderr, "%s\n", ROUGE);
+	fprintf(stderr, "\n%s", ROUGE);
 
-	// Si on n'est pas en mode offline
+	// Si on n'est pas en mode hors-connexion
 	if (strlen(nomFichier) == 0){
 		// Défini l'interface si elle ne l'a pas été avec un flag
 		if (device == NULL || device[0] == '\0')
 			device = pcap_lookupdev(errbuf);
 
 		if (device == NULL){
-			fprintf(stderr, "|Error| Couldn't find default device: %s\n",
+			fprintf(stderr, "[Error] Couldn't find default device: %s\n",
 				errbuf);
 			return EXIT_FAILURE;
 		}
 
 		// Cherche les propriétés de l'interface
 		if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
-			fprintf(stderr, "|Error| Couldn't get netmask for device %s "
-				":\n%s\n", device, errbuf);
+			fprintf(stderr, "[Error] Couldn't get netmask for device %s "
+				":\n\t%s\n\n", device, errbuf);
 			mask = 0;
 		}
 
 		// Ouvre la session en mode "promiscuous"
 		handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
 		if (handle == NULL){
-			fprintf(stderr, "|Error| Couldn't open device %s:\n%s\n",
-				device, errbuf);
+			fprintf(stderr, "[Error] Couldn't open device %s:\n\t%s%s\n",
+				device, errbuf, RESET);
 			return EXIT_FAILURE;
 		}
+	}
+	// Si on a précisé une interface et une trace hors-connexion
+	else if (strlen(nomFichier) > 0 && !(device == NULL || device[0] == '\0')){
+		fprintf(stderr, "[Caution] Interface %s will be overridden by the "
+			"offline trace (%s)\n\n", device, nomFichier);
 	}
 
 	// Compile et applique le filtre
 	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1){
-		fprintf(stderr, "|Error| Couldn't parse filter %s:\n%s\n",
-			filter_exp, pcap_geterr(handle));
+		fprintf(stderr, "[Error] Couldn't parse filter %s:\n\t%s%s\n",
+			filter_exp, pcap_geterr(handle), RESET);
 		return EXIT_FAILURE;
 	}
 	if (pcap_setfilter(handle, &fp) == -1){
-		fprintf(stderr, "|Error| Couldn't install filter %s:\n%s\n",
-			filter_exp, pcap_geterr(handle));
+		fprintf(stderr, "[Error] Couldn't install filter %s:\n\t%s%s\n",
+			filter_exp, pcap_geterr(handle), RESET);
 		return EXIT_FAILURE;
 	}
 
-	// Récupère des paquets
+	// Récupère 'nbrPaquets' paquets (-1 = sans limite)
 	if (pcap_loop(handle, nbrPaquets, gestionEthernet, NULL) < 0){
-		fprintf(stderr, "|Error| Error while reading the package %s\n",
-			device);
+		fprintf(stderr, "[Error] Error while reading the package %s%s\n",
+			device, RESET);
 		return EXIT_FAILURE;
 	}
 

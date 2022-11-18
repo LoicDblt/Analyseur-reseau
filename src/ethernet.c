@@ -140,7 +140,6 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 
 		/* Non pris en charge */
 		default:
-			printf("Unsupported protocol");
 			break;
 	}
 

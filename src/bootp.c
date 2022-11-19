@@ -74,7 +74,7 @@ void affichageParam(const u_int8_t* pointeur){
 
 		/* Client identifier */
 		case TAG_CLIENT_ID:
-			printf("(%d)\tClient ID", *pointeur);
+			printf("(%d)\tClient identifier", *pointeur);
 			break;
 
 		/* Non pris en charge */
@@ -114,7 +114,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 		else
 			printf("Unknown (0x%02x)\n", bootp->bp_htype);
 
-		printf("Hardware adress length: %d\n", bootp->bp_hlen);
+		printf("Hardware address length: %d\n", bootp->bp_hlen);
 		printf("Hops: %d\n", bootp->bp_hops);
 		printf("Transaction ID: 0x%08x\n", ntohl(bootp->bp_xid));
 		printf("Seconds elapsed: %u\n", bootp->bp_secs);
@@ -359,8 +359,21 @@ void gestionBootP(const u_char* paquet, const int offset){
 				/* Client identifier */
 				case TAG_CLIENT_ID:
 					if (niveauVerbo > SYNTHETIQUE){
-						printf("Client ID: ");
-						affichageString(pointeurDCHP, longueur);
+						printf("Client identifier: ");
+						int clientType = *pointeurDCHP++;
+						longueur--;
+
+						if (clientType == ETHERNET){
+							printf("\n\tHardware type : Ethernet (0x%02x)",
+								clientType);
+							printf("\n\tClient MAC address: ");
+							affichageAdresseMAC(pointeurDCHP);
+						}
+						else{
+							printf("\n\tType: %d", clientType);
+							printf("\n\tClient identifier: ");
+							affichageString(pointeurDCHP, longueur);
+						}
 					}
 					break;
 

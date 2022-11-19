@@ -54,9 +54,6 @@
 
 /************* FONCTIONS **************/
 
-// Fonction de conversion et d'affichage de la durée (heures, minutes, secondes)
-void affichageDureeConvertie(unsigned int dureeSecondes);
-
 // Fonction d'affichage du type de requête depuis un pointeur
 void affichageType(const unsigned int type);
 

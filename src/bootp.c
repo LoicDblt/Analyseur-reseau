@@ -1,85 +1,86 @@
 #include "../inc/bootpHeader.h"
 
 void affichageString(const u_int8_t* pointeur, const u_int8_t longueur){
-	for (unsigned int i = 0; i < longueur; i++){
+	for (unsigned int i = 0; i < longueur; i++)
 		printf("%c", *pointeur++);
-	}
 }
 
 void affichageDuree(const u_int8_t* pointeur){
-	printf("%ds", ntohl(*((int*) pointeur)));
+	unsigned int duree = ntohl(*((unsigned int*) pointeur));
+	printf("(%us) ", duree);
+	affichageDureeConvertie(duree);
 }
 
 void affichageParam(const u_int8_t* pointeur){
 	switch (*pointeur){
 		/* Subnet mask */
 		case TAG_SUBNET_MASK:
-			printf("(%d)\tSubnet mask", *pointeur);
+			printf("(%u)\tSubnet mask", *pointeur);
 			break;
 
 		/* Offset */
 		case TAG_TIME_OFFSET:
-			printf("(%d)\tTime offset", *pointeur);
+			printf("(%u)\tTime offset", *pointeur);
 			break;
 
 		/* Router */
 		case TAG_GATEWAY:
-			printf("(%d)\tGateway", *pointeur);
+			printf("(%u)\tGateway", *pointeur);
 			break;
 
 		/* DNS */
 		case TAG_DOMAIN_SERVER:
-			printf("(%d)\tDNS", *pointeur);
+			printf("(%u)\tDNS", *pointeur);
 			break;
 
 		/* Hostname */
 		case TAG_HOSTNAME:
-			printf("(%d)\tHostname", *pointeur);
+			printf("(%u)\tHostname", *pointeur);
 			break;
 
 		/* Domain name */
 		case TAG_DOMAINNAME:
-			printf("(%d)\tDomain name", *pointeur);
+			printf("(%u)\tDomain name", *pointeur);
 			break;
 
 		/* Broadcast address */
 		case TAG_BROAD_ADDR:
-			printf("(%d)\tBroadcast address", *pointeur);
+			printf("(%u)\tBroadcast address", *pointeur);
 			break;
 
 		/* Requested IP address */
 		case TAG_REQUESTED_IP:
-			printf("(%d)\tRequested IP", *pointeur);
+			printf("(%u)\tRequested IP", *pointeur);
 			break;
 
 		/* Lease time */
 		case TAG_IP_LEASE:
-			printf("(%d)\tIP lease", *pointeur);
+			printf("(%u)\tIP lease", *pointeur);
 			break;
 
 		/* Server identifier */
 		case TAG_SERVER_ID:
-			printf("(%d)\tServer ID", *pointeur);
+			printf("(%u)\tServer ID", *pointeur);
 			break;
 
 		/* Renewal time */
 		case TAG_RENEWAL_TIME:
-			printf("(%d)\tRenewal time", *pointeur);
+			printf("(%u)\tRenewal time", *pointeur);
 			break;
 
 		/* Rebind time */
 		case TAG_REBIND_TIME:
-			printf("(%d)\tRebind time", *pointeur);
+			printf("(%u)\tRebind time", *pointeur);
 			break;
 
 		/* Client identifier */
 		case TAG_CLIENT_ID:
-			printf("(%d)\tClient identifier", *pointeur);
+			printf("(%u)\tClient identifier", *pointeur);
 			break;
 
 		/* Non pris en charge */
 		default:
-			printf("(%d)\tUnsupported option", *pointeur);
+			printf("(%u)\tUnsupported option", *pointeur);
 			break;
 	}
 }
@@ -94,12 +95,12 @@ void gestionBootP(const u_char* paquet, const int offset){
 		switch (bootp->bp_op){
 			/* Bootrequest */
 			case BOOTREQUEST:
-				printf("Request (%d)", BOOTREQUEST);
+				printf("Request (%u)", BOOTREQUEST);
 				break;
 
 			/* Bootreply */
 			case BOOTREPLY:
-				printf("Reply (%d)", BOOTREPLY);
+				printf("Reply (%u)", BOOTREPLY);
 				break;
 
 			/* Inconnu */
@@ -114,8 +115,8 @@ void gestionBootP(const u_char* paquet, const int offset){
 		else
 			printf("Unknown (0x%02x)\n", bootp->bp_htype);
 
-		printf("Hardware address length: %d\n", bootp->bp_hlen);
-		printf("Hops: %d\n", bootp->bp_hops);
+		printf("Hardware address length: %u\n", bootp->bp_hlen);
+		printf("Hops: %u\n", bootp->bp_hops);
 		printf("Transaction ID: 0x%08x\n", ntohl(bootp->bp_xid));
 		printf("Seconds elapsed: %u\n", bootp->bp_secs);
 
@@ -185,7 +186,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 			longueur = *pointeurDCHP++;
 
 			if (type != TAG_END && niveauVerbo > SYNTHETIQUE)
-				printf("(%d) ", type);
+				printf("(%u) ", type);
 
 			switch (type){
 				/* Subnet mask */
@@ -317,7 +318,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 					}
 
 					if (niveauVerbo > SYNTHETIQUE)
-						printf(" (%d)", *pointeurDCHP);
+						printf(" (%u)", *pointeurDCHP);
 					break;
 				}
 

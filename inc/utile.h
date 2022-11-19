@@ -61,4 +61,7 @@ void affichageAdresseIPv6(const u_int8_t* pointeur, const u_int8_t longueur);
 unsigned int affichageNomDomaine(const u_int8_t* pointeur,
 	const unsigned int longueur);
 
+// Fonction de conversion et d'affichage de la durée (heures, minutes, secondes)
+void affichageDureeConvertie(unsigned int dureeSecondes);
+
 #endif

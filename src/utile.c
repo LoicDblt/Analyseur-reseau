@@ -149,3 +149,63 @@ unsigned int affichageNomDomaine(const u_int8_t* pointeur,
 	printf("%s", nomDomaine);
 	return nbrIncrPtr;
 }
+
+void affichageDureeConvertie(unsigned int dureeSecondes){
+	unsigned int j, h, m, s;
+
+	// Jours
+	j = dureeSecondes / SEC_DANS_JOUR;
+	dureeSecondes -= j * SEC_DANS_JOUR;
+
+	// Heures
+	h = dureeSecondes / SEC_DANS_HEURE;
+	dureeSecondes -= h * SEC_DANS_HEURE;
+
+	// Minutes
+	m = dureeSecondes / SEC_DANS_MIN;
+	dureeSecondes -= m * SEC_DANS_MIN;
+
+	// Secondes
+	s = dureeSecondes;
+
+	if (j > 0 || h > 0 || m > 0 || s > 0){
+		// Jours
+		if (j > 0){
+			printf("%d day", j);
+
+			// Ajoute un "s" si il y a plusieurs jours
+			if (j > 1)
+				printf("s");
+
+			if (h > 0 || m > 0 || s > 0)
+				printf(", ");
+		}
+
+		// Heures
+		if (h > 0){
+			printf("%d hour", h);
+			if (h > 1)
+				printf("s");
+			if (m > 0 || s > 0)
+				printf(", ");
+		}
+
+		// Minutes
+		if (m > 0){
+			printf("%d minute", m);
+			if (m > 1)
+				printf("s");
+			if (s > 0)
+				printf(", ");
+		}
+
+		// Secondes
+		if (s > 0){
+			printf("%d second", s);
+			if (s > 1)
+				printf("s");
+		}
+	}
+	else
+		printf("%d seconds", s);
+}

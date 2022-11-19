@@ -1,69 +1,5 @@
 #include "../inc/dns.h"
 
-void affichageDureeConvertie(unsigned int dureeSecondes){
-	unsigned int j, h, m, s;
-
-	// Jours
-	j = dureeSecondes / SEC_DANS_JOUR;
-	dureeSecondes -= j * SEC_DANS_JOUR;
-
-	// Heures
-	h = dureeSecondes / SEC_DANS_HEURE;
-	dureeSecondes -= h * SEC_DANS_HEURE;
-
-	// Minutes
-	m = dureeSecondes / SEC_DANS_MIN;
-	dureeSecondes -= m * SEC_DANS_MIN;
-
-	// Secondes
-	s = dureeSecondes;
-
-	if (j > 0 || h > 0 || m > 0 || s > 0){
-		printf("(");
-
-		// Jours
-		if (j > 0){
-			printf("%d day", j);
-
-			// Ajoute un "s" si il y a plusieurs jours
-			if (j > 1)
-				printf("s");
-
-			if (h > 0 || m > 0 || s > 0)
-				printf(", ");
-		}
-
-		// Heures
-		if (h > 0){
-			printf("%d hour", h);
-			if (h > 1)
-				printf("s");
-			if (m > 0 || s > 0)
-				printf(", ");
-		}
-
-		// Minutes
-		if (m > 0){
-			printf("%d minute", m);
-			if (m > 1)
-				printf("s");
-			if (s > 0)
-				printf(", ");
-		}
-
-		// Secondes
-		if (s > 0){
-			printf("%d second", s);
-			if (s > 1)
-				printf("s");
-		}
-
-		printf(")");
-	}
-	else
-		printf("(%d seconds)", s);
-}
-
 void affichageType(const unsigned int type){
 	printf("\n\tType: ");
 		switch (type){
@@ -205,9 +141,9 @@ void affichageBinaire(const unsigned int nombre,
 	printf("\n");
 	for (unsigned int i = 0; i < TAILLE_BIT; i++){
 		if (i == nieme){
-			printf("%d", recupereNiemeBit(nombre, nieme));
+			printf("%u", recupereNiemeBit(nombre, nieme));
 			for (unsigned int j = 1; j < nbrContigu; j++){
-				printf("%d", recupereNiemeBit(nombre, nieme+j));
+				printf("%u", recupereNiemeBit(nombre, nieme+j));
 				i++;
 			}
 		}
@@ -302,7 +238,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 			break;
 	}
 	if (niveauVerbo > SYNTHETIQUE)
-		printf(" (%d)", concatBit);
+		printf(" (%u)", concatBit);
 
 	// Authoritative
 	if (typeReponse == REPONSE){
@@ -343,28 +279,58 @@ void gestionDNS(const u_char* paquet, const int offset){
 	}
 
 		// Recursion available
+	if (typeReponse == REPONSE){
+		retourBit = recupereNiemeBit(concatHex, ++niemeBit);
+		if (niveauVerbo > SYNTHETIQUE){
+			affichageBinaire(concatHex, niemeBit, 1);
+			printf("\tRecursion available: ");
+			if (retourBit > 0)
+				printf("Server can do recursive queries");
+			else
+				printf("Server can't do recursive queries");
+		}
+	}
+	else
+		++niemeBit;
+
+		// Z (Reserved)
 	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
 	if (niveauVerbo > SYNTHETIQUE){
 		affichageBinaire(concatHex, niemeBit, 1);
-		printf("\tRecursion available: ");
-		if (retourBit > 0)
-			printf("Server can do recursive queries");
-		else
-			printf("Server can't do recursive queries");
-	}
-
-		// Z (Reserved)
-	bitUn = recupereNiemeBit(concatHex, ++niemeBit);
-	if (niveauVerbo > SYNTHETIQUE)
-		affichageBinaire(concatHex, niemeBit, 3);
-	bitDeux = recupereNiemeBit(concatHex, ++niemeBit);
-	bitTrois = recupereNiemeBit(concatHex, ++niemeBit);
-	concatBit = (bitUn << 3) | (bitDeux << 2) | (bitTrois << 1) | (bitQuatre);
-	if (niveauVerbo > SYNTHETIQUE)
 		printf("\tZ: ");
 
-	if (concatBit == ALLNULL && niveauVerbo > SYNTHETIQUE)
-		printf("Reserved (%d)", concatBit);
+		if (retourBit == 0)
+			printf("Reserved (%u)", concatBit);
+		else
+			printf("Should be reserved (%u)", concatBit);
+	}
+
+		// Answer authentificated
+	if (typeReponse == REPONSE){
+		retourBit = recupereNiemeBit(concatHex, ++niemeBit);
+		if (niveauVerbo > SYNTHETIQUE){
+			affichageBinaire(concatHex, niemeBit, 1);
+			printf("\tAnswer authentificated: ");
+			if (retourBit > 0)
+				printf("Answer/authority was authenticated by the server");
+			else{
+				printf("Answer/authority portion was not authenticated by the "
+					"server");
+			}
+		}
+	}
+	else
+		++niemeBit;
+
+		// Authentificated data
+	retourBit = recupereNiemeBit(concatHex, ++niemeBit);
+	if (niveauVerbo > SYNTHETIQUE){
+		affichageBinaire(concatHex, niemeBit, 1);
+		if (retourBit > 0)
+			printf("\tAuthentificated data");
+		else
+			printf("\tNon-authentificated data: Unacceptable");
+	}
 
 		// Reply code
 	if (typeReponse == REPONSE){
@@ -415,7 +381,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 					printf("Unknown");
 					break;
 			}
-			printf(" (%d)", concatBit);
+			printf(" (%u)", concatBit);
 		}
 	}
 
@@ -424,7 +390,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nQuestions: %d", concatHex);
+		printf("\nQuestions: %u", concatHex);
 	nbrQuestions = (int) concatHex;
 
 	// Answer RRs
@@ -432,7 +398,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nAnswer RRs: %d", concatHex);
+		printf("\nAnswer RRs: %u", concatHex);
 	nbrReponses = concatHex;
 
 	// Authority RRs
@@ -440,7 +406,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nAuthority RRs: %d", concatHex);
+		printf("\nAuthority RRs: %u", concatHex);
 	nbrAutorite = concatHex;
 
 	// Additional RRs
@@ -448,7 +414,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	hexDeux = *pointeurDNS++;
 	concatHex = (hexUn << 8) | (hexDeux);
 	if (niveauVerbo > SYNTHETIQUE)
-		printf("\nAdditional RRs: %d", concatHex);
+		printf("\nAdditional RRs: %u", concatHex);
 	nbrSupplementaire = concatHex;
 
 	// S'il y a des "queries"
@@ -483,8 +449,8 @@ void gestionDNS(const u_char* paquet, const int offset){
 				tailleNom++;
 			}
 			printf("\n\tName: %s", nomDomaine);
-			printf("\n\t[Name length]: %d", tailleNom);
-			printf("\n\t[Label count]: %d", nbrLabels);
+			printf("\n\t[Name length]: %u", tailleNom);
+			printf("\n\t[Label count]: %u", nbrLabels);
 
 			// Type
 			hexUn = *pointeurDNS++;
@@ -535,14 +501,15 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tTime to live: %d ", concatHex);
+			printf("\n\tTime to live: %us (", concatHex);
 			affichageDureeConvertie(concatHex);
+			printf(")");
 
 			// Data length
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
-			printf("\n\tData length: %d", concatHex);
+			printf("\n\tData length: %u", concatHex);
 
 			// Address
 			affichageAdresse(type, pointeurDNS, concatHex);
@@ -587,14 +554,15 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tTime to live: %d ", concatHex);
+			printf("\n\tTime to live: %us (", concatHex);
 			affichageDureeConvertie(concatHex);
+			printf(")");
 
 			// Data length
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
-			printf("\n\tData length: %d", concatHex);
+			printf("\n\tData length: %u", concatHex);
 
 			// Primary name server
 			printf("\n\tPrimary name server: ");
@@ -623,8 +591,9 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tRefresh interval: %d ", concatHex);
+			printf("\n\tRefresh interval: %us (", concatHex);
 			affichageDureeConvertie(concatHex);
+			printf(")");
 
 			// Retry interval
 			hexUn = *pointeurDNS++;
@@ -633,8 +602,9 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tRetry interval: %d ", concatHex);
+			printf("\n\tRetry interval: %us (", concatHex);
 			affichageDureeConvertie(concatHex);
+			printf(")");
 
 			// Expire limit
 			hexUn = *pointeurDNS++;
@@ -643,8 +613,9 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tExpire limit: %d ", concatHex);
+			printf("\n\tExpire limit: %us (", concatHex);
 			affichageDureeConvertie(concatHex);
+			printf(")");
 
 			// Minimum TTL
 			hexUn = *pointeurDNS++;
@@ -653,8 +624,9 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tMinimum TTL: %d ", concatHex);
+			printf("\n\tMinimum TTL: %us (", concatHex);
 			affichageDureeConvertie(concatHex);
+			printf(")");
 		}
 	}
 
@@ -719,14 +691,15 @@ void gestionDNS(const u_char* paquet, const int offset){
 			hexQuatre = *pointeurDNS++;
 			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
 				(hexQuatre);
-			printf("\n\tTime to live: %d ", concatHex);
+			printf("\n\tTime to live: %us (", concatHex);
 			affichageDureeConvertie(concatHex);
+			printf(")");
 
 			// Data length
 			hexUn = *pointeurDNS++;
 			hexDeux = *pointeurDNS++;
 			concatHex = (hexUn << 8) | (hexDeux);
-			printf("\n\tData length: %d", concatHex);
+			printf("\n\tData length: %u", concatHex);
 
 			// Address
 			affichageAdresse(type, pointeurDNS, concatHex);

@@ -52,8 +52,8 @@ void gestionARP(const u_char* paquet, const int offset){
 		printf("\nProtocol type: ");
 		affichageEtherType(ntohs(arp->ar_pro));
 
-		printf("\nMAC address length: %d\n", arp->ar_hln);
-		printf("Protocol address length: %d\n", arp->ar_pln);
+		printf("\nMAC address length: %u\n", arp->ar_hln);
+		printf("Protocol address length: %u\n", arp->ar_pln);
 	}
 
 	// Opccode

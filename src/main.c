@@ -159,7 +159,7 @@ int main(int argc, char *argv[]){
 		return EXIT_FAILURE;
 	}
 
-	// Récupère 'nbrPaquets' paquets (-1 = sans limite)
+	// Récupère "nbrPaquets" paquets (-1 = sans limite)
 	if (pcap_loop(handle, nbrPaquets, gestionEthernet, NULL) < 0){
 		fprintf(stderr, "[Error] Error while reading the package %s%s\n",
 			device, RESET);

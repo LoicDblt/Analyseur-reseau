@@ -16,21 +16,29 @@ void gestionIPv6(const u_char* paquet, const int offset){
 			printf("Not ECN-capable transport");
 		else
 			printf("ECN-capable transport");
-		printf(" (%d)\n", ecn);
+		printf(" (%u)\n", ecn);
 
 		printf("Flow label: 0x%06x\n",
 			ntohl(ip6->ip6_flow & IPV6_FLOWLABEL_MASK));
 
-		printf("Payload length: %d\n", ntohs(ip6->ip6_plen));
-		printf("Hop limit: %d\n", ip6->ip6_hlim);
+		printf("Payload length: %u\n", ntohs(ip6->ip6_plen));
+		printf("Hop limit: %u\n", ip6->ip6_hlim);
 	}
 
 	inet_ntop(AF_INET6, &ip6->ip6_src, buffAddrIPv6, INET6_ADDRSTRLEN);
-	printf("Src: %s", buffAddrIPv6);
+	if (niveauVerbo > SYNTHETIQUE)
+		printf("Source address: ");
+	else
+		printf("Src: ");
+	printf("%s", buffAddrIPv6);
 	sautLigneComplet();
 
 	inet_ntop(AF_INET6, &ip6->ip6_dst, buffAddrIPv6, INET6_ADDRSTRLEN);
-	printf("Dst: %s", buffAddrIPv6);
+	if (niveauVerbo > SYNTHETIQUE)
+		printf("Destination address: ");
+	else
+		printf("Dst: ");
+	printf("%s", buffAddrIPv6);
 
 	if (niveauVerbo > SYNTHETIQUE)
 		printf("\nNext header: ");
@@ -40,7 +48,7 @@ void gestionIPv6(const u_char* paquet, const int offset){
 		/* TCP */
 		case TCP:
 			if (niveauVerbo > SYNTHETIQUE)
-				printf("TCP (%d)", proto);
+				printf("TCP (%u)", proto);
 
 			gestionTCP(paquet, offset + sizeof(struct ip6_hdr),
 				ntohs(ip6->ip6_plen));
@@ -49,7 +57,7 @@ void gestionIPv6(const u_char* paquet, const int offset){
 		/* UDP */
 		case UDP:
 			if (niveauVerbo > SYNTHETIQUE)
-				printf("UDP (%d)", proto);
+				printf("UDP (%u)", proto);
 
 			gestionUDP(paquet, offset + sizeof(struct ip6_hdr));
 			break;
@@ -57,7 +65,7 @@ void gestionIPv6(const u_char* paquet, const int offset){
 		/* Non pris en charge */
 		default:
 			if (niveauVerbo > SYNTHETIQUE)
-				printf("Unsupported (%d)", proto);
+				printf("Unsupported (%u)", proto);
 			break;
 	}
 	printf(RESET);

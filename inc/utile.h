@@ -27,6 +27,7 @@
 #define CODE_CONTROLE	0x20
 #define FIN				0x00
 
+// Niveaux de verbosité
 #define CONCIS		1
 #define SYNTHETIQUE	2
 #define COMPLET		3

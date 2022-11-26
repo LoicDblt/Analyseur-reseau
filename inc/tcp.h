@@ -23,6 +23,9 @@
 
 /************* FONCTIONS **************/
 
+// Fonction pour l'affichage du nom du flag, avec gestion du séparateur
+int affichageFlag(int nbrFlags, char* nomFlag);
+
 // Fonction de gestion du protocole TCP
 void gestionTCP(const u_char* paquet, const int offset, int tailleTotale);
 

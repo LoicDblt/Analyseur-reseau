@@ -1,5 +1,14 @@
 #include "../inc/tcp.h"
 
+int affichageFlag(int nbrFlags, char* nomFlag){
+	if (nbrFlags > 0)
+		printf(", ");
+	else
+		printf(" ");
+	printf("%s", nomFlag);
+	return 1;
+}
+
 void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	const struct tcphdr* tcp = (struct tcphdr*)(paquet + offset);
 
@@ -38,34 +47,37 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	int tailleHeader = 4*tcp->th_off;
 
 	if (niveauVerbo > SYNTHETIQUE){
-		printf("\nHeader length: %d bytes (%d)\n", tailleHeader,
+		printf("\nHeader length: %d bytes (%d)", tailleHeader,
 			tailleHeader/4);
+
+		printf("\nFlags:");
+		int nbrFlags = 0;
 
 			/* Urgent */
 		if ((tcp->th_flags & TH_URG) > 0)
-			printf("URG ");
+			nbrFlags += affichageFlag(nbrFlags, "URG");
 
 			/* Acknowledgment */
 		if ((tcp->th_flags & TH_ACK) > 0)
-			printf("ACK ");
+			nbrFlags += affichageFlag(nbrFlags, "ACK");
 
 			/* Push */
 		if ((tcp->th_flags & TH_PUSH) > 0)
-			printf("PUSH ");
+			nbrFlags += affichageFlag(nbrFlags, "PUSH");
 
 			/* Reset */
 		if ((tcp->th_flags & TH_RST) > 0)
-			printf("RST ");
+			nbrFlags += affichageFlag(nbrFlags, "RST");
 
 			/* Syn */
 		if ((tcp->th_flags & TH_SYN) > 0)
-			printf("SYN ");
+			nbrFlags += affichageFlag(nbrFlags, "SYN");
 
 			/* Fin */
 		if ((tcp->th_flags & TH_FIN) > 0)
-			printf("FIN ");
+			nbrFlags += affichageFlag(nbrFlags, "FIN");
 
-		printf("(0x%03x)", tcp->th_flags);
+		printf(" (0x%03x)", tcp->th_flags);
 
 		printf("\nWindow: %u\n", ntohs(tcp->th_win));
 		printf("Checksum: 0x%04x (Unverified)\n", ntohs(tcp->th_sum));

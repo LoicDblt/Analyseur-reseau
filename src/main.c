@@ -1,6 +1,3 @@
-// Masque le warning "pcap_lookupdev deprecated"
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 #include "../inc/main.h"
 int niveauVerbo = VERBOSITE_DEFAUT;
 
@@ -31,7 +28,7 @@ int main(int argc, char *argv[]){
 	}
 
 	// Récupère les valeurs des commutateurs
-	while ((opt = getopt (argc, argv, "i:o:f:v:p:")) != -1){
+	while ((opt = getopt(argc, argv, "i:o:f:v:p:")) != -1){
 		printf(VERT);
 		fprintf(stderr, ROUGE);
 
@@ -117,8 +114,16 @@ int main(int argc, char *argv[]){
 	// Si on n'est pas en mode hors-connexion
 	if (strlen(nomFichier) == 0){
 		// Défini l'interface si elle ne l'a pas été avec un flag
-		if (device == NULL || device[0] == '\0')
-			device = pcap_lookupdev(errbuf);
+		if (device == NULL || device[0] == '\0'){
+			pcap_if_t *interfaces;
+
+			if (pcap_findalldevs(&interfaces,errbuf) == -1) {
+				fprintf(stderr, "[Error] Error while retrieving devices: %s\n",
+					errbuf);
+				return EXIT_FAILURE;
+			}
+			device = interfaces->name;
+		}
 
 		if (device == NULL){
 			fprintf(stderr, "[Error] Couldn't find default device: %s\n",

@@ -52,18 +52,12 @@ void gestionICMP(const u_char* paquet, const int offset){
 				printf("Timestamp reply");
 			break;
 
-		/* Traceroute */
-		case ICMP_TRACEROUTE:
-			if (niveauVerbo > CONCIS)
-				printf("%d (Traceroute)", type);
-			else
-				printf("Traceroute");
-			break;
-
 		/* Inconnu */
 		default:
 			if (niveauVerbo > CONCIS)
 				printf("%d (Unknow)", type);
+			else
+				printf("Unknown");
 			break;
 	}
 

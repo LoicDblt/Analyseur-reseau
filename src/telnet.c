@@ -92,7 +92,7 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 
 				/* Inconnu */
 				default:
-					printf("Unknow command: 0x%02x\n", commande);
+					printf("Unknown command: 0x%02x\n", commande);
 					break;
 			}
 		}

@@ -82,6 +82,14 @@ void gestionIPv4(const u_char* paquet, const int offset){
 
 	unsigned int proto = ip->ip_p;
 	switch (proto){
+		/* ICMP */
+		case ICMP:
+			if (niveauVerbo > SYNTHETIQUE)
+				printf("ICMP (%u)", proto);
+
+			gestionICMP(paquet, offset + sizeof(struct ip));
+			break;
+
 		/* TCP */
 		case TCP:
 			if (niveauVerbo > SYNTHETIQUE)

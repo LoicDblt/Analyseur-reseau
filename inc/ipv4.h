@@ -5,14 +5,16 @@
 
 #include <netinet/ip.h>
 
+#include "icmp.h"
 #include "tcp.h"
 #include "udp.h"
 #include "utile.h"
 
 /************* CONSTANTES *************/
 
-#define TCP	0x06
-#define UDP	0x11
+#define ICMP	0x01
+#define TCP		0x06
+#define UDP		0x11
 
 /************* FONCTIONS **************/
 

@@ -3,6 +3,7 @@
 
 /************** INCLUDES **************/
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -64,5 +65,8 @@ unsigned int affichageNomDomaine(const u_int8_t* pointeur,
 
 // Fonction de conversion et d'affichage de la durée (heures, minutes, secondes)
 void affichageDureeConvertie(unsigned int dureeSecondes);
+
+// Affiche les caractères de contrôle '\r' et '\n'
+void caraCtrl(char caractere);
 
 #endif

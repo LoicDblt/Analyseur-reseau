@@ -10,12 +10,7 @@ int main(int argc, char *argv[]){
 	bpf_u_int32 mask;				// Our netmask
 	bpf_u_int32 net = 0;			// Our IP
 
-	// Gestion des commutateurs
-	int opt;
-	long int nbrPaquets = -1;
-	char* nomFichier = "";
-
-	// Signifie qu'il y a des commutateurs
+		// Signifie qu'il y a des commutateurs
 	if (argc > 1){
 		// Force l'affichage du titre encadré
 		niveauVerbo = 3;
@@ -26,6 +21,11 @@ int main(int argc, char *argv[]){
 		// Remets la verbosité sur le niveau par défaut
 		niveauVerbo = VERBOSITE_DEFAUT;
 	}
+
+	// Gestion des commutateurs
+	int opt;
+	long int nbrPaquets = -1;
+	char* nomFichier = "";
 
 	// Récupère les valeurs des commutateurs
 	while ((opt = getopt(argc, argv, "i:o:f:v:p:")) != -1){
@@ -134,14 +134,14 @@ int main(int argc, char *argv[]){
 		// Cherche les propriétés de l'interface
 		if (pcap_lookupnet(device, &net, &mask, errbuf) < 0){
 			fprintf(stderr, "[Error] Couldn't get netmask for device %s "
-				":\n\t%s\n\n", device, errbuf);
+				":\n\t=> %s\n\n", device, errbuf);
 			mask = 0;
 		}
 
 		// Ouvre la session en mode "promiscuous"
 		handle = pcap_open_live(device, BUFSIZ, 1, 1000, errbuf);
 		if (handle == NULL){
-			fprintf(stderr, "[Error] Couldn't open device %s:\n\t%s%s\n",
+			fprintf(stderr, "[Error] Couldn't open device %s:\n\t=> %s%s\n",
 				device, errbuf, RESET);
 			return EXIT_FAILURE;
 		}
@@ -154,12 +154,12 @@ int main(int argc, char *argv[]){
 
 	// Compile et applique le filtre
 	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1){
-		fprintf(stderr, "[Error] Couldn't parse filter %s:\n\t%s%s\n",
+		fprintf(stderr, "[Error] Couldn't parse filter \"%s\":\n\t=> %s%s\n",
 			filter_exp, pcap_geterr(handle), RESET);
 		return EXIT_FAILURE;
 	}
 	if (pcap_setfilter(handle, &fp) == -1){
-		fprintf(stderr, "[Error] Couldn't install filter %s:\n\t%s%s\n",
+		fprintf(stderr, "[Error] Couldn't install filter %s:\n\t=> %s%s\n",
 			filter_exp, pcap_geterr(handle), RESET);
 		return EXIT_FAILURE;
 	}

@@ -11,6 +11,7 @@ int affichageFlag(int nbrFlags, char* nomFlag){
 
 void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	const struct tcphdr* tcp = (struct tcphdr*)(paquet + offset);
+	int payload = 0;
 
 	titreProto("TCP", VERT);
 
@@ -172,51 +173,21 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 			// On passe au "Type" suivant
 			pointeurTCP += longueur;
 		}
-
-	printf("Payload: %d", tailleTotale - tailleHeader);
 	}
 
-	// Ports SMTP
-	if (
-		portSrc == PORT_SMTP_1 || portDst == PORT_SMTP_1 ||
-		portSrc == PORT_SMTP_2 || portDst == PORT_SMTP_2
-	){
-		if (niveauVerbo > SYNTHETIQUE)
-			printf("\nProtocol: SMTP");
+	payload = tailleTotale - tailleHeader;
+	if (niveauVerbo > SYNTHETIQUE)
+		printf("Payload: %d", payload);
 
-		int tailleHeaderSMTP = tailleTotale - tailleHeader;
-		if (tailleHeaderSMTP > 0)
-			gestionSMTP(paquet, offset + tailleHeader, tailleHeaderSMTP);
-	}
 
-	// Port POP
-	else if (portSrc == PORT_POP || portDst == PORT_POP){
-		if (niveauVerbo > SYNTHETIQUE)
-			printf("\nProtocol: POP");
-
-		int tailleHeaderPOP = tailleTotale - tailleHeader;
-		if (tailleHeaderPOP > 0)
-			gestionPOP(paquet, offset + tailleHeader, tailleHeaderPOP);
-	}
-
-	// Port IMAP
-	else if (portSrc == PORT_IMAP || portDst == PORT_IMAP){
-		if (niveauVerbo > SYNTHETIQUE)
-			printf("\nProtocol: IMAP");
-
-		int tailleHeaderIMAP = tailleTotale - tailleHeader;
-		if (tailleHeaderIMAP > 0)
-			gestionIMAP(paquet, offset + tailleHeader, tailleHeaderIMAP);
-	}
 
 	// Port FTP
-	else if (portSrc == PORT_FTP || portDst == PORT_FTP){
+	if (portSrc == PORT_FTP || portDst == PORT_FTP){
 		if (niveauVerbo > SYNTHETIQUE)
 			printf("\nProtocol: FTP");
 
-		int tailleHeaderFTP = tailleTotale - tailleHeader;
-		if (tailleHeaderFTP > 0)
-			gestionFTP(paquet, offset + tailleHeader, tailleHeaderFTP);
+		if (payload > 0)
+			gestionFTP(paquet, offset + tailleHeader, payload);
 	}
 
 	// Port HTTP
@@ -224,6 +195,46 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		if (niveauVerbo > SYNTHETIQUE)
 			printf("\nProtocol: HTTP");
 
-		gestionHTTP(paquet, offset + tailleHeader, tailleTotale - tailleHeader);
+		if (payload > 0)
+			gestionHTTP(paquet, offset + tailleHeader, payload);
+	}
+
+	// Port IMAP
+	else if (portSrc == PORT_IMAP || portDst == PORT_IMAP){
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("\nProtocol: IMAP");
+
+		if (payload > 0)
+			gestionIMAP(paquet, offset + tailleHeader, payload);
+	}
+
+	// Port POP
+	else if (portSrc == PORT_POP || portDst == PORT_POP){
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("\nProtocol: POP");
+
+		if (payload > 0)
+			gestionPOP(paquet, offset + tailleHeader, payload);
+	}
+
+	// Ports SMTP
+	else if (
+		portSrc == PORT_SMTP_1 || portDst == PORT_SMTP_1 ||
+		portSrc == PORT_SMTP_2 || portDst == PORT_SMTP_2
+	){
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("\nProtocol: SMTP");
+
+		if (payload > 0)
+			gestionSMTP(paquet, offset + tailleHeader, payload);
+	}
+
+	// Port Telnet
+	else if (portSrc == PORT_TELNET || portDst == PORT_TELNET){
+		if (niveauVerbo > SYNTHETIQUE)
+			printf("\nProtocol: Telnet");
+
+		if (payload > 0)
+			gestionTelnet(paquet, offset + tailleHeader, payload);
 	}
 }

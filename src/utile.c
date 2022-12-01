@@ -209,3 +209,24 @@ void affichageDureeConvertie(unsigned int dureeSecondes){
 	else
 		printf("%d seconds", s);
 }
+
+void caraCtrl(char caractere){
+	// Caractère imprimable
+	if (isprint(caractere)){
+		printf("%c", caractere);
+		return;
+	}
+
+	switch (caractere){
+		case '\n':
+			printf("\\n");
+			break;
+
+		case '\r':
+			printf("\\r");
+			break;
+
+		default:
+			break;
+	}
+}

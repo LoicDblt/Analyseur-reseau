@@ -32,15 +32,16 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 	for (int i = 0; i < tailleHeader; i++){
 		type = *pointeurTelnet;
 
-		if (type == 255){
+		// Si c'est une commande
+		if (type == COMMANDE){
 			if (i > 0 && niveauVerbo == SYNTHETIQUE)
 				printf(" | ");
 			else if (i == 0 && niveauVerbo == CONCIS)
 				printf("Commands");
 
 			pointeurTelnet++;
-			commande = *pointeurTelnet;
 			i++;
+			commande = *pointeurTelnet;
 
 			switch (commande){
 				/* WILL | WON'T | DO | DON'T */
@@ -49,8 +50,8 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 				case DO:
 				case DONT:
 					pointeurTelnet++;
-					option = *pointeurTelnet;
 					i++;
+					option = *pointeurTelnet;
 					if (niveauVerbo == COMPLET){
 						printf("(%d) %s %s\n", commande, TELCMD(commande),
 							telopts[option]);
@@ -62,8 +63,8 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 				/* SUBOPTION */
 				case SB:
 					pointeurTelnet++;
-					option = *pointeurTelnet;
 					i++;
+					option = *pointeurTelnet;
 
 					if (niveauVerbo == COMPLET){
 						printf("(%d) %s %s", commande, TELCMD(commande),
@@ -95,6 +96,8 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 					break;
 			}
 		}
+
+		// Si ce n'était pas une commande, ce sont des données
 		else{
 			if (niveauVerbo > CONCIS){
 				if (i == 0 && niveauVerbo)

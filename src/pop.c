@@ -43,9 +43,8 @@ void gestionPOP(const u_char* paquet, const int offset, int tailleHeader){
 
 	// Affiche le contenu complet du header POP
 	if (niveauVerbo > SYNTHETIQUE){
-		// N'affiche pas le "\r\n" à la fin (d'où le "- 2")
-		for (int i = 0; i < tailleHeader - 2; i++)
-			printf("%c", *pointeurPOP++);
+		for (int i = 0; i < tailleHeader; i++)
+			caraCtrl(*pointeurPOP++);
 	}
 	else{
 		if (strlen(type) > 0)

@@ -8,23 +8,20 @@ void gestionIMAP(const u_char* paquet, const int offset, int tailleHeader){
 
 	// Affiche le contenu complet du header IMAP
 	if (niveauVerbo > SYNTHETIQUE){
-		// N'affiche pas le "\r\n" à la fin (d'où le "- 2")
-		for (int i = 0; i < tailleHeader - 2; i++)
-			printf("%c", *pointeurIMAP++);
+		for (int i = 0; i < tailleHeader; i++)
+			caraCtrl(*pointeurIMAP++);
 	}
 
 	// Affiche uniquement le tag et la commande (ou l'accusé)
 	else{
-		for (int i = 0; i < tailleHeader - 2; i++){
+		for (int i = 0; i < tailleHeader; i++){
 			// N'affiche pas toutes les options de CAPABILITY
 			if (memcmp(pointeurIMAP, CAPAB, sizeofSansSenti(CAPAB)) == 0){
-				printf("%s", CAPAB);
+				printf("%s\\r\\n", CAPAB);
 				break;
 			}
-			if (memcmp(pointeurIMAP, FIN_LGN, sizeofSansSenti(FIN_LGN)) == 0)
-				break;
 			else
-				printf("%c", *pointeurIMAP++);
+				caraCtrl(*pointeurIMAP++);
 		}
 	}
 }

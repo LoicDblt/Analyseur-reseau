@@ -8,18 +8,17 @@ void gestionFTP(const u_char* paquet, const int offset, int tailleHeader){
 
 	// Affiche le contenu complet du header FTP
 	if (niveauVerbo > SYNTHETIQUE){
-		// N'affiche pas le "\r\n" à la fin (d'où le "- 2")
-		for (int i = 0; i < tailleHeader - 2; i++)
-			printf("%c", *pointeurFTP++);
+		for (int i = 0; i < tailleHeader; i++)
+			caraCtrl(*pointeurFTP++);
 	}
 
 	// Affiche uniquement le code ou la commande
 	else{
-		for (int i = 0; i < tailleHeader - 2; i++){
+		for (int i = 0; i < tailleHeader; i++){
 			if (*pointeurFTP == ' ')
 				break;
 
-			printf("%c", *pointeurFTP++);
+			caraCtrl(*pointeurFTP++);
 		}
 	}
 }

@@ -28,9 +28,8 @@ void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 	if (niveauVerbo > SYNTHETIQUE){
 		// Si on a trouvé une méthode précédemment
 		if (strlen(type) > 0){
-			// N'affiche pas le "\r\n" à la fin (d'où le "- 2")
-			for (int i = 0; i < tailleHeader - 2; i++)
-				printf("%c", *pointeurHTTP++);
+			for (int i = 0; i < tailleHeader; i++)
+				caraCtrl(*pointeurHTTP++);
 		}
 
 		// Sinon ce sont des données

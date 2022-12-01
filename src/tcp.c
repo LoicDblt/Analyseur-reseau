@@ -179,8 +179,6 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	if (niveauVerbo > SYNTHETIQUE)
 		printf("Payload: %d", payload);
 
-
-
 	// Port FTP
 	if (portSrc == PORT_FTP || portDst == PORT_FTP){
 		if (niveauVerbo > SYNTHETIQUE)

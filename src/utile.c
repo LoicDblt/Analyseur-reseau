@@ -220,6 +220,7 @@ void caraCtrl(char caractere){
 	switch (caractere){
 		case '\n':
 			printf("\\n");
+			printf("\n");
 			break;
 
 		case '\r':

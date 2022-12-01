@@ -8,7 +8,6 @@
 /************* CONSTANTES *************/
 
 #define CAPAB	"CAPABILITY"
-#define FIN_LGN	"\r\n"
 
 /************* FONCTIONS **************/
 

@@ -9,7 +9,7 @@
 #include "ethernet.h"
 #include "utile.h"
 
-/************* CONSTANTES *************/
+/************** CONSTANTE *************/
 
 #define VERBOSITE_DEFAUT	1
 

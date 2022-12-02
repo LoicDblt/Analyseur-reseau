@@ -13,7 +13,6 @@ void gestionIPv4(const u_char* paquet, const int offset){
 	printf("%s", inet_ntoa(ip->ip_src));
 	sautLigneComplet();
 
-
 	if (niveauVerbo > SYNTHETIQUE)
 		printf("Destination address: ");
 	else

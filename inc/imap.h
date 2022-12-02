@@ -1,15 +1,15 @@
 #ifndef IMAP_H
 #define IMAP_H
 
-/************** INCLUDES **************/
+/*************** INCLUDE **************/
 
 #include "utile.h"
 
-/************* CONSTANTES *************/
+/************* CONSTANTE **************/
 
 #define CAPAB	"CAPABILITY"
 
-/************* FONCTIONS **************/
+/************** FONCTION **************/
 
 // Fonction de gestion du protocole IMAP
 void gestionIMAP(const u_char* paquet, const int offset, int tailleHeader);

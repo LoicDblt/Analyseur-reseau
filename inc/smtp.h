@@ -1,11 +1,11 @@
 #ifndef SMTP_H
 #define SMTP_H
 
-/************** INCLUDES **************/
+/*************** INCLUDE **************/
 
 #include "utile.h"
 
-/************* FONCTIONS **************/
+/************** FONCTION **************/
 
 // Fonction de gestion du protocole SMTP
 void gestionSMTP(const u_char* paquet, const int offset, int tailleHeader);

@@ -1,7 +1,7 @@
 #ifndef POP_H
 #define POP_H
 
-/************** INCLUDES **************/
+/*************** INCLUDE **************/
 
 #include "utile.h"
 
@@ -24,7 +24,7 @@
 #define USER	"USER"
 #define STAT	"STAT"
 
-/************* FONCTIONS **************/
+/************** FONCTION **************/
 
 // Fonction de gestion du protocole POP
 void gestionPOP(const u_char* paquet, const int offset, int tailleHeader);

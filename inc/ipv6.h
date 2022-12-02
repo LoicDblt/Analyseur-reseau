@@ -20,7 +20,7 @@
 #endif /* LITTLE_ENDIAN */
 #endif
 
-/************* FONCTIONS **************/
+/************** FONCTION **************/
 
 // Fonction de gestion du protocole IPv6
 void gestionIPv6(const u_char* paquet, const int offset);

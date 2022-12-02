@@ -16,7 +16,7 @@
 #define TCP		0x06
 #define UDP		0x11
 
-/************* FONCTIONS **************/
+/************** FONCTION **************/
 
 // Fonction de gestion du protocole IPv4
 void gestionIPv4(const u_char* paquet, const int offset);

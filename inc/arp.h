@@ -8,7 +8,7 @@
 #include "ethernet.h"
 #include "utile.h"
 
-/************* FONCTIONS **************/
+/************** FONCTION **************/
 
 // Fonction de gestion du protocole ARP
 void gestionARP(const u_char* paquet, const int offset);

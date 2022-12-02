@@ -1,7 +1,7 @@
 #ifndef DNS_H
 #define DNS_H
 
-/************** INCLUDES **************/
+/************** INCLUDE ***************/
 
 #include "utile.h"
 

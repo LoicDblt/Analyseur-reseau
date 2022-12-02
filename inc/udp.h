@@ -9,11 +9,11 @@
 #include "dns.h"
 #include "utile.h"
 
-/************* CONSTANTES *************/
+/************** CONSTANTE *************/
 
 #define PORT_DNS	53
 
-/************* FONCTIONS **************/
+/************** FONCTION **************/
 
 // Fonction de gestion du protocole UDP
 void gestionUDP(const u_char* paquet, const int offset);

@@ -7,7 +7,7 @@
 
 #include "utile.h"
 
-/************* FONCTIONS **************/
+/************** FONCTION **************/
 
 // Fonction de gestion du protocole ICMP
 void gestionICMP(const u_char* paquet, const int offset);

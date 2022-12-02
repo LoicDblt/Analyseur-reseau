@@ -6,11 +6,11 @@
 #include "telnet.h"
 #include "utile.h"
 
-/************* CONSTANTES *************/
+/************** CONSTANTE *************/
 
 #define COMMANDE	0xff
 
-/************* FONCTIONS **************/
+/************** FONCTION **************/
 
 // Fonction de gestion du protocole Telnet
 void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader);

@@ -92,7 +92,10 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 
 				/* Inconnu */
 				default:
-					printf("(%d) Unknown command\n", commande);
+					if (niveauVerbo == COMPLET)
+						printf("(%d) Unknown command", commande);
+					else if (niveauVerbo == SYNTHETIQUE)
+						printf("Unknown command");
 					break;
 			}
 		}
@@ -100,9 +103,12 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 		// Si ce n'était pas une commande, ce sont des données
 		else{
 			if (niveauVerbo > CONCIS){
+				int retourCara = 0;
 				if (i == 0 && niveauVerbo)
 					printf("Data: ");
-				caraCtrl(type);
+				retourCara = caraCtrl(type);
+				if (retourCara == 1 && i < tailleHeader -1)
+					printf("\n");
 			}
 			else if (niveauVerbo == CONCIS && i == 0)
 				printf("Data");

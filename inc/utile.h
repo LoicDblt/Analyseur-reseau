@@ -67,6 +67,6 @@ unsigned int affichageNomDomaine(const u_int8_t* pointeur,
 void affichageDureeConvertie(unsigned int dureeSecondes);
 
 // Affiche les caractères de contrôle '\r' et '\n'
-void caraCtrl(char caractere);
+int caraCtrl(char caractere);
 
 #endif

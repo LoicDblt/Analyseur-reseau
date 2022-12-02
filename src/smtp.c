@@ -8,8 +8,12 @@ void gestionSMTP(const u_char* paquet, const int offset, int tailleHeader){
 
 	// Affiche le contenu complet du header SMTP
 	if (niveauVerbo > SYNTHETIQUE){
-		for (int i = 0; i < tailleHeader; i++)
-			caraCtrl(*pointeurSMTP++);
+		int retourCara = 0;
+		for (int i = 0; i < tailleHeader; i++){
+			retourCara = caraCtrl(*pointeurSMTP++);
+			if (retourCara == 1 && i < tailleHeader -1)
+				printf("\n");
+		}
 	}
 
 	// Affiche uniquement le code dans le header SMTP

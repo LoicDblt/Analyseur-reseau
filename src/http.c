@@ -28,8 +28,13 @@ void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 	if (niveauVerbo > SYNTHETIQUE){
 		// Si on a trouvé une méthode précédemment
 		if (strlen(type) > 0){
-			for (int i = 0; i < tailleHeader; i++)
-				caraCtrl(*pointeurHTTP++);
+			int retourCara = 0;
+
+			for (int i = 0; i < tailleHeader; i++){
+				retourCara = caraCtrl(*pointeurHTTP++);
+				if (retourCara == 1 && i < tailleHeader-1)
+					printf("\n");
+			}
 		}
 
 		// Sinon ce sont des données

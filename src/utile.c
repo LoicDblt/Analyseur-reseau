@@ -5,7 +5,7 @@ void titreTrame(const char* message){
 	if (niveauVerbo > CONCIS){
 		printf("\n%s", CYAN);
 
-		// 8 espaces de chaque côté du message + 2 "#"
+		// 8 espaces de chaque côté du message + 2 '#'
 		for (unsigned long i = 0; i < strlen(message) + 18; i++)
 			printf("#");
 
@@ -210,24 +210,24 @@ void affichageDureeConvertie(unsigned int dureeSecondes){
 		printf("%d seconds", s);
 }
 
-void caraCtrl(char caractere){
+int caraCtrl(char caractere){
 	// Caractère imprimable
 	if (isprint(caractere)){
 		printf("%c", caractere);
-		return;
+		return 0;
 	}
 
 	switch (caractere){
 		case '\n':
 			printf("\\n");
-			printf("\n");
-			break;
+			return 1;
 
 		case '\r':
 			printf("\\r");
-			break;
+			return 0;
 
 		default:
-			break;
+			printf("\\%03x", caractere);
+			return 0;
 	}
 }

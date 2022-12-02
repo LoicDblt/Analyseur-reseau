@@ -10,7 +10,7 @@ int main(int argc, char *argv[]){
 	bpf_u_int32 mask;				// Our netmask
 	bpf_u_int32 net = 0;			// Our IP
 
-		// Signifie qu'il y a des commutateurs
+	// Signifie qu'il y a des commutateurs
 	if (argc > 1){
 		// Force l'affichage du titre encadré
 		niveauVerbo = 3;
@@ -175,7 +175,7 @@ int main(int argc, char *argv[]){
 	fprintf(stderr, RESET);
 	pcap_close(handle);
 
-	// Pour la finition
+	// Pour la finition !
 	if (niveauVerbo == CONCIS)
 		printf("\n");
 

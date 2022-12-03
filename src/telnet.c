@@ -6,7 +6,11 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 
 	titreProto("Telnet", ROUGE);
 
-	// Source : telnet.h (erreur d'import (avec arp.o) depuis le header...)
+	/**
+	 * Source : telnet.h
+	 * Si usage de "#define TELCMDS" et "#define TELOPTS", erreurs à la
+	 * compilation car tableaux, ci-dessous, définis dans plusieurs objets
+	 **/
 	char *telopts[NTELOPTS+1] = {
 		"BINARY", "ECHO", "RCP", "SUPPRESS GO AHEAD", "NAME",
 		"STATUS", "TIMING MARK", "RCTE", "NAOL", "NAOP",
@@ -26,7 +30,6 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 		"EL", "GA", "SB", "WILL", "WONT", "DO", "DONT", "IAC", 0,
 	};
 
-
 	// Affiche le contenu complet du header Telnet
 	u_int8_t type, commande, option;
 	for (int i = 0; i < tailleHeader; i++){
@@ -44,7 +47,7 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 			commande = *pointeurTelnet;
 
 			switch (commande){
-				/* WILL | WON'T | DO | DON'T */
+				/* Will | Won't | Do | Don't */
 				case WILL:
 				case WONT:
 				case DO:
@@ -60,7 +63,7 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 						printf("%s %s", TELCMD(commande), telopts[option]);
 					break;
 
-				/* SUBOPTION */
+				/* Suboption */
 				case SB:
 					pointeurTelnet++;
 					i++;
@@ -82,7 +85,7 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 						printf("\n");
 					break;
 
-				/* SUBOPTION END */
+				/* Suboption end */
 				case SE:
 					if (niveauVerbo == COMPLET)
 						printf("(%d) %s\n", commande, TELCMD(commande));

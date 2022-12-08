@@ -11,6 +11,8 @@
 
 /************** CONSTANTE *************/
 
+#define NBR_PAQUET_INF_0	0
+#define NBR_PAQUET_INF_1	-1
 #define VERBOSITE_DEFAUT	1
 
 /*************** GLOBAL ***************/

@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
 
 	// Gestion des commutateurs
 	int opt;
-	long int nbrPaquets = -1;
+	long int nbrPaquets = NBR_PAQUET_INF_1;
 	char* nomFichier = "";
 
 	// Récupère les valeurs des commutateurs
@@ -81,24 +81,33 @@ int main(int argc, char *argv[]){
 
 					default:
 						fprintf(stderr, "[Error] Unknow level of verbosity "
-							"(1 [very concise] to 3 [complete])%s\n",
+							"(1 (very concise) to 3 (complete))%s\n",
 							RESET);
 						return EXIT_FAILURE;
 				}
-				printf("[-v] Level of verbosity: %s [%s]\n", optarg,
+				printf("[-v] Level of verbosity: %s (%s)\n", optarg,
 					verbosite);
 				break;
 
 			/* Nombre de paquets à afficher */
 			case 'p':
 				nbrPaquets = atoi(optarg);
-				if (nbrPaquets < -1){
+				if (nbrPaquets < NBR_PAQUET_INF_1){
 					fprintf(stderr, "[Error] Number of packets to compute "
-						"must be over -1%s\n", RESET);
+						"must be over %d%s\n", NBR_PAQUET_INF_1, RESET);
 					return EXIT_FAILURE;
 				}
-				printf("[-p] Number of packets to compute: %ld\n",
+				printf("[-p] Number of packets to compute: %ld",
 					nbrPaquets);
+
+				// Préviens si vaut "-1" ou "0" que c'est infini
+				if (
+					nbrPaquets == NBR_PAQUET_INF_1 ||
+					nbrPaquets == NBR_PAQUET_INF_0
+				)
+					printf(" (unlimited)");
+
+				printf("\n");
 				break;
 
 			/* Inconnu */
@@ -146,7 +155,8 @@ int main(int argc, char *argv[]){
 			return EXIT_FAILURE;
 		}
 	}
-	// Si on a précisé une interface et une trace hors-connexion
+
+	// Si on a précisé une trace hors-connexion et une interface
 	else if (strlen(nomFichier) > 0 && !(device == NULL || device[0] == '\0')){
 		fprintf(stderr, "[Caution] Interface %s will be overridden by the "
 			"offline trace (%s)\n\n", device, nomFichier);

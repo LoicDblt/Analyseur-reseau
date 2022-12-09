@@ -32,15 +32,27 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 
 	// Affiche le contenu complet du header Telnet
 	u_int8_t type, commande, option;
+	int compteur_nbr_commandes = 0;
+
 	for (int i = 0; i < tailleHeader; i++){
 		type = *pointeurTelnet;
 
-		// Si c'est une commande
-		if (type == COMMANDE){
+		// Si c'est une commande (Interpret As Command)
+		if (type == IAC){
+			compteur_nbr_commandes++;
+
 			if (i > 0 && niveauVerbo == SYNTHETIQUE)
 				printf(" | ");
-			else if (i == 0 && niveauVerbo == CONCIS)
-				printf("Commands");
+
+			// On indique uniquement qu'une commande a été reçue
+			else if (niveauVerbo == CONCIS){
+				if (compteur_nbr_commandes == 1)
+					printf("Command");
+
+				// On met au pluriels s'il y en a au moins deux
+				else if (compteur_nbr_commandes == 2)
+					printf("s");
+			}
 
 			pointeurTelnet++;
 			i++;
@@ -107,8 +119,10 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 		else{
 			if (niveauVerbo > CONCIS){
 				int retourCara = 0;
+
 				if (i == 0 && niveauVerbo)
 					printf("Data: ");
+
 				retourCara = caraCtrl(type);
 				if (retourCara == 1 && i < tailleHeader -1)
 					printf("\n");

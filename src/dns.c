@@ -63,7 +63,7 @@ void affichageType(const unsigned int type){
 				printf("Unsupported");
 				break;
 		}
-		printf(" (0x%04x)", type);
+		printf(" (%d)", type);
 }
 
 void affichageAdresse(const unsigned int type, const u_int8_t* pointeurDNS,
@@ -449,8 +449,8 @@ void gestionDNS(const u_char* paquet, const int offset){
 				tailleNom++;
 			}
 			printf("\n\tName: %s", nomDomaine);
-			printf("\n\t[Name length]: %u", tailleNom);
-			printf("\n\t[Label count]: %u", nbrLabels);
+			printf("\n\t[Name length: %u]", tailleNom);
+			printf("\n\t[Label count: %u]", nbrLabels);
 
 			// Type
 			hexUn = *pointeurDNS++;

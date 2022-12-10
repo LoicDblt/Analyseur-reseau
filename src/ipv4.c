@@ -5,7 +5,6 @@ void gestionIPv4(const u_char* paquet, const int offset){
 
 	titreProto("IPv4", BLEU);
 
-	// Adresses IP
 	if (niveauVerbo > SYNTHETIQUE)
 		printf("Source address: ");
 	else
@@ -25,8 +24,9 @@ void gestionIPv4(const u_char* paquet, const int offset){
 
 		unsigned int flagsServices = ip->ip_tos;
 		printf("Differentiated services field: 0x%02x\n", flagsServices);
+
+		// ECN
 		printf("Explicite congestion notification: ");
-		/* ECT */
 
 		if ((flagsServices & IPTOS_ECN_MASK) > 0){
 			/* ECN-capable transport (1) */
@@ -86,7 +86,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 			if (niveauVerbo > SYNTHETIQUE)
 				printf("ICMP (%u)", proto);
 
-			gestionICMP(paquet, offset + sizeof(struct ip));
+			gestionICMP(paquet, offset + tailleHeader);
 			break;
 
 		/* TCP */
@@ -94,7 +94,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 			if (niveauVerbo > SYNTHETIQUE)
 				printf("TCP (%u)", proto);
 
-			gestionTCP(paquet, offset + sizeof(struct ip),
+			gestionTCP(paquet, offset + tailleHeader,
 				tailleTotale - tailleHeader);
 			break;
 
@@ -103,7 +103,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 			if (niveauVerbo > SYNTHETIQUE)
 				printf("UDP (%u)", proto);
 
-			gestionUDP(paquet, offset + sizeof(struct ip));
+			gestionUDP(paquet, offset + tailleHeader);
 			break;
 
 		/* Non pris en charge */

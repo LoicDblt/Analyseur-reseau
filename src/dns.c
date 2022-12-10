@@ -2,68 +2,68 @@
 
 void affichageType(const unsigned int type){
 	printf("\n\tType: ");
-		switch (type){
-			/* A */
-			case A:
-				printf("A (Host address)");
-				break;
+	switch (type){
+		/* A */
+		case A:
+			printf("A (Host address)");
+			break;
 
-			/* NS */
-			case NS:
-				printf("NS (Authoritative name server)");
-				break;
+		/* NS */
+		case NS:
+			printf("NS (Authoritative name server)");
+			break;
 
-			/* CNAME */
-			case CNAME:
-				printf("CNAME (Canonical NAME for an alias)");
-				break;
+		/* CNAME */
+		case CNAME:
+			printf("CNAME (Canonical NAME for an alias)");
+			break;
 
-			/* SOA */
-			case SOA:
-				printf("SOA (Start of a zone of authority)");
-				break;
+		/* SOA */
+		case SOA:
+			printf("SOA (Start of a zone of authority)");
+			break;
 
-			/* WKS */
-			case WKS:
-				printf("WKS (Well known service description)");
-				break;
+		/* WKS */
+		case WKS:
+			printf("WKS (Well known service description)");
+			break;
 
-			/* PTR */
-			case PTR:
-				printf("PTR (Domain name PoinTeR)");
-				break;
+		/* PTR */
+		case PTR:
+			printf("PTR (Domain name PoinTeR)");
+			break;
 
-			/* HINFO */
-			case HINFO:
-				printf("HINFO (Host information)");
-				break;
+		/* HINFO */
+		case HINFO:
+			printf("HINFO (Host information)");
+			break;
 
-			/* MINFO */
-			case MINFO:
-				printf("MINFO (Mailbox or mail list information)");
-				break;
+		/* MINFO */
+		case MINFO:
+			printf("MINFO (Mailbox or mail list information)");
+			break;
 
-			/* MX */
-			case MX:
-				printf("MX (Mail exchange)");
-				break;
+		/* MX */
+		case MX:
+			printf("MX (Mail exchange)");
+			break;
 
-			/* TXT */
-			case TXT:
-				printf("TXT (Text strings)");
-				break;
+		/* TXT */
+		case TXT:
+			printf("TXT (Text strings)");
+			break;
 
-			/* AAAA */
-			case AAAA:
-				printf("AAAA (IPv6 address)");
-				break;
+		/* AAAA */
+		case AAAA:
+			printf("AAAA (IPv6 address)");
+			break;
 
-			/* Inconnu */
-			default:
-				printf("Unsupported");
-				break;
-		}
-		printf(" (%d)", type);
+		/* Inconnu */
+		default:
+			printf("Unsupported");
+			break;
+	}
+	printf(" (%d)", type);
 }
 
 void affichageAdresse(const unsigned int type, const u_int8_t* pointeurDNS,

@@ -3,7 +3,7 @@
 
 /************** INCLUDES **************/
 
-#include "telnet.h"
+#include "telnet.h" // Header non inclus par défaut sur MacOS
 #include "utile.h"
 
 /************** FONCTION **************/

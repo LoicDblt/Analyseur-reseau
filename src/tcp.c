@@ -11,7 +11,6 @@ int affichageFlag(int nbrFlags, char* nomFlag){
 
 void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	const struct tcphdr* tcp = (struct tcphdr*)(paquet + offset);
-	int payload = 0;
 
 	titreProto("TCP", VERT);
 
@@ -175,7 +174,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		}
 	}
 
-	payload = tailleTotale - tailleHeader;
+	int payload = tailleTotale - tailleHeader;
 	if (niveauVerbo > SYNTHETIQUE)
 		printf("Payload: %d", payload);
 

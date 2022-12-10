@@ -47,7 +47,7 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 			else if (niveauVerbo == SYNTHETIQUE && compteur_nbr_commandes == 1)
 				printf("IAC: ");
 
-			// On indique uniquement qu'une commande a été reçue
+			// On indique uniquement qu'une commande a été reçue (CONCIS)
 			else if (niveauVerbo == CONCIS){
 				if (compteur_nbr_commandes == 1)
 					printf("Command");
@@ -121,6 +121,8 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 				if (retourCara == 1 && i < tailleHeader -1)
 					printf("\n");
 			}
+
+			// On indique seulement que ce sont des données (CONCIS)
 			else if (niveauVerbo == CONCIS && i == 0)
 				printf("Data");
 		}

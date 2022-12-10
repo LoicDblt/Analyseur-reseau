@@ -11,7 +11,7 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 	 * Si usage de "#define TELCMDS" et "#define TELOPTS", erreurs à la
 	 * compilation car tableaux, ci-dessous, définis dans plusieurs objets
 	 **/
-	char *telopts[NTELOPTS+1] = {
+	char* telopts[NTELOPTS+1] = {
 		"BINARY", "ECHO", "RCP", "SUPPRESS GO AHEAD", "NAME",
 		"STATUS", "TIMING MARK", "RCTE", "NAOL", "NAOP",
 		"NAOCRD", "NAOHTS", "NAOHTD", "NAOFFD", "NAOVTS",
@@ -24,7 +24,7 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 		"ENCRYPT", "NEW-ENVIRON",
 		0,
 	};
-	char *telcmds[] = {
+	char* telcmds[] = {
 		"EOF", "SUSP", "ABORT", "EOR",
 		"SE", "NOP", "DMARK", "BRK", "IP", "AO", "AYT", "EC",
 		"EL", "GA", "SB", "WILL", "WONT", "DO", "DONT", "IAC", 0,
@@ -41,8 +41,11 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 		if (type == IAC){
 			compteur_nbr_commandes++;
 
-			if (i > 0 && niveauVerbo == SYNTHETIQUE)
-				printf(" | ");
+			if (niveauVerbo == COMPLET)
+				printf("IAC ");
+
+			else if (niveauVerbo == SYNTHETIQUE && compteur_nbr_commandes == 1)
+				printf("IAC: ");
 
 			// On indique uniquement qu'une commande a été reçue
 			else if (niveauVerbo == CONCIS){
@@ -53,6 +56,9 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 				else if (compteur_nbr_commandes == 2)
 					printf("s");
 			}
+
+			else if (compteur_nbr_commandes > 1 && niveauVerbo == SYNTHETIQUE)
+				printf(" | ");
 
 			pointeurTelnet++;
 			i++;
@@ -67,11 +73,8 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 					pointeurTelnet++;
 					i++;
 					option = *pointeurTelnet;
-					if (niveauVerbo == COMPLET){
-						printf("(%d) %s %s\n", commande, TELCMD(commande),
-							telopts[option]);
-					}
-					else if (niveauVerbo == SYNTHETIQUE)
+
+					if (niveauVerbo > CONCIS)
 						printf("%s %s", TELCMD(commande), telopts[option]);
 					break;
 
@@ -81,38 +84,29 @@ void gestionTelnet(const u_char* paquet, const int offset, int tailleHeader){
 					i++;
 					option = *pointeurTelnet;
 
-					if (niveauVerbo == COMPLET){
-						printf("(%d) %s %s", commande, TELCMD(commande),
-							telopts[option]);
-					}
-					else if (niveauVerbo == SYNTHETIQUE)
-						printf("%s %s", TELCMD(commande),
-							telopts[option]);
+					if (niveauVerbo > CONCIS)
+						printf("%s %s", TELCMD(commande), telopts[option]);
 
 					pointeurTelnet++;
 					i++;
-					if (option == TELOPT_TSPEED && niveauVerbo > SYNTHETIQUE)
+					if (option == TELOPT_TSPEED && niveauVerbo == COMPLET)
 						printf("\n\tValue: %02d", *pointeurTelnet);
-					if (niveauVerbo > SYNTHETIQUE)
-						printf("\n");
 					break;
 
 				/* Suboption end */
 				case SE:
-					if (niveauVerbo == COMPLET)
-						printf("(%d) %s\n", commande, TELCMD(commande));
-					else if (niveauVerbo == SYNTHETIQUE)
+					if (niveauVerbo > CONCIS)
 						printf("%s", TELCMD(commande));
 					break;
 
 				/* Inconnu */
 				default:
 					if (niveauVerbo == COMPLET)
-						printf("(%d) Unknown command", commande);
-					else if (niveauVerbo == SYNTHETIQUE)
-						printf("Unknown command");
+						printf("Unknown command (%d)", commande);
 					break;
 			}
+			if (niveauVerbo == COMPLET && i < tailleHeader - 1)
+				printf("\n");
 		}
 
 		// Si ce n'était pas une commande, ce sont des données

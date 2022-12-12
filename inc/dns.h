@@ -72,6 +72,9 @@ unsigned int recupereNiemeBit(const unsigned int nombre,
 void affichageBinaire(const unsigned int nombre,
 	const unsigned int nieme, const unsigned int nbrContigu);
 
+// Fonction d'affichage des informations des "Answer" et "Additional"
+u_int8_t* affichageInfosAnswer(u_int8_t* pointeurDNS);
+
 // Fonction de gestion du protocole DNS
 void gestionDNS(const u_char* paquet, const int offset);
 

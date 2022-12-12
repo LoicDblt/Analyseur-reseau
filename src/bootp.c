@@ -159,9 +159,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 			printf("%s\n", bootp->bp_file);
 	}
 
-
 	// Vérification du magic cookie
-
 	if (niveauVerbo > CONCIS)
 		printf("Magic cookie: ");
 

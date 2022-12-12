@@ -12,7 +12,7 @@ void affichageEtherType(uint16_t type){
 			printf("IP");
 			break;
 
-		/* Addr. resolution protocol (ARP) */
+		/* Address Resolution Protocol (ARP) */
 		case ETHERTYPE_ARP:
 			printf("ARP");
 			break;
@@ -32,7 +32,22 @@ void affichageEtherType(uint16_t type){
 			printf("IPv6");
 			break;
 
-		/* Used to test interfaces */
+		/* PAE */
+		case ETHERTYPE_PAE:
+			printf("PAE");
+			break;
+
+		/* RSN Pre-Authentification */
+		case ETHERTYPE_RSN_PREAUTH:
+			printf("RSN PreAuth");
+			break;
+
+		/* Precision Time Protocol (PTP) */
+		case ETHERTYPE_PTP:
+			printf("PTP");
+			break;
+
+		/* Loopback */
 		case ETHERTYPE_LOOPBACK:
 			printf("Loopback");
 			break;

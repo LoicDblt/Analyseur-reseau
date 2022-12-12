@@ -31,7 +31,7 @@ void titreProto(const char* message, char* couleur){
 	printf("%s", couleur);
 
 	// Titre "complet"
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		printf("\n");
 
 		// 1 espaces de chaque côté du message + 2 "*"
@@ -59,7 +59,7 @@ void titreProto(const char* message, char* couleur){
 }
 
 void sautLigneComplet(void){
-	if (niveauVerbo > SYNTHETIQUE)
+	if (niveauVerbo == COMPLET)
 		printf("\n");
 	else
 		printf(" | ");

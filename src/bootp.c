@@ -90,7 +90,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 	titreProto("BootP", ROUGE);
 
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		printf("Message type: ");
 		switch (bootp->bp_op){
 			/* Bootrequest */
@@ -185,13 +185,13 @@ void gestionBootP(const u_char* paquet, const int offset){
 			type = *pointeurDCHP++;
 			longueur = *pointeurDCHP++;
 
-			if (type != TAG_END && niveauVerbo > SYNTHETIQUE)
+			if (type != TAG_END && niveauVerbo == COMPLET)
 				printf("(%u) ", type);
 
 			switch (type){
 				/* Subnet mask */
 				case TAG_SUBNET_MASK:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Subnet mask: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -199,7 +199,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Offset */
 				case TAG_TIME_OFFSET:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Time offset: ");
 						affichageDuree(pointeurDCHP);
 					}
@@ -207,7 +207,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Router */
 				case TAG_GATEWAY:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Router: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -215,7 +215,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* DNS */
 				case TAG_DOMAIN_SERVER:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("DNS: ");
 
 						// Pour gérer plusieurs DNS
@@ -232,7 +232,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Hostname */
 				case TAG_HOSTNAME:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Hostname: ");
 						affichageString(pointeurDCHP, longueur);
 					}
@@ -240,7 +240,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Domain name */
 				case TAG_DOMAINNAME:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Domain name: ");
 						affichageString(pointeurDCHP, longueur);
 					}
@@ -248,7 +248,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Broadcast address */
 				case TAG_BROAD_ADDR:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Broadcast address: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -256,7 +256,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Requested IP address */
 				case TAG_REQUESTED_IP:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Requested IP: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -264,7 +264,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Lease time */
 				case TAG_IP_LEASE:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("IP lease: ");
 						affichageDuree(pointeurDCHP);
 					}
@@ -317,14 +317,14 @@ void gestionBootP(const u_char* paquet, const int offset){
 							break;
 					}
 
-					if (niveauVerbo > SYNTHETIQUE)
+					if (niveauVerbo == COMPLET)
 						printf(" (%u)", *pointeurDCHP);
 					break;
 				}
 
 				/* Server identifier */
 				case TAG_SERVER_ID:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Server ID: ");
 						affichageAdresseIPv4(pointeurDCHP, longueur);
 					}
@@ -332,7 +332,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Parameter request list */
 				case TAG_PARM_REQUEST:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Parameters request:");
 						for (unsigned int i = 0; i < longueur; i++){
 							printf("\n\t");
@@ -343,7 +343,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Renewal time */
 				case TAG_RENEWAL_TIME:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Renewal time: ");
 						affichageDuree(pointeurDCHP);
 					}
@@ -351,7 +351,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Rebind time */
 				case TAG_REBIND_TIME:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Rebind time: ");
 						affichageDuree(pointeurDCHP);
 					}
@@ -359,7 +359,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Client identifier */
 				case TAG_CLIENT_ID:
-					if (niveauVerbo > SYNTHETIQUE){
+					if (niveauVerbo == COMPLET){
 						printf("Client identifier: ");
 						int clientType = *pointeurDCHP++;
 						longueur--;
@@ -384,11 +384,11 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 				/* Non pris en charge */
 				default:
-					if (niveauVerbo > SYNTHETIQUE)
+					if (niveauVerbo == COMPLET)
 						printf("Unsupported option");
 					break;
 			}
-			if (niveauVerbo > SYNTHETIQUE)
+			if (niveauVerbo == COMPLET)
 				printf("\n");
 
 			// On passe au "Type" suivant
@@ -398,7 +398,7 @@ void gestionBootP(const u_char* paquet, const int offset){
 
 	// Si le magic cookie n'est pas reconnu
 	else{
-		if (niveauVerbo > SYNTHETIQUE)
+		if (niveauVerbo == COMPLET)
 			printf("Unknown");
 	}
 }

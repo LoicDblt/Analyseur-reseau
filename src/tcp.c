@@ -27,7 +27,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		sautLigneComplet();
 
 		// Sequence number
-		if (niveauVerbo > SYNTHETIQUE)
+		if (niveauVerbo == COMPLET)
 			printf("Sequence number");
 		else
 			printf("Seq");
@@ -36,7 +36,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		sautLigneComplet();
 
 		// Acknowledgement number
-		if (niveauVerbo > SYNTHETIQUE)
+		if (niveauVerbo == COMPLET)
 			printf("Acknowledgement number");
 		else
 			printf("Ack");
@@ -46,7 +46,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 
 	int tailleHeader = 4*tcp->th_off;
 
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		printf("\nHeader length: %d bytes (%d)", tailleHeader,
 			tailleHeader/4);
 
@@ -175,12 +175,12 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	}
 
 	int payload = tailleTotale - tailleHeader;
-	if (niveauVerbo > SYNTHETIQUE)
+	if (niveauVerbo == COMPLET)
 		printf("Payload: %d", payload);
 
 	// Port FTP
 	if (portSrc == PORT_FTP || portDst == PORT_FTP){
-		if (niveauVerbo > SYNTHETIQUE)
+		if (niveauVerbo == COMPLET)
 			printf("\nProtocol: FTP");
 
 		if (payload > 0)
@@ -189,7 +189,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 
 	// Port HTTP
 	else if (portSrc == PORT_HTTP || portDst == PORT_HTTP){
-		if (niveauVerbo > SYNTHETIQUE)
+		if (niveauVerbo == COMPLET)
 			printf("\nProtocol: HTTP");
 
 		if (payload > 0)
@@ -198,7 +198,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 
 	// Port IMAP
 	else if (portSrc == PORT_IMAP || portDst == PORT_IMAP){
-		if (niveauVerbo > SYNTHETIQUE)
+		if (niveauVerbo == COMPLET)
 			printf("\nProtocol: IMAP");
 
 		if (payload > 0)
@@ -207,7 +207,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 
 	// Port POP
 	else if (portSrc == PORT_POP || portDst == PORT_POP){
-		if (niveauVerbo > SYNTHETIQUE)
+		if (niveauVerbo == COMPLET)
 			printf("\nProtocol: POP");
 
 		if (payload > 0)
@@ -219,7 +219,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 		portSrc == PORT_SMTP_1 || portDst == PORT_SMTP_1 ||
 		portSrc == PORT_SMTP_2 || portDst == PORT_SMTP_2
 	){
-		if (niveauVerbo > SYNTHETIQUE)
+		if (niveauVerbo == COMPLET)
 			printf("\nProtocol: SMTP");
 
 		if (payload > 0)
@@ -228,7 +228,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 
 	// Port Telnet
 	else if (portSrc == PORT_TELNET || portDst == PORT_TELNET){
-		if (niveauVerbo > SYNTHETIQUE)
+		if (niveauVerbo == COMPLET)
 			printf("\nProtocol: Telnet");
 
 		if (payload > 0)

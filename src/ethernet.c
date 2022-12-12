@@ -92,7 +92,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	titreTrame(messageTrame);
 
 	// Informations générales sur le paquet
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		titreProto("General", CYAN);
 
 		printf("Arrival time: ");
@@ -116,7 +116,7 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 	printf("Dst: ");
 	affichageAdresseMAC(ethernet->ether_dhost);
 
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		printf("\nEtherType: ");
 		affichageEtherType(ntohs(ethernet->ether_type));
 	}

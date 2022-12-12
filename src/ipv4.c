@@ -5,21 +5,21 @@ void gestionIPv4(const u_char* paquet, const int offset){
 
 	titreProto("IPv4", BLEU);
 
-	if (niveauVerbo > SYNTHETIQUE)
+	if (niveauVerbo == COMPLET)
 		printf("Source address: ");
 	else
 		printf("Src: ");
 	printf("%s", inet_ntoa(ip->ip_src));
 	sautLigneComplet();
 
-	if (niveauVerbo > SYNTHETIQUE)
+	if (niveauVerbo == COMPLET)
 		printf("Destination address: ");
 	else
 		printf("Dst: ");
 	printf("%s", inet_ntoa(ip->ip_dst));
 
 	int tailleHeader = 4*ip->ip_hl;
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		printf("\nHeader length: %d bytes (%u)\n", tailleHeader, ip->ip_hl);
 
 		unsigned int flagsServices = ip->ip_tos;
@@ -44,7 +44,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 	}
 
 	int tailleTotale = ntohs(ip->ip_len);
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		printf("\nTotal length: %d\n", tailleTotale);
 
 		printf("Identification: 0x%04x (%u)\n", ntohs(ip->ip_id),
@@ -83,7 +83,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 	switch (proto){
 		/* ICMP */
 		case ICMP:
-			if (niveauVerbo > SYNTHETIQUE)
+			if (niveauVerbo == COMPLET)
 				printf("ICMP (%u)", proto);
 
 			gestionICMP(paquet, offset + tailleHeader);
@@ -91,7 +91,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 
 		/* TCP */
 		case TCP:
-			if (niveauVerbo > SYNTHETIQUE)
+			if (niveauVerbo == COMPLET)
 				printf("TCP (%u)", proto);
 
 			gestionTCP(paquet, offset + tailleHeader,
@@ -100,7 +100,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 
 		/* UDP */
 		case UDP:
-			if (niveauVerbo > SYNTHETIQUE)
+			if (niveauVerbo == COMPLET)
 				printf("UDP (%u)", proto);
 
 			gestionUDP(paquet, offset + tailleHeader);
@@ -108,7 +108,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 
 		/* Non pris en charge */
 		default:
-			if (niveauVerbo > SYNTHETIQUE)
+			if (niveauVerbo == COMPLET)
 				printf("Unsupported (%u)", proto);
 			break;
 	}

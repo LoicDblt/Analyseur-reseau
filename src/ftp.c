@@ -8,7 +8,7 @@ void gestionFTP(const u_char* paquet, const int offset, int tailleHeader){
 	titreProto("FTP", ROUGE);
 
 	// Affiche le contenu complet du header FTP
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		for (int i = 0; i < tailleHeader; i++){
 			retourCara = caraCtrl(*pointeurFTP++);
 			if (retourCara == 1 && i < tailleHeader -1)
@@ -23,7 +23,7 @@ void gestionFTP(const u_char* paquet, const int offset, int tailleHeader){
 				break;
 
 			retourCara = caraCtrl(*pointeurFTP++);
-			if (retourCara == 1 && i < tailleHeader -1)
+			if (retourCara == 1 && i < tailleHeader - 1 && niveauVerbo > CONCIS)
 				printf("\n");
 		}
 	}

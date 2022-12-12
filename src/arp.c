@@ -5,7 +5,7 @@ void gestionARP(const u_char* paquet, const int offset){
 
 	titreProto("ARP", BLEU);
 
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		// Hardware type
 		printf("Hardware type: ");
 		switch (ntohs(arp->ar_hrd)){
@@ -114,7 +114,7 @@ void gestionARP(const u_char* paquet, const int offset){
 	if (niveauVerbo > CONCIS)
 		printf(" (%u)", ntohs(arp->ar_op));
 
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		u_int8_t* pointeurFinStruct = (u_int8_t*) (paquet + offset +
 			sizeof(struct arphdr*));
 

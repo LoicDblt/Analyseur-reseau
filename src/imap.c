@@ -8,7 +8,7 @@ void gestionIMAP(const u_char* paquet, const int offset, int tailleHeader){
 	titreProto("IMAP", ROUGE);
 
 	// Affiche le contenu complet du header IMAP
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		for (int i = 0; i < tailleHeader; i++){
 			retourCara = caraCtrl(*pointeurIMAP++);
 			if (retourCara == 1 && i < tailleHeader -1)

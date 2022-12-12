@@ -25,7 +25,7 @@ void gestionHTTP(const u_char* paquet, const int offset, int tailleHeader){
 	else if (memcmp(pointeurHTTP, TRACE, sizeofSansSenti(TRACE)) == 0)
 		type = TRACE;
 
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		// Si on a trouvé une méthode précédemment
 		if (strlen(type) > 0){
 			int retourCara = 0;

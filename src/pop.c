@@ -42,7 +42,7 @@ void gestionPOP(const u_char* paquet, const int offset, int tailleHeader){
 		type = STAT;
 
 	// Affiche le contenu complet du header POP
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		int retourCara = 0;
 		for (int i = 0; i < tailleHeader; i++){
 			retourCara = caraCtrl(*pointeurPOP++);

@@ -7,7 +7,7 @@ void gestionSMTP(const u_char* paquet, const int offset, int tailleHeader){
 	titreProto("SMTP", ROUGE);
 
 	// Affiche le contenu complet du header SMTP
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		int retourCara = 0;
 		for (int i = 0; i < tailleHeader; i++){
 			retourCara = caraCtrl(*pointeurSMTP++);

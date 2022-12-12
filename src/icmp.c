@@ -61,7 +61,7 @@ void gestionICMP(const u_char* paquet, const int offset){
 			break;
 	}
 
-	if (niveauVerbo > SYNTHETIQUE){
+	if (niveauVerbo == COMPLET){
 		printf("\nCode: %d\n", icmp->icmp_code);
 		printf("Checksum: 0x%04x (Unverified)\n", ntohs(icmp->icmp_cksum));
 		printf("Identifier (BE): %d (0x%04x)\n", ntohs(icmp->icmp_id),

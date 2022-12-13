@@ -58,7 +58,7 @@ void titreProto(const char* message, char* couleur){
 		printf("\n");
 }
 
-void sautLigneComplet(void){
+void sautLigneOuSeparateur(void){
 	if (niveauVerbo == COMPLET)
 		printf("\n");
 	else

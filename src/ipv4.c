@@ -5,22 +5,11 @@ void gestionIPv4(const u_char* paquet, const int offset){
 
 	titreProto("IPv4", BLEU);
 
-	if (niveauVerbo == COMPLET)
-		printf("Source address: ");
-	else
-		printf("Src: ");
-	printf("%s", inet_ntoa(ip->ip_src));
-	sautLigneComplet();
-
-	if (niveauVerbo == COMPLET)
-		printf("Destination address: ");
-	else
-		printf("Dst: ");
-	printf("%s", inet_ntoa(ip->ip_dst));
-
 	int tailleHeader = 4*ip->ip_hl;
+	int tailleTotale = ntohs(ip->ip_len);
+
 	if (niveauVerbo == COMPLET){
-		printf("\nHeader length: %d bytes (%u)\n", tailleHeader, ip->ip_hl);
+		printf("Header length: %d bytes (%u)\n", tailleHeader, ip->ip_hl);
 
 		unsigned int flagsServices = ip->ip_tos;
 		printf("Differentiated services field: 0x%02x\n", flagsServices);
@@ -31,7 +20,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 		if ((flagsServices & IPTOS_ECN_MASK) > 0){
 			/* ECN-capable transport (1) */
 			if ((flagsServices & IPTOS_ECN_ECT1) > 0)
-			printf("ECN-capable transport (1)");
+				printf("ECN-capable transport (1)");
 
 			/* ECN-capable transport (0) */
 			if ((flagsServices & IPTOS_ECN_ECT0) > 0)
@@ -41,10 +30,7 @@ void gestionIPv4(const u_char* paquet, const int offset){
 			printf("Not ECN-capable transport (%d)",
 				flagsServices & IPTOS_ECN_MASK);
 		}
-	}
 
-	int tailleTotale = ntohs(ip->ip_len);
-	if (niveauVerbo == COMPLET){
 		printf("\nTotal length: %d\n", tailleTotale);
 
 		printf("Identification: 0x%04x (%u)\n", ntohs(ip->ip_id),
@@ -71,15 +57,32 @@ void gestionIPv4(const u_char* paquet, const int offset){
 			printf("More fragments ");
 			flagValue += 1;
 		}
-		printf("\n       (0x%02x)", flagValue);
+		printf("(0x%02x)", flagValue);
 
 		printf("\nFragment offset: %u\n", flagsOff & IP_OFFMASK);
 		printf("Time to live: %u\n", ip->ip_ttl);
 		printf("Checksum: 0x%04x (Unverified)\n", ntohs(ip->ip_sum));
-		printf("Protocol: ");
 	}
 
+	// Adresses
+	if (niveauVerbo == COMPLET)
+		printf("Source address: ");
+	else
+		printf("Src: ");
+	printf("%s", inet_ntoa(ip->ip_src));
+	sautLigneOuSeparateur();
+
+	if (niveauVerbo == COMPLET)
+		printf("Destination address: ");
+	else
+		printf("Dst: ");
+	printf("%s", inet_ntoa(ip->ip_dst));
+
+	// Protocole
+	if (niveauVerbo == COMPLET)
+		printf("\nProtocol: ");
 	unsigned int proto = ip->ip_p;
+
 	switch (proto){
 		/* ICMP */
 		case ICMP:

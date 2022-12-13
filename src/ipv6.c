@@ -25,13 +25,14 @@ void gestionIPv6(const u_char* paquet, const int offset){
 		printf("Hop limit: %u\n", ip6->ip6_hlim);
 	}
 
+	// Adresses
 	inet_ntop(AF_INET6, &ip6->ip6_src, buffAddrIPv6, INET6_ADDRSTRLEN);
 	if (niveauVerbo == COMPLET)
 		printf("Source address: ");
 	else
 		printf("Src: ");
 	printf("%s", buffAddrIPv6);
-	sautLigneComplet();
+	sautLigneOuSeparateur();
 
 	inet_ntop(AF_INET6, &ip6->ip6_dst, buffAddrIPv6, INET6_ADDRSTRLEN);
 	if (niveauVerbo == COMPLET)
@@ -40,6 +41,7 @@ void gestionIPv6(const u_char* paquet, const int offset){
 		printf("Dst: ");
 	printf("%s", buffAddrIPv6);
 
+	// Protocole
 	if (niveauVerbo == COMPLET)
 		printf("\nNext header: ");
 	unsigned int proto = ip6->ip6_nxt;

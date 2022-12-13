@@ -19,12 +19,12 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	int portDst = ntohs(tcp->th_dport);
 
 	printf("Src: %u", portSrc);
-	sautLigneComplet();
+	sautLigneOuSeparateur();
 
 	printf("Dst: %u", portDst);
 
 	if (niveauVerbo > CONCIS){
-		sautLigneComplet();
+		sautLigneOuSeparateur();
 
 		// Sequence number
 		if (niveauVerbo == COMPLET)
@@ -33,7 +33,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 			printf("Seq");
 
 		printf(": %u", ntohl(tcp->th_seq));
-		sautLigneComplet();
+		sautLigneOuSeparateur();
 
 		// Acknowledgement number
 		if (niveauVerbo == COMPLET)

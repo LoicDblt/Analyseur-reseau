@@ -44,8 +44,8 @@ void titreTrame(const char* message);
 // Titre des protocoles
 void titreProto(const char* message, char* couleur);
 
-// Passe à la ligne suivante si verbosité "COMPLET"
-void sautLigneComplet(void);
+// Passe à la ligne suivante si verbosité "complet"
+void sautLigneOuSeparateur(void);
 
 // Fonction de vérification du retour de snprintf
 void verifTaille(const int retourTaille, const size_t tailleBuffer);

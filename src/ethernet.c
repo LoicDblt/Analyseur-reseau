@@ -32,21 +32,6 @@ void affichageEtherType(uint16_t type){
 			printf("IPv6");
 			break;
 
-		/* PAE */
-		case ETHERTYPE_PAE:
-			printf("PAE");
-			break;
-
-		/* RSN Pre-Authentification */
-		case ETHERTYPE_RSN_PREAUTH:
-			printf("RSN PreAuth");
-			break;
-
-		/* Precision Time Protocol (PTP) */
-		case ETHERTYPE_PTP:
-			printf("PTP");
-			break;
-
 		/* Loopback */
 		case ETHERTYPE_LOOPBACK:
 			printf("Loopback");
@@ -124,12 +109,12 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 		titreProto("Eth", MAGENTA);
 
 	// Affichage des adresses MAC
-	printf("Src: ");
-	affichageAdresseMAC(ethernet->ether_shost);
-	sautLigneComplet();
-
 	printf("Dst: ");
 	affichageAdresseMAC(ethernet->ether_dhost);
+	sautLigneOuSeparateur();
+
+	printf("Src: ");
+	affichageAdresseMAC(ethernet->ether_shost);
 
 	if (niveauVerbo == COMPLET){
 		printf("\nEtherType: ");

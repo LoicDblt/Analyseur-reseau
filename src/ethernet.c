@@ -109,11 +109,17 @@ void gestionEthernet(u_char* args, const struct pcap_pkthdr* pkthdr,
 		titreProto("Eth", MAGENTA);
 
 	// Affichage des adresses MAC
-	printf("Dst: ");
+	if (niveauVerbo == COMPLET)
+		printf("Destination: ");
+	else
+		printf("Dst: ");
 	affichageAdresseMAC(ethernet->ether_dhost);
 	sautLigneOuSeparateur();
 
-	printf("Src: ");
+	if (niveauVerbo == COMPLET)
+		printf("Source: ");
+	else
+		printf("Src: ");
 	affichageAdresseMAC(ethernet->ether_shost);
 
 	if (niveauVerbo == COMPLET){

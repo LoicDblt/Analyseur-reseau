@@ -2,7 +2,8 @@
 
 void gestionIPv6(const u_char* paquet, const int offset){
 	const struct ip6_hdr* ip6 = (struct ip6_hdr*)(paquet + offset);
-	char buffAddrIPv6[INET6_ADDRSTRLEN];
+	char ipSrc[INET6_ADDRSTRLEN];
+	char ipDst[INET6_ADDRSTRLEN];
 
 	titreProto("IPv6", BLEU);
 
@@ -26,20 +27,9 @@ void gestionIPv6(const u_char* paquet, const int offset){
 	}
 
 	// Adresses
-	inet_ntop(AF_INET6, &ip6->ip6_src, buffAddrIPv6, INET6_ADDRSTRLEN);
-	if (niveauVerbo == COMPLET)
-		printf("Source address: ");
-	else
-		printf("Src: ");
-	printf("%s", buffAddrIPv6);
-	sautLigneOuSeparateur();
-
-	inet_ntop(AF_INET6, &ip6->ip6_dst, buffAddrIPv6, INET6_ADDRSTRLEN);
-	if (niveauVerbo == COMPLET)
-		printf("Destination address: ");
-	else
-		printf("Dst: ");
-	printf("%s", buffAddrIPv6);
+	inet_ntop(AF_INET6, &ip6->ip6_src, ipSrc, INET6_ADDRSTRLEN);
+	inet_ntop(AF_INET6, &ip6->ip6_dst, ipDst, INET6_ADDRSTRLEN);
+	afficheSrcDstAddrIP(ipSrc, ipDst);
 
 	// Protocole
 	if (niveauVerbo == COMPLET)

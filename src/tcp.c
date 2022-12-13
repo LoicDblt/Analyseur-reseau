@@ -17,11 +17,7 @@ void gestionTCP(const u_char* paquet, const int offset, int tailleTotale){
 	// Ports
 	int portSrc = ntohs(tcp->th_sport);
 	int portDst = ntohs(tcp->th_dport);
-
-	printf("Src: %u", portSrc);
-	sautLigneOuSeparateur();
-
-	printf("Dst: %u", portDst);
+	afficheSrcDstPorts(portSrc, portDst);
 
 	if (niveauVerbo > CONCIS){
 		sautLigneOuSeparateur();

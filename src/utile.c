@@ -231,3 +231,33 @@ int caraCtrl(char caractere){
 			return 0;
 	}
 }
+
+void afficheSrcDstPorts(const unsigned portSrc, const unsigned portDst){
+	if (niveauVerbo == COMPLET)
+		printf("Source port: ");
+	else
+		printf("Src: ");
+	printf("%u", portSrc);
+	sautLigneOuSeparateur();
+
+	if (niveauVerbo == COMPLET)
+		printf("Destination port: ");
+	else
+		printf("Dst: ");
+	printf("%u", portDst);
+}
+
+void afficheSrcDstAddrIP(const char* ipSrc, const char* ipDst){
+	if (niveauVerbo == COMPLET)
+		printf("Source address: ");
+	else
+		printf("Src: ");
+	printf("%s", ipSrc);
+	sautLigneOuSeparateur();
+
+	if (niveauVerbo == COMPLET)
+		printf("Destination address: ");
+	else
+		printf("Dst: ");
+	printf("%s", ipDst);
+}

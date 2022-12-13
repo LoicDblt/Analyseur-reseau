@@ -131,6 +131,7 @@ int main(int argc, char *argv[]){
 					errbuf);
 				return EXIT_FAILURE;
 			}
+
 			device = interfaces->name;
 		}
 

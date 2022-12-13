@@ -9,10 +9,7 @@ void gestionUDP(const u_char* paquet, const int offset){
 	titreProto("UDP", VERT);
 
 	// Ports
-	printf("Src: %u", portSrc);
-	sautLigneOuSeparateur();
-
-	printf("Dst: %u", portDst);
+	afficheSrcDstPorts(portSrc, portDst);
 
 	if (niveauVerbo == COMPLET){
 		unsigned int tailleTotale = ntohs(udp->uh_ulen);

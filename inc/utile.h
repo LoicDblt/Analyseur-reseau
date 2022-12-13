@@ -69,4 +69,10 @@ void affichageDureeConvertie(unsigned int dureeSecondes);
 // Affiche les caractères de contrôle '\r' et '\n'
 int caraCtrl(char caractere);
 
+// Affiche les ports avec un message adapté au niveau de verbosité
+void afficheSrcDstPorts(const unsigned portSrc, const unsigned portDst);
+
+// Affiche les adresses IP avec un message adapté au niveau de verbosité
+void afficheSrcDstAddrIP(const char* ipSrc, const char* ipDst);
+
 #endif

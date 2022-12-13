@@ -65,18 +65,9 @@ void gestionIPv4(const u_char* paquet, const int offset){
 	}
 
 	// Adresses
-	if (niveauVerbo == COMPLET)
-		printf("Source address: ");
-	else
-		printf("Src: ");
-	printf("%s", inet_ntoa(ip->ip_src));
-	sautLigneOuSeparateur();
-
-	if (niveauVerbo == COMPLET)
-		printf("Destination address: ");
-	else
-		printf("Dst: ");
-	printf("%s", inet_ntoa(ip->ip_dst));
+	char* ipSrc = strdup(inet_ntoa(ip->ip_src));
+	char* ipDst = strdup(inet_ntoa(ip->ip_dst));
+	afficheSrcDstAddrIP(ipSrc, ipDst);
 
 	// Protocole
 	if (niveauVerbo == COMPLET)

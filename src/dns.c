@@ -1,5 +1,25 @@
 #include "../inc/dns.h"
 
+unsigned int concactDeuxOctets(u_int8_t* pointeurDNS){
+	unsigned int octUn, octDeux;
+
+	octUn = *pointeurDNS++;
+	octDeux = *pointeurDNS++;
+
+	return (octUn << 8) | (octDeux);
+}
+
+unsigned int concactQautreOctets(u_int8_t* pointeurDNS){
+	unsigned int octUn, octDeux, octTrois, octQuatre;
+
+	octUn = *pointeurDNS++;
+	octDeux = *pointeurDNS++;
+	octTrois = *pointeurDNS++;
+	octQuatre = *pointeurDNS++;
+
+	return (octUn << 24) | (octDeux << 16) | (octTrois << 8) | (octQuatre);
+}
+
 void affichageType(const unsigned int type){
 	printf("\n\tType: ");
 	switch (type){
@@ -153,36 +173,29 @@ void affichageBinaire(const unsigned int nombre,
 }
 
 u_int8_t* affichageInfosAnswer(u_int8_t* pointeurDNS){
-	unsigned int hexUn, hexDeux, hexTrois, hexQuatre, concatHex;
+	unsigned int concatHex;
 
 	// Type
-	hexUn = *pointeurDNS++;
-	hexDeux = *pointeurDNS++;
-	concatHex = (hexUn << 8) | (hexDeux);
+	concatHex = concactDeuxOctets(pointeurDNS);
+	pointeurDNS += 2;
 	unsigned int type = concatHex;
 	affichageType(type);
 
 	// Classe
-	hexUn = *pointeurDNS++;
-	hexDeux = *pointeurDNS++;
-	concatHex = (hexUn << 8) | (hexDeux);
+	concatHex = concactDeuxOctets(pointeurDNS);
+	pointeurDNS += 2;
 	affichageClasse(concatHex);
 
 	// Time to live
-	hexUn = *pointeurDNS++;
-	hexDeux = *pointeurDNS++;
-	hexTrois = *pointeurDNS++;
-	hexQuatre = *pointeurDNS++;
-	concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
-		(hexQuatre);
+	concatHex = concactQautreOctets(pointeurDNS);
+	pointeurDNS += 4;
 	printf("\n\tTime to live: %u (", concatHex);
 	affichageDureeConvertie(concatHex);
 	printf(")");
 
 	// Data length
-	hexUn = *pointeurDNS++;
-	hexDeux = *pointeurDNS++;
-	concatHex = (hexUn << 8) | (hexDeux);
+	concatHex = concactDeuxOctets(pointeurDNS);
+	pointeurDNS += 2;
 	printf("\n\tData length: %u", concatHex);
 
 	// Address
@@ -197,7 +210,7 @@ void gestionDNS(const u_char* paquet, const int offset){
 	// On place un pointeur après l'entête UDP
 	u_int8_t* pointeurDNS = (u_int8_t*) paquet + offset;
 
-	unsigned int hexUn, hexDeux, hexTrois, hexQuatre, concatHex;
+	unsigned int octUn, concatHex;
 	unsigned int bitUn, bitDeux, bitTrois, bitQuatre, concatBit, retourBit;
 	unsigned int nbrQuestions, nbrReponses, nbrAutorite, nbrSupplementaire;
 	unsigned int nbrIncrPtr;
@@ -206,16 +219,14 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	titreProto("DNS", ROUGE);
 
-	hexUn = *pointeurDNS++; 				// Récupère le premier hexa
-	hexDeux = *pointeurDNS++;				// Récupère le second hexa
-	concatHex = (hexUn << 8) | (hexDeux);	// Concatène les deux
+	concatHex = concactDeuxOctets(pointeurDNS);
+	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("Transaction ID: 0x%04x", concatHex);
 
 	// Flags
-	hexUn = *pointeurDNS++;
-	hexDeux = *pointeurDNS++;
-	concatHex = (hexUn << 8) | (hexDeux);
+	concatHex = concactDeuxOctets(pointeurDNS);
+	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nFlags: 0x%04x", concatHex);
 	int niemeBit = 0;
@@ -427,33 +438,29 @@ void gestionDNS(const u_char* paquet, const int offset){
 	}
 
 	// Questions
-	hexUn = *pointeurDNS++;
-	hexDeux = *pointeurDNS++;
-	concatHex = (hexUn << 8) | (hexDeux);
+	concatHex = concactDeuxOctets(pointeurDNS);
+	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nQuestions: %u", concatHex);
 	nbrQuestions = (int) concatHex;
 
 	// Answer RRs
-	hexUn = *pointeurDNS++;
-	hexDeux = *pointeurDNS++;
-	concatHex = (hexUn << 8) | (hexDeux);
+	concatHex = concactDeuxOctets(pointeurDNS);
+	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nAnswer RRs: %u", concatHex);
 	nbrReponses = concatHex;
 
 	// Authority RRs
-	hexUn = *pointeurDNS++;
-	hexDeux = *pointeurDNS++;
-	concatHex = (hexUn << 8) | (hexDeux);
+	concatHex = concactDeuxOctets(pointeurDNS);
+	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nAuthority RRs: %u", concatHex);
 	nbrAutorite = concatHex;
 
 	// Additional RRs
-	hexUn = *pointeurDNS++;
-	hexDeux = *pointeurDNS++;
-	concatHex = (hexUn << 8) | (hexDeux);
+	concatHex = concactDeuxOctets(pointeurDNS);
+	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nAdditional RRs: %u", concatHex);
 	nbrSupplementaire = concatHex;
@@ -494,15 +501,13 @@ void gestionDNS(const u_char* paquet, const int offset){
 			printf("\n\t[Label count: %u]", nbrLabels);
 
 			// Type
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			concatHex = (hexUn << 8) | (hexDeux);
+			concatHex = concactDeuxOctets(pointeurDNS);
+			pointeurDNS += 2;
 			affichageType(concatHex);
 
 			// Classe
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			concatHex = (hexUn << 8) | (hexDeux);
+			concatHex = concactDeuxOctets(pointeurDNS);
+			pointeurDNS += 2;
 			affichageClasse(concatHex);
 		}
 	}
@@ -516,10 +521,9 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 			// Name
 			printf("\n\tName: %s", nomDomaine);
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			concatHex = (hexUn << 8) | (hexDeux);
-			if (hexUn < CODE_CONTROLE)
+			octUn = *pointeurDNS;
+			pointeurDNS += 2;
+			if (octUn < CODE_CONTROLE)
 				pointeurDNS += strlen(nomDomaine);
 
 			pointeurDNS = affichageInfosAnswer(pointeurDNS);
@@ -535,40 +539,32 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 			// Name
 			printf("\n\tName: %s", nomDomaine);
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			concatHex = (hexUn << 8) | (hexDeux);
-			if (hexUn < CODE_CONTROLE)
+			octUn = *pointeurDNS;
+			pointeurDNS += 2;
+			if (octUn < CODE_CONTROLE)
 				pointeurDNS += strlen(nomDomaine);
 
 			// Type
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			concatHex = (hexUn << 8) | (hexDeux);
+			concatHex = concactDeuxOctets(pointeurDNS);
+			pointeurDNS += 2;
 			unsigned int type = concatHex;
 			affichageType(type);
 
 			// Classe
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			concatHex = (hexUn << 8) | (hexDeux);
+			concatHex = concactDeuxOctets(pointeurDNS);
+			pointeurDNS += 2;
 			affichageClasse(concatHex);
 
 			// Time to live
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			hexTrois = *pointeurDNS++;
-			hexQuatre = *pointeurDNS++;
-			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
-				(hexQuatre);
+			concatHex = concactQautreOctets(pointeurDNS);
+			pointeurDNS += 4;
 			printf("\n\tTime to live: %u (", concatHex);
 			affichageDureeConvertie(concatHex);
 			printf(")");
 
 			// Data length
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			concatHex = (hexUn << 8) | (hexDeux);
+			concatHex = concactDeuxOctets(pointeurDNS);
+			pointeurDNS += 2;
 			printf("\n\tData length: %u", concatHex);
 
 			// Primary name server
@@ -583,54 +579,34 @@ void gestionDNS(const u_char* paquet, const int offset){
 											// à la valeur suivante
 
 			// Serial number
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			hexTrois = *pointeurDNS++;
-			hexQuatre = *pointeurDNS++;
-			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
-				(hexQuatre);
+			concatHex = concactQautreOctets(pointeurDNS);
+			pointeurDNS += 4;
 			printf("\n\tSerial number: %u", concatHex);
 
 			// Refresh interval
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			hexTrois = *pointeurDNS++;
-			hexQuatre = *pointeurDNS++;
-			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
-				(hexQuatre);
+			concatHex = concactQautreOctets(pointeurDNS);
+			pointeurDNS += 4;
 			printf("\n\tRefresh interval: %u (", concatHex);
 			affichageDureeConvertie(concatHex);
 			printf(")");
 
 			// Retry interval
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			hexTrois = *pointeurDNS++;
-			hexQuatre = *pointeurDNS++;
-			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
-				(hexQuatre);
+			concatHex = concactQautreOctets(pointeurDNS);
+			pointeurDNS += 4;
 			printf("\n\tRetry interval: %u (", concatHex);
 			affichageDureeConvertie(concatHex);
 			printf(")");
 
 			// Expire limit
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			hexTrois = *pointeurDNS++;
-			hexQuatre = *pointeurDNS++;
-			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
-				(hexQuatre);
+			concatHex = concactQautreOctets(pointeurDNS);
+			pointeurDNS += 4;
 			printf("\n\tExpire limit: %u (", concatHex);
 			affichageDureeConvertie(concatHex);
 			printf(")");
 
 			// Minimum TTL
-			hexUn = *pointeurDNS++;
-			hexDeux = *pointeurDNS++;
-			hexTrois = *pointeurDNS++;
-			hexQuatre = *pointeurDNS++;
-			concatHex = (hexUn << 24) | (hexDeux << 16) | (hexTrois << 8) |
-				(hexQuatre);
+			concatHex = concactQautreOctets(pointeurDNS);
+			pointeurDNS += 4;
 			printf("\n\tMinimum TTL: %u (", concatHex);
 			affichageDureeConvertie(concatHex);
 			printf(")");

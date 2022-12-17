@@ -11,16 +11,8 @@ int main(int argc, char *argv[]){
 	bpf_u_int32 net = 0;			// Our IP
 
 	// Signifie qu'il y a des commutateurs
-	if (argc > 1){
-		// Force l'affichage du titre encadré
-		niveauVerbo = 3;
-
-		titreTrame("Enabled options");
-		printf("\n\n");
-
-		// Remets la verbosité sur le niveau par défaut
-		niveauVerbo = VERBOSITE_DEFAUT;
-	}
+	if (argc > 1)
+		titreOptions("Enabled options");
 
 	// Gestion des commutateurs
 	int opt;
@@ -132,7 +124,21 @@ int main(int argc, char *argv[]){
 				return EXIT_FAILURE;
 			}
 
+			/*
+			* Nouvelle interface "ap" sur MacOS 13.1 (13/12/2022), prenant la
+			* première place dans la liste (au lieu de l'interface active, dans
+			* un cas standard)
+			*/
 			device = interfaces->name;
+			#if __APPLE__
+			if (strncmp(interfaces->name, "ap", 2) == 0)
+				device = interfaces->next->name;
+			#endif
+
+			printf(VIDER_LIGNE);
+			titreOptions("Default configuration");
+			printf("%s[Info] Interface selected: %s%s\n\n", VERT,
+				device, ROUGE);
 		}
 
 		if (device == NULL){

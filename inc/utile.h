@@ -38,6 +38,9 @@
 // Renvoie la taille sans la valeur sentinnelle
 #define sizeofSansSenti(taille) sizeof(taille) - 1
 
+// Titre des options
+void titreOptions(const char* message);
+
 // Titre des trames
 void titreTrame(const char* message);
 

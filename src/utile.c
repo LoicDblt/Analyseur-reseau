@@ -1,5 +1,16 @@
 #include "../inc/utile.h"
 
+void titreOptions(const char* message){
+	// Force l'affichage du titre encadré
+	niveauVerbo = 3;
+
+	titreTrame(message);
+	printf("\n\n");
+
+	// Remets la verbosité sur le niveau par défaut
+	niveauVerbo = VERBOSITE_DEFAUT;
+}
+
 void titreTrame(const char* message){
 	// Titre "synthétique" et "complet"
 	if (niveauVerbo > CONCIS){

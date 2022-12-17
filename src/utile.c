@@ -1,6 +1,6 @@
 #include "../inc/utile.h"
 
-void titreOptions(const char* message){
+void titreOptions(const char* message, const int niveauVerboSauvegarde){
 	// Force l'affichage du titre encadré
 	niveauVerbo = 3;
 
@@ -8,7 +8,7 @@ void titreOptions(const char* message){
 	printf("\n\n");
 
 	// Remets la verbosité sur le niveau par défaut
-	niveauVerbo = VERBOSITE_DEFAUT;
+	niveauVerbo = niveauVerboSauvegarde;
 }
 
 void titreTrame(const char* message){

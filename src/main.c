@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
 
 	// Signifie qu'il y a des commutateurs
 	if (argc > 1)
-		titreOptions("Enabled options");
+		titreOptions("Enabled options", VERBOSITE_DEFAUT);
 
 	// Gestion des commutateurs
 	int opt;
@@ -136,9 +136,9 @@ int main(int argc, char *argv[]){
 			#endif
 
 			printf(VIDER_LIGNE);
-			titreOptions("Default configuration");
-			printf("%s[Info] Interface selected: %s%s\n\n", VERT,
-				device, ROUGE);
+			titreOptions("Default configuration", niveauVerbo);
+			printf("%s[Info] Interface selected: %s%s\n\n", VERT, device,
+				ROUGE);
 		}
 
 		if (device == NULL){

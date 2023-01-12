@@ -1,6 +1,6 @@
 #include "../inc/dns.h"
 
-unsigned int concactDeuxOctets(u_int8_t* pointeurDNS){
+unsigned int concatDeuxOctets(u_int8_t* pointeurDNS){
 	unsigned int octUn, octDeux;
 
 	octUn = *pointeurDNS++;
@@ -9,7 +9,7 @@ unsigned int concactDeuxOctets(u_int8_t* pointeurDNS){
 	return (octUn << 8) | (octDeux);
 }
 
-unsigned int concactQautreOctets(u_int8_t* pointeurDNS){
+unsigned int concatQuatreOctets(u_int8_t* pointeurDNS){
 	unsigned int octUn, octDeux, octTrois, octQuatre;
 
 	octUn = *pointeurDNS++;
@@ -176,25 +176,25 @@ u_int8_t* affichageInfosAnswer(u_int8_t* pointeurDNS){
 	unsigned int concatHex;
 
 	// Type
-	concatHex = concactDeuxOctets(pointeurDNS);
+	concatHex = concatDeuxOctets(pointeurDNS);
 	pointeurDNS += 2;
 	unsigned int type = concatHex;
 	affichageType(type);
 
 	// Classe
-	concatHex = concactDeuxOctets(pointeurDNS);
+	concatHex = concatDeuxOctets(pointeurDNS);
 	pointeurDNS += 2;
 	affichageClasse(concatHex);
 
 	// Time to live
-	concatHex = concactQautreOctets(pointeurDNS);
+	concatHex = concatQuatreOctets(pointeurDNS);
 	pointeurDNS += 4;
 	printf("\n\tTime to live: %u (", concatHex);
 	affichageDureeConvertie(concatHex);
 	printf(")");
 
 	// Data length
-	concatHex = concactDeuxOctets(pointeurDNS);
+	concatHex = concatDeuxOctets(pointeurDNS);
 	pointeurDNS += 2;
 	printf("\n\tData length: %u", concatHex);
 
@@ -219,13 +219,13 @@ void gestionDNS(const u_char* paquet, const int offset){
 
 	titreProto("DNS", ROUGE);
 
-	concatHex = concactDeuxOctets(pointeurDNS);
+	concatHex = concatDeuxOctets(pointeurDNS);
 	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("Transaction ID: 0x%04x", concatHex);
 
 	// Flags
-	concatHex = concactDeuxOctets(pointeurDNS);
+	concatHex = concatDeuxOctets(pointeurDNS);
 	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nFlags: 0x%04x", concatHex);
@@ -438,28 +438,28 @@ void gestionDNS(const u_char* paquet, const int offset){
 	}
 
 	// Questions
-	concatHex = concactDeuxOctets(pointeurDNS);
+	concatHex = concatDeuxOctets(pointeurDNS);
 	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nQuestions: %u", concatHex);
 	nbrQuestions = (int) concatHex;
 
 	// Answer RRs
-	concatHex = concactDeuxOctets(pointeurDNS);
+	concatHex = concatDeuxOctets(pointeurDNS);
 	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nAnswer RRs: %u", concatHex);
 	nbrReponses = concatHex;
 
 	// Authority RRs
-	concatHex = concactDeuxOctets(pointeurDNS);
+	concatHex = concatDeuxOctets(pointeurDNS);
 	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nAuthority RRs: %u", concatHex);
 	nbrAutorite = concatHex;
 
 	// Additional RRs
-	concatHex = concactDeuxOctets(pointeurDNS);
+	concatHex = concatDeuxOctets(pointeurDNS);
 	pointeurDNS += 2;
 	if (niveauVerbo == COMPLET)
 		printf("\nAdditional RRs: %u", concatHex);
@@ -501,12 +501,12 @@ void gestionDNS(const u_char* paquet, const int offset){
 			printf("\n\t[Label count: %u]", nbrLabels);
 
 			// Type
-			concatHex = concactDeuxOctets(pointeurDNS);
+			concatHex = concatDeuxOctets(pointeurDNS);
 			pointeurDNS += 2;
 			affichageType(concatHex);
 
 			// Classe
-			concatHex = concactDeuxOctets(pointeurDNS);
+			concatHex = concatDeuxOctets(pointeurDNS);
 			pointeurDNS += 2;
 			affichageClasse(concatHex);
 		}
@@ -545,25 +545,25 @@ void gestionDNS(const u_char* paquet, const int offset){
 				pointeurDNS += strlen(nomDomaine);
 
 			// Type
-			concatHex = concactDeuxOctets(pointeurDNS);
+			concatHex = concatDeuxOctets(pointeurDNS);
 			pointeurDNS += 2;
 			unsigned int type = concatHex;
 			affichageType(type);
 
 			// Classe
-			concatHex = concactDeuxOctets(pointeurDNS);
+			concatHex = concatDeuxOctets(pointeurDNS);
 			pointeurDNS += 2;
 			affichageClasse(concatHex);
 
 			// Time to live
-			concatHex = concactQautreOctets(pointeurDNS);
+			concatHex = concatQuatreOctets(pointeurDNS);
 			pointeurDNS += 4;
 			printf("\n\tTime to live: %u (", concatHex);
 			affichageDureeConvertie(concatHex);
 			printf(")");
 
 			// Data length
-			concatHex = concactDeuxOctets(pointeurDNS);
+			concatHex = concatDeuxOctets(pointeurDNS);
 			pointeurDNS += 2;
 			printf("\n\tData length: %u", concatHex);
 
@@ -579,33 +579,33 @@ void gestionDNS(const u_char* paquet, const int offset){
 											// à la valeur suivante
 
 			// Serial number
-			concatHex = concactQautreOctets(pointeurDNS);
+			concatHex = concatQuatreOctets(pointeurDNS);
 			pointeurDNS += 4;
 			printf("\n\tSerial number: %u", concatHex);
 
 			// Refresh interval
-			concatHex = concactQautreOctets(pointeurDNS);
+			concatHex = concatQuatreOctets(pointeurDNS);
 			pointeurDNS += 4;
 			printf("\n\tRefresh interval: %u (", concatHex);
 			affichageDureeConvertie(concatHex);
 			printf(")");
 
 			// Retry interval
-			concatHex = concactQautreOctets(pointeurDNS);
+			concatHex = concatQuatreOctets(pointeurDNS);
 			pointeurDNS += 4;
 			printf("\n\tRetry interval: %u (", concatHex);
 			affichageDureeConvertie(concatHex);
 			printf(")");
 
 			// Expire limit
-			concatHex = concactQautreOctets(pointeurDNS);
+			concatHex = concatQuatreOctets(pointeurDNS);
 			pointeurDNS += 4;
 			printf("\n\tExpire limit: %u (", concatHex);
 			affichageDureeConvertie(concatHex);
 			printf(")");
 
 			// Minimum TTL
-			concatHex = concactQautreOctets(pointeurDNS);
+			concatHex = concatQuatreOctets(pointeurDNS);
 			pointeurDNS += 4;
 			printf("\n\tMinimum TTL: %u (", concatHex);
 			affichageDureeConvertie(concatHex);

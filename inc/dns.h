@@ -55,10 +55,10 @@
 /************* FONCTIONS **************/
 
 // Fonction de concaténation de 2 octets
-unsigned int concactDeuxOctets(u_int8_t* pointeurDNS);
+unsigned int concatDeuxOctets(u_int8_t* pointeurDNS);
 
 // Fonction de concaténation de 4 octets
-unsigned int concactQautreOctets(u_int8_t* pointeurDNS);
+unsigned int concatQuatreOctets(u_int8_t* pointeurDNS);
 
 // Fonction d'affichage du type de requête depuis un pointeur
 void affichageType(const unsigned int type);
